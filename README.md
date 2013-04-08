@@ -1,4 +1,4 @@
-TGOL
+GameOfLife
 ====
 
 The Game of Life
