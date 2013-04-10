@@ -71,7 +71,7 @@ public class Field {
 			
 			Point c = entry.getKey();
 			
-			cells[c.y][c.x] = "~";
+			cells[c.y][c.x] = "O";
 		}
 		
 		for(Map.Entry<Point, Integer> entry : this._emergingPlaces.entrySet()) {

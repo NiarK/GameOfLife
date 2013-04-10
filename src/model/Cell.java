@@ -15,8 +15,8 @@ public class Cell {
 	public Cell(Point coord){
 		this._coordinate = coord;
 		
-		this._state = new CellState();
-		this._nextState = null;
+		this._state = null;
+		this._nextState = new CellState();
 	}
 	
 	public void update(){

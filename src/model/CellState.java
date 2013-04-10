@@ -10,22 +10,22 @@ package model;
  */
 public class CellState {
 	
-	private int _value;
+	private boolean _isLiving;
 	
 	public CellState(){
-		this._value = 1;
+		this._isLiving = true;
 	}
 	
-	public CellState(int val){
-		this._value = val;
+	public CellState(boolean live){
+		this._isLiving = live;
 	}
 
-	public int getValue() {
-		return _value;
+	public boolean isLiving() {
+		return _isLiving;
 	}
 
-	public void setValue(int val) {
-		this._value = val;
+	public void live(boolean live) {
+		this._isLiving = live;
 	}
 	
 	
