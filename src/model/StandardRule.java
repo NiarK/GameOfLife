@@ -119,7 +119,8 @@ public class StandardRule implements Rule {
 
 		this.updateCells(cells);
 		this.updateEmergingPlaces(field);
-
+		field.setCells(cells);
+		
 		return field;
 	}
 
