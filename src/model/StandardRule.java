@@ -37,8 +37,8 @@ public class StandardRule implements Rule {
 				Point coord = new Point(x,y);
 				
 				if( random.nextBoolean() && random.nextBoolean() ){
-					CellState state = new CellState();
-					Cell c = new Cell(coord, state);
+					
+					Cell c = new Cell(coord);
 
 					cells.put(coord, c);
 					
@@ -55,7 +55,81 @@ public class StandardRule implements Rule {
 
 	@Override
 	public Field update(Field field) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		
+		//this.getNeighborNumber(field.getCells(), new Point(2,2));
+		
+		HashMap<Point, Cell> cells = field.getCells();
+		
+		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
+			int neighborNumber = this.getNeighborNumber(cells, entry.getKey());
+			
+			//if(neighborNumber )
+		}
+		
+		return field;
+	}
+	
+	/**
+	 * Récupère le nombre de voisin d'une case.
+	 * @param field Le terrain dans lequel se situe la case.
+	 * @param place La case en question.
+	 */
+	private int getNeighborNumber(HashMap<Point, Cell> cells, Point place) {
+		
+		//HashMap<Point, Cell> cells = field.getCells();
+		Point neighbor = (Point)place.clone();
+		int cpt = 0;
+		
+		// Voisin en haut à gauche.
+		neighbor.x -= 1;
+		neighbor.y -= 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin en haut.
+		neighbor.x += 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin en haut à droite.
+		neighbor.x += 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin à droite.
+		neighbor.y += 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin en bas à droite.
+		neighbor.y += 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin en bas.
+		neighbor.x -= 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin en bas à gauche.
+		neighbor.x -= 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		// Voisin à gauche.
+		neighbor.y -= 1;
+		if(cells.containsKey(neighbor)) {
+			++cpt;
+		}
+		
+		return cpt;
 	}
 	
 	/**
@@ -83,7 +157,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x >= 0 && neighbor.y >= 0) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Gestion du voisin au dessus
@@ -91,7 +165,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.y >= 0) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin au dessus à droite
@@ -99,7 +173,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x < size.x && neighbor.y >= 0) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin à droite
@@ -107,7 +181,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x < size.x) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin en dessous à droite
@@ -115,7 +189,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x < size.x && neighbor.y < size.y) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin en dessous
@@ -123,7 +197,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.y < size.y) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin en dessous à gauche
@@ -131,7 +205,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x >= 0 && neighbor.y < size.y) {
 				
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 			// Voisin à gauche
@@ -139,7 +213,7 @@ public class StandardRule implements Rule {
 			
 			if(neighbor.x >= 0) {
 
-				incrementNeighbor(neighbor, field);
+				incrementEmergingNeighbor(neighbor, field);
 			}
 			
 		}
@@ -150,7 +224,7 @@ public class StandardRule implements Rule {
 		return field;
 	}
 	
-	private void incrementNeighbor(Point neighbor, Field field) {
+	private void incrementEmergingNeighbor(Point neighbor, Field field) {
 	
 		if( ! field.getCells().containsKey(neighbor) ){
 		
@@ -168,65 +242,4 @@ public class StandardRule implements Rule {
 		}
 	}
 	
-	//public void updateEmergingPlaces(Field field, Point place);
-	
-	/*public void updateNighCases(){
-		//TODO: a refaire !
-		HashMap<Point, Cell> cells = this._field.getCells();
-		HashMap<Point, Integer> nighCases = this._field.getEmergingPlaces();
-		
-		Point size = this._field.getSize();
-		
-		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
-			
-			Point cell = entry.getKey();
-			Point nearCell = cell;
-			
-			boolean ok = true;
-			
-			if(cell.x - 1 >= 0 ) {
-				nearCell = cell;
-				nearCell.x = cell.x - 1;
-				
-				incrementNeighborOnCase(nearCell);
-			}
-			
-			if(cell.x + 1 < size.x ) {
-				nearCell = cell;
-				nearCell.x = cell.x + 1;
-				
-				incrementNeighborOnCase(nearCell);
-			}
-			
-			if(cell.y - 1 >= 0 ) {
-				nearCell = cell;
-				nearCell.y = cell.y - 1;
-				
-				incrementNeighborOnCase(nearCell);
-			}
-			
-			if(cell.y + 1 < size.y ) {
-				nearCell = cell;
-				nearCell.y = cell.y + 1;
-				
-				incrementNeighborOnCase(nearCell);
-			}
-		}
-		
-	}
-	
-	public void incrementNeighborOnCase(Point c) {
-		
-		HashMap<Point, Integer> nighCases = this._field.getEmergingPlaces();
-		
-		Integer neighbor = nighCases.get(c);
-				
-		if(neighbor == null) {
-			neighbor = 0;
-		}
-
-		neighbor += 1;
-
-		nighCases.put(c, neighbor);
-	}*/
 }

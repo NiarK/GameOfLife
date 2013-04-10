@@ -10,19 +10,37 @@ public class Cell {
 	
 	private Point _coordinate;
 	private CellState _state;
-	private CellState _prevState;
+	private CellState _nextState;
 	
-	public Cell(Point coord, CellState state){
+	public Cell(Point coord){
 		this._coordinate = coord;
 		
-		this._state = state;
-		this._prevState = null;
+		this._state = new CellState();
+		this._nextState = null;
 	}
 	
-	public void update(CellState state){
-		this._prevState = this._state;
-		this._state = state;
+	public void update(){
+		
+		this._state = this._nextState;
 	}
+
+	public Point getCoordinate() {
+		return _coordinate;
+	}
+
+	public void setCoordinate(Point coordinate) {
+		this._coordinate = coordinate;
+	}
+
+	public CellState getState() {
+		return _state;
+	}
+
+	public void setNextState(CellState state) {
+		this._nextState = state;
+	}
+	
+	
 	
 	
 }

@@ -26,5 +26,7 @@ public class GameOfLife {
 		
 		System.out.println(field.toString());
 		
+		rule.update(field);
+		
 	}
 }
