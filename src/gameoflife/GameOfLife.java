@@ -13,7 +13,7 @@ public class GameOfLife {
 	/**
 	 * @param args the command line arguments
 	 */
-<<<<<<< HEAD
+	
 	public static void main(String[] args) throws InterruptedException {
 		
 		Field field = new Field(new Point(30,25));
@@ -31,9 +31,5 @@ public class GameOfLife {
 			Thread.sleep(500);
 		}
 		
-=======
-	public static void main(String[] args) {
-                WindowGame w = new WindowGame();
->>>>>>> f7577713e8d7c464e230d53c18aa61aa055a20a4
 	}
 }
