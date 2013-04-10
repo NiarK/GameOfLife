@@ -89,7 +89,7 @@ public class WindowGame implements Observer {
         frame.setVisible(true);
         
         field = new Field(new Point(10,10));
-        field.addObserver(this);
+        //field.addObserver(this);
         StandardRule rule = new StandardRule();
         rule.randomlyFill(field);
     }
@@ -101,7 +101,7 @@ public class WindowGame implements Observer {
         String imgInLife = "images.jpg";
         ImageIcon imageInLife = new ImageIcon(imgInLife);
         HashMap<Point,Cell> hm = field.getCells();
-        if(o instanceof Field){
+        /*if(o instanceof Field){
             for(int i = 0; i < x; i++){
                 for(int j = 0; j < y; j++){
                     jPs[i][j].removeAll();
@@ -117,6 +117,6 @@ public class WindowGame implements Observer {
                     }
                 }
             }
-        }
+        }*/
     }
 }
