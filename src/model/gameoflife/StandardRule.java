@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package model.gameoflife;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class StandardRule implements Rule {
 	}
 
 	@Override
-	public Field update(Field field) {
+	public synchronized Field update(Field field) {
 
 		//this.getNeighborNumber(field.getCells(), new Point(2,2));
 

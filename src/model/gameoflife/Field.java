@@ -1,4 +1,4 @@
-package model;
+package model.gameoflife;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Observable;
  *
  * @author pierre
  */
-public class Field extends Observable {
+public class Field {
 	
 	private HashMap<Point, Cell> _cells;
 	private HashMap<Point, Integer> _emergingPlaces; // coord d'une case vide -> nb voisin
@@ -47,8 +47,6 @@ public class Field extends Observable {
 	public void setEmergingPlaces(HashMap<Point, Integer> nighCases) {
 		this._emergingPlaces = nighCases;
 		
-		this.setChanged();
-		this.notifyObservers();
 	}
 
 	public Point getSize() {

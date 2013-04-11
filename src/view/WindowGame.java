@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gameoflife;
+package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,9 +16,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import model.Cell;
-import model.Field;
-import model.StandardRule;
+import model.gameoflife.Cell;
+import model.gameoflife.Field;
+import model.gameoflife.StandardRule;
 
 /**
  *

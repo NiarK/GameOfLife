@@ -1,4 +1,4 @@
-package model;
+package model.gameoflife;
 
 import java.awt.Point;
 import java.util.HashMap;
