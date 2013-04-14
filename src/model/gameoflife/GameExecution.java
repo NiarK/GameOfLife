@@ -26,7 +26,6 @@ public class GameExecution extends Observable implements Runnable {
 	@Override
 	public void run() {
 		this._rule.update(this._field);
-		System.out.println(this._field.toString());
 		
 		this.setChanged();
 		this.notifyObservers();
@@ -34,6 +33,10 @@ public class GameExecution extends Observable implements Runnable {
 	
 	public HashMap<Point, Cell> getCells() {
 		return this._field.getCells();
+	}
+	
+	public Point getSize() {
+		return this._field.getSize();
 	}
 	
 }
