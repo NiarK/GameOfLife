@@ -10,6 +10,9 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,10 +21,13 @@ import javax.swing.JPanel;
  *
  * @author pierre
  */
-public class Window extends JFrame implements ActionListener {
+public class Window extends JFrame implements ActionListener, WindowListener {
 	
 	private JButton _btn_Pause;
 	private JButton _btn_Play;
+	private JButton _btn_Next;
+	private JButton _btn_RandomlyFill;
+	private JButton _btn_Empty;
 	
 	private Controller _controller;
 
@@ -32,6 +38,16 @@ public class Window extends JFrame implements ActionListener {
 		
 		_btn_Play = new JButton("Play");
 		_btn_Play.addActionListener(this);
+		
+		_btn_Next = new JButton("Next Step");
+		_btn_Next.addActionListener(this);
+		
+		_btn_RandomlyFill = new JButton("Randomly Fill");
+		_btn_RandomlyFill.addActionListener(this);
+		
+		_btn_Empty = new JButton("Empty");
+		_btn_Empty.addActionListener(this);
+	
 		
 		this.setTitle("Conway's game of life");
 		this.setSize(800, 600);
@@ -48,7 +64,9 @@ public class Window extends JFrame implements ActionListener {
 		player.setLayout(playerLayout);
 		player.add(_btn_Play);
 		player.add(_btn_Pause);
-		player.add(new JButton("Next Step"));
+		player.add(_btn_Next);
+		player.add(_btn_RandomlyFill);
+		player.add(_btn_Empty);
 		//player.add(Box.createHorizontalGlue());
 		
 		
@@ -66,7 +84,9 @@ public class Window extends JFrame implements ActionListener {
 		//game.addObserver(field);
 		_controller = new Controller();
 		_controller.addObserverToGame(field);
-		
+
+		this.addWindowListener(this);
+
 	}
 	
 
@@ -80,5 +100,57 @@ public class Window extends JFrame implements ActionListener {
 			_controller.play();
 		}
 		
+		else if(e.getSource() == _btn_Next) {
+			_controller.next();
+		}
+		
+		else if(e.getSource() == _btn_RandomlyFill) {
+			_controller.randomlyFill();
+		}
+		
+		else if(e.getSource() == _btn_Empty) {
+			_controller.empty();
+		}
+		
 	}
+
+	@Override
+	public void windowClosing(WindowEvent we) {
+		if(we.getSource() == this)
+		{
+			_controller.stop();
+		}
+	}
+
+	@Override
+	public void windowOpened(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowClosed(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowIconified(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowActivated(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
+	
 }

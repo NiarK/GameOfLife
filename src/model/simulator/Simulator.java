@@ -57,6 +57,11 @@ public class Simulator extends Thread {
 		_exec = false;
 	}
 	
+	public synchronized void next() {
+		this.pause();
+		_task.run();
+	}
+	
 	public synchronized void terminate() {
 		_run = false;
 	}

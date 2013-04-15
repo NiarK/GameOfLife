@@ -35,13 +35,20 @@ public class StandardRule implements Rule {
 	 * Born : 3
 	 * Survive : 2 et 3
 	 */
-	public void ruleStandard() {
-		this._born.clear();
-		this._born.add(3);
+	public static StandardRule gameOfLifeRule() {
+		StandardRule rule = new StandardRule();
 		
-		this._survive.clear();
-		this._survive.add(2);
-		this._survive.add(3);
+		HashSet b = new HashSet();
+		b.add(3);
+		
+		HashSet s = new HashSet();
+		s.add(2);
+		s.add(3);
+		
+		rule.setBorn(b);
+		rule.setSurvive(s);
+		
+		return rule;
 	}
 	
 	/**
@@ -49,14 +56,44 @@ public class StandardRule implements Rule {
 	 * Born : 3 et 6
 	 * Survive : 2 et 3
 	 */
-	public void ruleHighLife() {
-		this._born.clear();
-		this._born.add(3);
-		this._born.add(6);
+	public static StandardRule highLifeRule() {
 		
-		this._survive.clear();
-		this._survive.add(2);
-		this._survive.add(3);
+		StandardRule rule = new StandardRule();
+		
+		HashSet b = new HashSet();
+		b.add(3);
+		b.add(6);
+		
+		HashSet s = new HashSet();
+		s.add(2);
+		s.add(3);
+		
+		rule.setBorn(b);
+		rule.setSurvive(s);
+		
+		return rule;
+	}
+	
+	/**
+	 * Initialise les règles pour le jeu de la vie
+	 * Born : 3 et 6
+	 * Survive : 2 et 3
+	 */
+	public static StandardRule B1S12Rule() {
+		
+		StandardRule rule = new StandardRule();
+		
+		HashSet b = new HashSet();
+		b.add(1);
+		
+		HashSet s = new HashSet();
+		s.add(1);
+		s.add(2);
+		
+		rule.setBorn(b);
+		rule.setSurvive(s);
+		
+		return rule;
 	}
 	
 	@Override
@@ -124,6 +161,14 @@ public class StandardRule implements Rule {
 		return field;
 	}
 
+	@Override
+	public void empty(Field _field) {
+		_field.setCells(new HashMap<Point, Cell>());
+		_field.setEmergingPlaces(new HashMap<Point, Integer>());
+	}
+
+	
+	
 	/**
 	 * Récupère le nombre de voisin d'une case.
 	 * @param field Le terrain dans lequel se situe la case.

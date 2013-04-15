@@ -5,6 +5,9 @@
 package controller;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -27,8 +30,8 @@ public class Controller {
 	public Controller() {
 		Field field = new Field(new Point(52, 35));
 
-		StandardRule rule = new StandardRule();
-		rule.ruleStandard();
+		StandardRule rule = StandardRule.gameOfLifeRule();
+		
 
 		rule.randomlyFill(field);
 
@@ -56,5 +59,21 @@ public class Controller {
 
 	public void play() {
 		_simulator.play();
+	}
+	
+	public void next() {
+		_simulator.next();
+	}
+
+	public void stop() {
+		_simulator.terminate();
+	}
+
+	public void randomlyFill() {
+		_game.randomlyFill();
+	}
+
+	public void empty() {
+		_game.empty();
 	}
 }

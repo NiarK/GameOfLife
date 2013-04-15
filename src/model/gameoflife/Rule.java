@@ -22,4 +22,6 @@ public interface Rule {
 	 * @return Le terrain mis à jour.
 	 */
 	public abstract Field update(Field field);
+
+	public void empty(Field _field);
 }

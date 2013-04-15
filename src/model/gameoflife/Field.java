@@ -44,8 +44,8 @@ public class Field {
 		return _emergingPlaces;
 	}
 	
-	public void setEmergingPlaces(HashMap<Point, Integer> nighCases) {
-		this._emergingPlaces = nighCases;
+	public void setEmergingPlaces(HashMap<Point, Integer> emergingPlaces) {
+		this._emergingPlaces = emergingPlaces;
 		
 	}
 

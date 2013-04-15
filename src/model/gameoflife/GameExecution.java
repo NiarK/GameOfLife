@@ -7,7 +7,6 @@ package model.gameoflife;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.TimerTask;
 
 /**
  *
@@ -26,6 +25,20 @@ public class GameExecution extends Observable implements Runnable {
 	@Override
 	public void run() {
 		this._rule.update(this._field);
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void empty() {
+		_rule.empty(_field);
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void randomlyFill() {
+		_rule.randomlyFill(_field);
 		
 		this.setChanged();
 		this.notifyObservers();
