@@ -96,6 +96,26 @@ public class StandardRule implements Rule {
 		return rule;
 	}
 	
+	/**
+	 * Initialise les règles pour le jeu de la vie
+	 * Born : 2
+	 * Survive : non
+	 */
+	public static StandardRule seedsRule() {
+		
+		StandardRule rule = new StandardRule();
+		
+		HashSet b = new HashSet();
+		b.add(2);
+		
+		HashSet s = new HashSet();
+		
+		rule.setBorn(b);
+		rule.setSurvive(s);
+		
+		return rule;
+	}
+	
 	@Override
 	public Field randomlyFill(Field field) {
 
@@ -129,7 +149,7 @@ public class StandardRule implements Rule {
 	@Override
 	public synchronized Field update(Field field) {
 
-		//this.getNeighborNumber(field.getCells(), new Point(2,2));
+		this.updateEmergingPlaces(field);
 
 		HashMap<Point, Cell> cells = field.getCells();
 		HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
@@ -155,8 +175,7 @@ public class StandardRule implements Rule {
 		}
 
 		this.updateCells(cells);
-		this.updateEmergingPlaces(field);
-		field.setCells(cells);
+		//field.setCells(cells);
 		
 		return field;
 	}
@@ -243,87 +262,91 @@ public class StandardRule implements Rule {
 		HashMap<Point, Integer> emergingPlaces	= field.getEmergingPlaces(); //new HashMap<>();//
 		emergingPlaces.clear();
 
-		Point size = field.getSize();
-
-		Point neighbor;
-
 		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
 
-			neighbor = (Point)entry.getKey().clone();
-
-			// gestion du voisin au dessus à gauche
-			neighbor.x -= 1;
-			neighbor.y -= 1;
-
-			if(neighbor.x >= 0 && neighbor.y >= 0) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Gestion du voisin au dessus
-			neighbor.x += 1;
-
-			if(neighbor.y >= 0) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin au dessus à droite
-			neighbor.x += 1;
-
-			if(neighbor.x < size.x && neighbor.y >= 0) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin à droite
-			neighbor.y += 1;
-
-			if(neighbor.x < size.x) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin en dessous à droite
-			neighbor.y += 1;
-
-			if(neighbor.x < size.x && neighbor.y < size.y) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin en dessous
-			neighbor.x -= 1;
-
-			if(neighbor.y < size.y) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin en dessous à gauche
-			neighbor.x -= 1;
-
-			if(neighbor.x >= 0 && neighbor.y < size.y) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
-
-			// Voisin à gauche
-			neighbor.y -= 1;
-
-			if(neighbor.x >= 0) {
-
-				incrementEmergingNeighbor(neighbor, field);
-			}
+			updateEmergingPlace(entry.getKey(), field);
 
 		}
-		//System.out.println(emergingPlaces);
-
-		//field.setEmergingPlaces(emergingPlaces);
 
 		return field;
 	}
 
+	/**
+	 * Met à jour les voisins émergeants d'un endroit.
+	 * @param neighbor L'endroit en question.
+	 * @param field Le terrain dans lequel évolue les cellules.
+	 */
+	public void updateEmergingPlace(Point place, Field field) {
+		
+		Point size = field.getSize();
+		place = (Point)place.clone();
+
+		// gestion du voisin au dessus à gauche
+		place.x -= 1;
+		place.y -= 1;
+
+		if(place.x >= 0 && place.y >= 0) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Gestion du voisin au dessus
+		place.x += 1;
+
+		if(place.y >= 0) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin au dessus à droite
+		place.x += 1;
+
+		if(place.x < size.x && place.y >= 0) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin à droite
+		place.y += 1;
+
+		if(place.x < size.x) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin en dessous à droite
+		place.y += 1;
+
+		if(place.x < size.x && place.y < size.y) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin en dessous
+		place.x -= 1;
+
+		if(place.y < size.y) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin en dessous à gauche
+		place.x -= 1;
+
+		if(place.x >= 0 && place.y < size.y) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+
+		// Voisin à gauche
+		place.y -= 1;
+
+		if(place.x >= 0) {
+
+			incrementEmergingNeighbor(place, field);
+		}
+	}
+	
 	/**
 	 * Mets à jour l'état de toutes les cellules.
 	 * @param cells Cellules a mettre à jour.
@@ -360,7 +383,9 @@ public class StandardRule implements Rule {
 			n += 1;
 
 			emergingPlaces.put((Point)neighbor.clone(), n);
+		
 		}
+		//System.out.println(field);
 	}
 
 	public HashSet<Integer> getBorn() {

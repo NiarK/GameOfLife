@@ -1,8 +1,5 @@
 package model.gameoflife;
 
-import java.awt.Point;
-import java.util.HashMap;
-
 /**
  * Permet d'appliquer les règles.
  * @author pierre
@@ -22,6 +19,10 @@ public interface Rule {
 	 * @return Le terrain mis à jour.
 	 */
 	public abstract Field update(Field field);
-
-	public void empty(Field _field);
+	
+	/**
+	 * Vide le terreain
+	 * @param field Le terrain en question
+	 */
+	public void empty(Field field);
 }

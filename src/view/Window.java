@@ -8,9 +8,12 @@ import controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JButton;
@@ -21,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author pierre
  */
-public class Window extends JFrame implements ActionListener, WindowListener {
+public class Window extends JFrame implements ActionListener, WindowListener, MouseListener, MouseMotionListener {
 	
 	private JButton _btn_Pause;
 	private JButton _btn_Play;
@@ -29,9 +32,15 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 	private JButton _btn_RandomlyFill;
 	private JButton _btn_Empty;
 	
+	Point _mousePosition;
+	
+	private Field _field;
+	
 	private Controller _controller;
 
 	public Window() {
+		
+		_mousePosition = new Point();
 		
 		_btn_Pause = new JButton("Pause");
 		_btn_Pause.addActionListener(this);
@@ -55,8 +64,10 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		Field field = new Field();
-		field.setBackground(Color.black);
+		_field = new Field();
+		_field.setBackground(Color.black);
+		_field.addMouseListener(this);
+		_field.addMouseMotionListener(this);
 		
 		
 		JPanel player = new JPanel();
@@ -72,7 +83,7 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 		
 		JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
-		main.add(field, BorderLayout.CENTER);
+		main.add(_field, BorderLayout.CENTER);
 		main.add(player, BorderLayout.SOUTH);
 		main.setBackground(Color.GRAY);
 		
@@ -83,7 +94,8 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 		
 		//game.addObserver(field);
 		_controller = new Controller();
-		_controller.addObserverToGame(field);
+		_controller.addObserverToGame(_field);
+		_controller.empty();
 
 		this.addWindowListener(this);
 
@@ -119,6 +131,7 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 		if(we.getSource() == this)
 		{
 			_controller.stop();
+//			_field.terminate();
 		}
 	}
 
@@ -151,6 +164,76 @@ public class Window extends JFrame implements ActionListener, WindowListener {
 	public void windowDeactivated(WindowEvent we) {
 		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+		
+		if(me.getModifiers() == MouseEvent.BUTTON1_MASK) {
+			Point indicator = _field.getIndicator();
+
+			if( indicator != null ) {
+				_controller.toggleCell(indicator);
+			}
+		}
+		else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
+			_mousePosition = me.getPoint();
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent me) {
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+		
+		if(me.getModifiers() == MouseEvent.BUTTON1_MASK) {
+			Point oldIndicator = (Point)_field.getIndicator().clone();
+
+			mouseMoved(me);
+
+			Point indicator = _field.getIndicator();
+
+			if( indicator != null && ! indicator.equals(oldIndicator)) {
+				_controller.toggleCell(indicator);
+			}
+		}
+		else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
+			
+			Point diff = me.getPoint();
+			diff.x -= _mousePosition.x;
+			diff.y -= _mousePosition.y;
+			
+			_mousePosition = me.getPoint();
+			
+			_field.moveField(diff);
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
+		
+		Point position = me.getPoint();
+		
+		_field.setIndicatorPosition(position);
+	}
+	
 	
 	
 }

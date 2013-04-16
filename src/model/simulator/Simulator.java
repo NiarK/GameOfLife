@@ -25,7 +25,7 @@ public class Simulator extends Thread {
 		//this._timer = new Timer();
 		this._task = task;
 		this._period = period;
-		_exec = true;
+		_exec = false;
 		_run = true;
 		
 		//this._timer.schedule(_task, _period, _period);

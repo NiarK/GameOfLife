@@ -28,12 +28,9 @@ public class Controller {
 	private Simulator _simulator;
 	
 	public Controller() {
-		Field field = new Field(new Point(52, 35));
+		Field field = new Field(new Point(40, 30));
 
-		StandardRule rule = StandardRule.gameOfLifeRule();
-		
-
-		rule.randomlyFill(field);
+		StandardRule rule = StandardRule.highLifeRule();
 
 		_game = new GameExecution(field, rule);
 		
@@ -70,10 +67,16 @@ public class Controller {
 	}
 
 	public void randomlyFill() {
+		_simulator.pause();
 		_game.randomlyFill();
 	}
 
 	public void empty() {
+		_simulator.pause();
 		_game.empty();
+	}
+
+	public void toggleCell(Point position) {
+		_game.toggleCell(position);
 	}
 }

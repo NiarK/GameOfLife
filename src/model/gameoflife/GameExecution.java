@@ -52,4 +52,26 @@ public class GameExecution extends Observable implements Runnable {
 		return this._field.getSize();
 	}
 	
+	public void toggleCell(Point position) {
+		
+		if(
+				position.x >= 0 && 
+				position.x < _field.getSize().x && 
+				position.y >= 0 && 
+				position.y < _field.getSize().y
+				) {
+		
+			if( _field.getCells().containsKey(position) ) {
+				_field.getCells().remove(position);
+			}
+			else {
+				_field.getCells().put(position, new Cell(position));
+			}
+
+			//_rule.updateEmergingPlace(position, _field);
+
+			this.setChanged();
+			this.notifyObservers();
+		}
+	}
 }
