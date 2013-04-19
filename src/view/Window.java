@@ -11,9 +11,13 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JButton;
@@ -24,7 +28,7 @@ import javax.swing.JPanel;
  *
  * @author pierre
  */
-public class Window extends JFrame implements ActionListener, WindowListener, MouseListener, MouseMotionListener {
+public class Window extends JFrame implements ActionListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener {
 	
 	private JButton _btn_Pause;
 	private JButton _btn_Play;
@@ -68,6 +72,8 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 		_field.setBackground(Color.black);
 		_field.addMouseListener(this);
 		_field.addMouseMotionListener(this);
+		_field.addMouseWheelListener(this);
+		_field.addComponentListener(this);
 		
 		
 		JPanel player = new JPanel();
@@ -233,7 +239,37 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 		
 		_field.setIndicatorPosition(position);
 	}
-	
-	
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent mwe) {
+		
+		int unit = mwe.getWheelRotation();
+		
+		_field.zoom(unit);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent ce) {
+		
+		if( ce.getSource() == _field ){
+			_field.resize();
+		}
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent ce) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void componentShown(ComponentEvent ce) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent ce) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
 }

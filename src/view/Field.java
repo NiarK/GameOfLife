@@ -24,8 +24,12 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 	private HashMap<Point, Cell> _cells;
 	private Point _size;
 	private int _cellSize;
+	private Point _position;
 	private Point _offset;
 	private Point _indicator;
+	private double _zoom;
+	
+	private Point _oldComponentSize;
 	//private boolean _exec;
 	
 	//private view.Cell c;
@@ -40,11 +44,17 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 		
 		_cellSize = 15;
 		
+		_position = new Point(this.getWidth()/2,this.getHeight()/2);
+		
 		_offset = new Point(0,0);
 		
 		_size = new Point(0,0);
 		
 		_indicator = null;
+		
+		_zoom = 1;
+		
+		_oldComponentSize = new Point(this.getWidth(), this.getHeight());
 		
 		//_exec = true;
 		
@@ -55,19 +65,39 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
+		//TODO: Mettre ce calcul autre part
+		_offset.x = _position.x - (int) (_size.x * _cellSize * _zoom)/2;
+		_offset.y = _position.y - (int) (_size.y * _cellSize * _zoom)/2;
+		
 		if( _indicator != null ) {
 			g.setColor(Color.LIGHT_GRAY);
-			g.drawRect(_cellSize * _indicator.x + _offset.x, _cellSize * _indicator.y + _offset.y, _cellSize, _cellSize);
+			g.drawRect(
+					(int) (_cellSize * _zoom) *_indicator.x + _offset.x,
+					(int) (_cellSize * _zoom) *_indicator.y + _offset.y,
+					/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
+					(int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
+					(int) (_cellSize * _zoom),
+					(int) (_cellSize * _zoom));
 		}
-		
+				
 		g.setColor(Color.DARK_GRAY);
-		g.drawRect(_offset.x, _offset.y, _cellSize * _size.x, _cellSize * _size.y);
+		g.drawRect(
+				_offset.x,
+				_offset.y,
+				_size.x * (int) (_cellSize * _zoom),
+				_size.y * (int) (_cellSize * _zoom));
 		
 		g.setColor(Color.red);
 		
 		for(Entry<Point, Cell> entry : _cells.entrySet()) {
 			Point coord = entry.getKey();
-			g.fillOval(_cellSize * coord.x + _offset.x, _cellSize * coord.y + _offset.y, _cellSize, _cellSize);
+			g.fillOval(
+					(int) (_cellSize * _zoom) * coord.x + _offset.x,
+					(int) (_cellSize * _zoom) * coord.y + _offset.y,
+					/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
+					(int) ((_cellSize * coord.y + _offset.y) * _zoom), */
+					(int) (_cellSize * _zoom), 
+					(int) (_cellSize * _zoom));
 		}
 		
 		//g.drawImage(c.getNextImage(), 0, 0, this);
@@ -92,8 +122,8 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 	
 	public Point cellCoordinate(Point coord) {
 		Point cell = new Point();
-		cell.x = ( coord.x - _offset.x - 1 ) / _cellSize;
-		cell.y = ( coord.y - _offset.y - 1 ) / _cellSize;
+		cell.x = ( coord.x - _offset.x - 1 ) / (int) (_cellSize * _zoom);
+		cell.y = ( coord.y - _offset.y - 1 ) / (int) (_cellSize * _zoom);
 		return cell;
 	}
 	
@@ -119,12 +149,39 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 	public void moveField(Point movement) {
 		_offset.x += movement.x;
 		_offset.y += movement.y;
+		_position.x += movement.x;
+		_position.y += movement.y;
+		
+		this.repaint();
+	}
+	
+	public void zoom(int unit) {
+		_zoom += (double)unit/10;
+		
+		if(_zoom > 1) {
+			_zoom = 1;
+		}
+		else if (_zoom < 0.2) {
+			_zoom = 0.2;
+		}
 		
 		this.repaint();
 	}
 	
 	public Point getIndicator() {
 		return _indicator;
+	}
+	
+	public void resize() {
+		Point size = new Point();
+		size.x = this.getWidth() - _oldComponentSize.x;
+		size.y = this.getHeight() - _oldComponentSize.y;
+		
+		_position.x += size.x/2;
+		_position.y += size.y/2;
+		
+		_oldComponentSize.x = this.getWidth();
+		_oldComponentSize.y = this.getHeight();
 	}
 	
 	/*

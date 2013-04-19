@@ -28,9 +28,12 @@ public class Controller {
 	private Simulator _simulator;
 	
 	public Controller() {
-		Field field = new Field(new Point(40, 30));
+		Field field = new Field(new Point(100, 100));
 
-		StandardRule rule = StandardRule.highLifeRule();
+		StandardRule rule = StandardRule.gameOfLifeRule();
+		//StandardRule rule = StandardRule.highLifeRule();
+		//StandardRule rule = StandardRule.seedsRule();
+		//StandardRule rule = StandardRule.B1S12Rule();
 
 		_game = new GameExecution(field, rule);
 		
