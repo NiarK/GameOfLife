@@ -20,9 +20,14 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -96,6 +101,12 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 		
 		this.setContentPane(main);
 		this.setVisible(true);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+			Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		SwingUtilities.updateComponentTreeUI(this);
 		
 		
 		//game.addObserver(field);
