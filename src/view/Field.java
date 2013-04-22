@@ -29,6 +29,8 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 	private Point _indicator;
 	private double _zoom;
 	private Point _oldComponentSize;
+	
+	public static double ZOOM_UNIT = 0.9;
 	//private boolean _exec;
 
 	//private view.Cell c;
@@ -92,30 +94,25 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 
 		p1.x = (int) (-_offset.x / _zoom) / _cellSize;
 		p1.y = (int) (-_offset.y / _zoom) / _cellSize;
-		p2.x = (int) ((this.getWidth() - _offset.x) / _zoom) / _cellSize;
-		p2.y = (int) ((this.getHeight() - _offset.y) / _zoom) / _cellSize;
-		//(_position.x + (int) (_size.x * _cellSize * _zoom)/2 - this.getWidth()) / _cellSize;
-		//p2.x = (_position.y + (int) (_size.y * _cellSize * _zoom)/2 - this.getHeight()) / _cellSize;
+		p2.x = (int) ((this.getWidth() - _offset.x) / (int)(_cellSize * _zoom));
+		p2.y = (int) ((this.getHeight() - _offset.y) / (int)(_cellSize * _zoom));
+		
+		for (Entry<Point, Cell> entry : _cells.entrySet()) {
+			Point coord = entry.getKey();
+			if (coord.x >= p1.x
+				&& coord.y >= p1.y
+				&& coord.x <= p2.x
+				&& coord.y <= p2.y) {
+				g.fillOval(
+						(int) (_cellSize * _zoom) * coord.x + _offset.x,
+						(int) (_cellSize * _zoom) * coord.y + _offset.y,
+						/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
+						 (int) ((_cellSize * coord.y + _offset.y) * _zoom), */
+						(int) (_cellSize * _zoom),
+						(int) (_cellSize * _zoom));
 
-		synchronized (_cells) {
-			for (Entry<Point, Cell> entry : _cells.entrySet()) {
-				Point coord = entry.getKey();
-				if (coord.x >= p1.x
-					&& coord.y >= p1.y
-					&& coord.x <= p2.x
-					&& coord.y <= p2.y) {
-					g.fillOval(
-							(int) (_cellSize * _zoom) * coord.x + _offset.x,
-							(int) (_cellSize * _zoom) * coord.y + _offset.y,
-							/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
-							 (int) ((_cellSize * coord.y + _offset.y) * _zoom), */
-							(int) (_cellSize * _zoom),
-							(int) (_cellSize * _zoom));
-					
-				}
 			}
 		}
-		//g.drawImage(c.getNextImage(), 0, 0, this);
 	}
 
 	@Override
@@ -123,12 +120,9 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 
 		if (o instanceof GameExecution) {
 			GameExecution game = (GameExecution) o;
-			synchronized (_cells) {
-				_cells = game.getCells();
-				_size = game.getSize();
-			}
-			//_offset.x = ( this.getSize().width - (_size.x * _cellSize) ) / 2;
-			//_offset.y = ( this.getSize().height - (_size.y * _cellSize) ) / 2;
+			
+			_cells = game.getCells();
+			_size = game.getSize();
 
 			this.repaint();
 		}
@@ -156,7 +150,7 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 
 	public boolean isInsideTheField(Point coord) {
 		return coord.x >= 0 && coord.x < _size.x
-				&& coord.y >= 0 && coord.y < _size.y;
+			&& coord.y >= 0 && coord.y < _size.y;
 	}
 
 	public void moveField(Point movement) {
@@ -171,7 +165,8 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 	}
 
 	public void zoom(int unit) {
-		_zoom += (double) unit / 10;
+		_zoom *= Math.pow(Field.ZOOM_UNIT, unit);
+		System.out.println(_zoom);
 
 		if (_zoom > 1) {
 			_zoom = 1;
@@ -197,23 +192,5 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 		_oldComponentSize.x = this.getWidth();
 		_oldComponentSize.y = this.getHeight();
 	}
-	/*
-	 @Override
-	 public synchronized void run() {
-		
-	 while (_exec) {
-	 this.repaint();
-	 try {
-	 Thread.sleep(200);
-	 } catch (InterruptedException ex) {
-	 Logger.getLogger(Field.class.getName()).log(Level.SEVERE, null, ex);
-	 }
-	 }
-		
-	 }
 	
-	 public synchronized void terminate() {
-	 _exec = false;
-	 }
-	 */
 }
