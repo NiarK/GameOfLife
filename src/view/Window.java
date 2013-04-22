@@ -104,9 +104,9 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-			Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+			//Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		SwingUtilities.updateComponentTreeUI(this);
+		//SwingUtilities.updateComponentTreeUI(this);
 		
 		
 		//game.addObserver(field);
@@ -221,7 +221,12 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 	public void mouseDragged(MouseEvent me) {
 		
 		if(me.getModifiers() == MouseEvent.BUTTON1_MASK) {
-			Point oldIndicator = (Point)_field.getIndicator().clone();
+			
+			Point oldIndicator = _field.getIndicator();
+			
+			if( oldIndicator != null ) {
+				oldIndicator = (Point)oldIndicator.clone();
+			}
 
 			mouseMoved(me);
 

@@ -49,20 +49,20 @@ public class Simulator extends Thread {
 	
 	
 	
-	public synchronized void play() {
+	public void play() {
 		_exec = true;
 	}
 	
-	public synchronized void pause() {
+	public void pause() {
 		_exec = false;
 	}
 	
-	public synchronized void next() {
+	public void next() {
 		this.pause();
 		_task.run();
 	}
 	
-	public synchronized void terminate() {
+	public void terminate() {
 		_run = false;
 	}
 

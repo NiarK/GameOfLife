@@ -5,10 +5,6 @@
 package controller;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +24,7 @@ public class Controller {
 	private Simulator _simulator;
 	
 	public Controller() {
-		Field field = new Field(new Point(100, 100));
+		Field field = new Field(new Point(50, 50));
 
 		StandardRule rule = StandardRule.gameOfLifeRule();
 		//StandardRule rule = StandardRule.highLifeRule();
@@ -62,7 +58,16 @@ public class Controller {
 	}
 	
 	public void next() {
-		_simulator.next();
+		
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_simulator.next();
+			}
+		});
+		
+		t.start();
 	}
 
 	public void stop() {
@@ -71,15 +76,42 @@ public class Controller {
 
 	public void randomlyFill() {
 		_simulator.pause();
-		_game.randomlyFill();
+		
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.randomlyFill();
+			}
+		});
+		
+		t.start();
 	}
 
 	public void empty() {
 		_simulator.pause();
-		_game.empty();
+		
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.empty();
+			}
+		});
+		
+		t.start();
 	}
 
-	public void toggleCell(Point position) {
-		_game.toggleCell(position);
+	public void toggleCell(final Point position) {
+		
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.toggleCell(position);
+			}
+		});
+		
+		t.start();
 	}
 }

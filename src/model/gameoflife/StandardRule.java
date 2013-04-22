@@ -147,7 +147,7 @@ public class StandardRule implements Rule {
 	}
 
 	@Override
-	public synchronized Field update(Field field) {
+	public Field update(Field field) {
 
 		this.updateEmergingPlaces(field);
 

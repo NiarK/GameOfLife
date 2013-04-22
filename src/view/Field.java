@@ -89,17 +89,18 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 		
 		g.setColor(Color.red);
 		
-		for(Entry<Point, Cell> entry : _cells.entrySet()) {
-			Point coord = entry.getKey();
-			g.fillOval(
-					(int) (_cellSize * _zoom) * coord.x + _offset.x,
-					(int) (_cellSize * _zoom) * coord.y + _offset.y,
-					/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
-					(int) ((_cellSize * coord.y + _offset.y) * _zoom), */
-					(int) (_cellSize * _zoom), 
-					(int) (_cellSize * _zoom));
+		synchronized(_cells) {
+			for(Entry<Point, Cell> entry : _cells.entrySet()) {
+				Point coord = entry.getKey();
+				g.fillOval(
+						(int) (_cellSize * _zoom) * coord.x + _offset.x,
+						(int) (_cellSize * _zoom) * coord.y + _offset.y,
+						/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
+						(int) ((_cellSize * coord.y + _offset.y) * _zoom), */
+						(int) (_cellSize * _zoom), 
+						(int) (_cellSize * _zoom));
+			}
 		}
-		
 		//g.drawImage(c.getNextImage(), 0, 0, this);
 	}
 
@@ -109,10 +110,10 @@ public class Field extends JPanel implements Observer/*, Runnable */{
 		if(o instanceof GameExecution)
 		{
 			GameExecution game = (GameExecution)o;
-			
-			_cells = game.getCells();
-			_size = game.getSize();
-			
+			synchronized(_cells) {
+				_cells = game.getCells();
+				_size = game.getSize();
+			}
 			//_offset.x = ( this.getSize().width - (_size.x * _cellSize) ) / 2;
 			//_offset.y = ( this.getSize().height - (_size.y * _cellSize) ) / 2;
 			
