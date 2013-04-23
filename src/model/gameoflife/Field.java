@@ -1,6 +1,7 @@
 package model.gameoflife;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -13,7 +14,11 @@ public class Field {
 	
 	private HashMap<Point, Cell> _cells;
 	private HashMap<Point, Integer> _emergingPlaces; // coord d'une case vide -> nb voisin
+	private ArrayList<HashMap<Point, Cell>> _cellsFragments;
+	private ArrayList<HashMap<Point, Integer>> _emergingPlacesFragments;
 	private Point _size;
+	
+	public static final int NB_FRAGMENT = 10;
 	//private Rule _rule;
 
 	/**
@@ -21,15 +26,53 @@ public class Field {
 	 * @param size La taille du terrain.
 	 //* @param r Les règle du jeu.
 	 */
-	public Field(Point size/*, Rule r*/) {
+	public Field(Point size) {
 		this._size = size;
 		
 		this._cells = new HashMap<>();
 		this._emergingPlaces = new HashMap<>();
 		
+		_cellsFragments = new ArrayList<>();
+		_emergingPlacesFragments = new ArrayList<>();
+		
+		int fragment = (int) Math.ceil((_size.x / (double) Field.NB_FRAGMENT) * (_size.y / (double) Field.NB_FRAGMENT));
+		for(int i = 0; i < fragment; ++i) {
+			_cellsFragments.add(new HashMap<Point, Cell>());
+			_emergingPlacesFragments.add(new HashMap<Point, Integer>());
+		}
+		
 		//this._rule = r;
 		
 		//this._rule.randomlyFill(this._size, this._cells, this._nighCases);
+	}
+	
+	public void addCell(Point place, Cell cell) {
+		_cells.put(place, cell);
+		
+		int index = this.getFragmentIndex(place);
+		
+		_cellsFragments.get(index).put(place, cell);
+	}
+	
+	public void removeCell(Point place) {
+		_cells.remove(place);
+		
+		int index = this.getFragmentIndex(place);
+		
+		_cellsFragments.get(index).remove(place);
+	}
+	
+	public void addEmergingPlace(Point place, int neighborhood) {
+		_emergingPlaces.put(place, neighborhood);
+		
+		int index = this.getFragmentIndex(place);
+		
+		_emergingPlacesFragments.get(index).put(place, neighborhood);
+	}
+	
+	public int getFragmentIndex(Point place) {
+		return place.y / Field.NB_FRAGMENT * (int) Math.ceil(_size.x / (double) Field.NB_FRAGMENT)
+				+ place.x / Field.NB_FRAGMENT;
 	}
 
 	public HashMap<Point, Cell> getCells() {

@@ -24,14 +24,13 @@ public class Controller {
 	private Simulator _simulator;
 	
 	public Controller() {
-		Field field = new Field(new Point(50, 50));
 
 		StandardRule rule = StandardRule.gameOfLifeRule();
 		//StandardRule rule = StandardRule.highLifeRule();
 		//StandardRule rule = StandardRule.seedsRule();
 		//StandardRule rule = StandardRule.B1S12Rule();
 
-		_game = new GameExecution(field, rule);
+		_game = new GameExecution(new Point(50, 50), rule);
 		
 		try {
 			_simulator = new Simulator(_game, 500);

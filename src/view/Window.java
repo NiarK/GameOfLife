@@ -8,6 +8,7 @@ import controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,14 +21,24 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.IconUIResource;
 
 /**
  *
@@ -82,30 +93,93 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 		
 		
 		JPanel player = new JPanel();
-		GridLayout playerLayout = new GridLayout(1, 3);
-		player.setLayout(playerLayout);
+		player.setLayout(new GridLayout(1, 3));
 		player.add(_btn_Play);
 		player.add(_btn_Pause);
 		player.add(_btn_Next);
-		player.add(_btn_RandomlyFill);
-		player.add(_btn_Empty);
 		//player.add(Box.createHorizontalGlue());
+		
+		JPanel fieldAction = new JPanel();
+		fieldAction.setLayout(new GridLayout(1, 2));
+		fieldAction.add(_btn_RandomlyFill);
+		fieldAction.add(_btn_Empty);
+		
+		JPanel sizeLabel = new JPanel();
+		sizeLabel.setLayout(new GridLayout(1, 4));
+		sizeLabel.add(new JLabel("Field size : "));
+		sizeLabel.add(new JLabel("50"));
+		sizeLabel.add(new JLabel(" x "));
+		sizeLabel.add(new JLabel("50"));
+		
+		JPanel sizeColumn = new JPanel();
+		sizeColumn.setLayout(new GridLayout(1,2));
+		sizeColumn.add(new JLabel("Column : "));
+		sizeColumn.add(new JSlider(JSlider.HORIZONTAL, 1, 1000, 50));
+		
+		JPanel sizeRow = new JPanel();
+		sizeRow.setLayout(new GridLayout(1,2));
+		sizeRow.add(new JLabel("Row : "));
+		sizeRow.add(new JSlider(JSlider.HORIZONTAL, 1, 1000, 50));
+		
+		JPanel speed = new JPanel();
+		speed.setLayout(new GridLayout(1,2));
+		speed.add(new JLabel("Speed : "));
+		speed.add(new JComboBox());
+		
+		JPanel type = new JPanel();
+		type.setLayout(new GridLayout(1,2));
+		type.add(new JLabel("Type : "));
+		type.add(new JComboBox());
+		
+		JPanel search = new JPanel();
+		search.setLayout(new GridLayout(1,2));
+		search.add(new JLabel("Search : "));
+		search.add(new JComboBox());
+		
+		JPanel rule = new JPanel();
+		rule.setLayout(new GridLayout(1,3));
+		rule.add(new JLabel("Rule : "));
+		rule.add(new JComboBox());
+		Image icon = null;
+		try {
+			icon = ImageIO.read(new File("src/resources/param.png"));
+		} catch (IOException ex) {
+			Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		rule.add(new JButton("ok", new ImageIcon(icon)));
+		
+		JPanel option = new JPanel();
+		option.setLayout(new GridLayout(13, 1, 10, 20));
+		option.add(Box.createVerticalGlue());
+		option.add(player);
+		option.add(fieldAction);
+		option.add(sizeLabel);
+		option.add(sizeColumn);
+		option.add(sizeRow);
+		option.add(speed);
+		option.add(type);
+		option.add(search);
+		option.add(rule);
+		
+		JTabbedPane panel = new JTabbedPane();
+		panel.addTab("Otpion", option);
+		panel.addTab("Patterns", null);
 		
 		
 		JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
 		main.add(_field, BorderLayout.CENTER);
-		main.add(player, BorderLayout.SOUTH);
+		main.add(panel, BorderLayout.WEST);
 		main.setBackground(Color.GRAY);
 		
 		
 		this.setContentPane(main);
 		this.setVisible(true);
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
 			//Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		}*/
 		//SwingUtilities.updateComponentTreeUI(this);
 		
 		
@@ -275,17 +349,17 @@ public class Window extends JFrame implements ActionListener, WindowListener, Mo
 
 	@Override
 	public void componentMoved(ComponentEvent ce) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override
 	public void componentShown(ComponentEvent ce) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override
 	public void componentHidden(ComponentEvent ce) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 }

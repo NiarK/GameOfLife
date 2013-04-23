@@ -17,8 +17,8 @@ public class GameExecution extends Observable implements Runnable {
 	private Field _field;
 	private Rule _rule;
 	
-	public GameExecution(Field field, Rule rule) {
-		this._field = field;
+	public GameExecution(Point size, Rule rule) {
+		this._field = new Field(size);
 		this._rule = rule;
 	}
 	
