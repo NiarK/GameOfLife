@@ -166,7 +166,7 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 
 	public void zoom(int unit) {
 		_zoom *= Math.pow(Field.ZOOM_UNIT, unit);
-		System.out.println(_zoom);
+		//System.out.println(_zoom);
 
 		if (_zoom > 1) {
 			_zoom = 1;

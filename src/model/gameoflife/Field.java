@@ -3,6 +3,7 @@ package model.gameoflife;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
 
@@ -59,7 +60,7 @@ public class Field {
 		
 		int index = this.getFragmentIndex(place);
 		
-		_cellsFragments.get(index).remove(place);
+//		_cellsFragments.get(index).remove(place);
 	}
 	
 	public void addEmergingPlace(Point place, int neighborhood) {
@@ -94,6 +95,24 @@ public class Field {
 
 	public Point getSize() {
 		return _size;
+	}
+	
+	public void setSize(Point size) {
+		_size = size;
+		
+		Iterator<Map.Entry<Point, Cell>> it = _cells.entrySet().iterator();
+
+		while(it.hasNext()) {
+
+			Cell cell = it.next().getValue();
+
+			Point pos = cell.getCoordinate();
+			
+			if(pos.x < 0 || pos.y < 0 || pos.x >= _size.x || pos.y >= _size.y) {
+				it.remove();
+				this.removeCell(pos);
+			}
+		}
 	}
 	
 	public String toString(){

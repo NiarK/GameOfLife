@@ -76,4 +76,11 @@ public class GameExecution extends Observable implements Runnable {
 		}
 
 	}
+	
+	public synchronized void setFieldSize(Point size) {
+		_field.setSize(size);
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
 }

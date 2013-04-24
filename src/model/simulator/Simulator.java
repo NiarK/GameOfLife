@@ -64,6 +64,7 @@ public class Simulator extends Thread {
 	
 	public void terminate() {
 		_run = false;
+		_exec = false;
 	}
 
 	public int getPeriod() {
@@ -74,6 +75,8 @@ public class Simulator extends Thread {
 		this._period = period;
 	}
 	
-	
+	public boolean isPlayed() {
+		return _exec;
+	}
 	
 }

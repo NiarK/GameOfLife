@@ -20,6 +20,12 @@ import view.Window;
  */
 public class Controller {
 	
+	public static final int SPEED_VERY_FAST	= 10;
+	public static final int SPEED_FAST		= 50;
+	public static final int SPEED_MEDIUM	= 200;
+	public static final int SPEED_LOW		= 500;
+	public static final int SPEED_VERY_LOW	= 1000;
+	
 	private GameExecution _game;
 	private Simulator _simulator;
 	
@@ -112,5 +118,39 @@ public class Controller {
 		});
 		
 		t.start();
+	}
+	
+	public boolean isPlayed() {
+		return _simulator.isPlayed();
+	}
+	
+	public void setFieldSize(final Point size) {
+		
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.setFieldSize(size);
+			}
+		});
+		
+		t.start();
+	}
+	
+	public void setSpeed(int speed) {
+		_simulator.setPeriod(speed);
+	}
+	
+	public static Integer[] getSpeeds() {
+		
+		Integer[] speeds = new Integer[5];
+		
+		speeds[0] = Controller.SPEED_VERY_LOW;
+		speeds[1] = Controller.SPEED_LOW;
+		speeds[2] = Controller.SPEED_MEDIUM;
+		speeds[3] = Controller.SPEED_FAST;
+		speeds[4] = Controller.SPEED_VERY_FAST;
+		
+		return speeds;
 	}
 }
