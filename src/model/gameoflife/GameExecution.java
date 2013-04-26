@@ -52,7 +52,7 @@ public class GameExecution extends Observable implements Runnable {
 		return (HashMap<Point, Cell>)this._field.getCells().clone();
 	}
 	
-	public Point getSize() {
+	public Point getFieldSize() {
 		return this._field.getSize();
 	}
 	
@@ -82,5 +82,9 @@ public class GameExecution extends Observable implements Runnable {
 		
 		this.setChanged();
 		this.notifyObservers();
+	}
+	
+	public synchronized void setRule(Rule rule) {
+		_rule = rule;
 	}
 }

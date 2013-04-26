@@ -29,8 +29,32 @@ public class Controller {
 	private GameExecution _game;
 	private Simulator _simulator;
 	
+	private RuleParameter[] _rules;
+	private String[][] _searchName;
+	private String[] _typeName;
+	
 	public Controller() {
 
+		_typeName = new String[3];
+		_typeName[0] = "Square";
+		_typeName[1] = "Hexagone";
+		_typeName[2] = "Triangle";
+		
+		_searchName = new String[_typeName.length][];
+		_searchName[0] = new String[4];
+		_searchName[0][0] = "Round";
+		_searchName[0][1] = "Plus";
+		_searchName[0][2] = "Cross";
+		_searchName[0][3] = "Large";
+		_searchName[1] = new String[2];
+		_searchName[1][0] = "Small";
+		_searchName[1][1] = "Large";
+		_searchName[2] = new String[2];
+		_searchName[2][0] = "Small";
+		_searchName[2][1] = "Large";
+		
+		this.initRuleParameter();
+		
 		StandardRule rule = StandardRule.gameOfLifeRule();
 		//StandardRule rule = StandardRule.highLifeRule();
 		//StandardRule rule = StandardRule.seedsRule();
@@ -44,6 +68,40 @@ public class Controller {
 		} catch (InterruptedException ex) {
 			Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+	
+	public void initRuleParameter() {
+		/*_rulesName = new String[4];
+		_rulesName[0] = "Game of life";
+		_rulesName[1] = "High life";
+		_rulesName[2] = "Seeds";
+		_rulesName[3] = "B1S12";*/
+		
+		_rules = new RuleParameter[4];
+		
+		StandardRule rule = StandardRule.gameOfLifeRule();
+		
+		_rules[0] = new RuleParameter();
+		_rules[0].setName("Game of life");
+		_rules[0].setBorn(rule.getBorn());
+		_rules[0].setSurvive(rule.getSurvive());
+		
+		rule = StandardRule.highLifeRule();
+		_rules[1] = new RuleParameter();
+		_rules[1].setName("High life");
+		_rules[1].setBorn(rule.getBorn());
+		_rules[1].setSurvive(rule.getSurvive());
+		
+		rule = StandardRule.seedsRule();
+		_rules[2] = new RuleParameter();
+		_rules[2].setName("Seeds");
+		_rules[2].setBorn(rule.getBorn());
+		_rules[2].setSurvive(rule.getSurvive());
+		
+		rule = StandardRule.B1S12Rule();
+		_rules[3] = new RuleParameter();
+		_rules[3].setBorn(rule.getBorn());
+		_rules[3].setSurvive(rule.getSurvive());
 	}
 	
 	/**
@@ -152,5 +210,22 @@ public class Controller {
 		speeds[4] = Controller.SPEED_VERY_FAST;
 		
 		return speeds;
+	}
+	
+	public void setRule(RuleParameter rp) throws BadRuleNameException {
+		
+		//TODO: do stuff...
+	}
+	
+	public String[] getFieldTypes() {
+		return _typeName;
+	}
+	
+	public String[] getSearcchType(int indexOfFieldType) {
+		return _searchName[indexOfFieldType];
+	}
+	
+	public RuleParameter[] getRules() {
+		return _rules;
 	}
 }

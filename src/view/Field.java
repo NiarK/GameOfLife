@@ -122,7 +122,7 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 			GameExecution game = (GameExecution) o;
 			
 			_cells = game.getCells();
-			_size = game.getSize();
+			_size = game.getFieldSize();
 
 			this.repaint();
 		}

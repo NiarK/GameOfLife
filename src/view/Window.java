@@ -4,6 +4,7 @@
  */
 package view;
 
+import controller.BadRuleNameException;
 import controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -48,8 +49,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton		_btn_Next;
 	private JButton		_btn_RandomlyFill;
 	private JButton		_btn_Empty;
+	private JButton		_btn_ruleParameter;
 	
 	private JComboBox	_cbb_Speed;
+	private JComboBox	_cbb_Rule;
 	
 	private JTextField	_txt_Column;
 	private JTextField	_txt_Row;
@@ -65,6 +68,17 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	public Window() {
 		
 		ImageManager manager = ImageManager.getInstance();
+		
+		_field = new Field();
+		_field.setBackground(Color.black);
+		_field.addMouseListener(this);
+		_field.addMouseMotionListener(this);
+		_field.addMouseWheelListener(this);
+		_field.addComponentListener(this);
+		
+		_controller = new Controller();
+		_controller.addObserverToGame(_field);
+		_controller.empty();
 		
 		_mousePosition = new Point();
 		
@@ -88,9 +102,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_Empty.addActionListener(this);
 		_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
 		
-		_cbb_Speed = new JComboBox(this.getSpeeds());
-		_cbb_Speed.setSelectedIndex(1);
-		_cbb_Speed.addActionListener(this);
+		_btn_ruleParameter = new JButton();
+		_btn_ruleParameter.addActionListener(this);
+		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
 		
 		_sli_Column = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 		_sli_Column.addChangeListener(this);
@@ -107,18 +121,20 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
 		_txt_Row.addActionListener(this);
 		
+		_cbb_Speed = new JComboBox(this.getSpeeds());
+		_cbb_Speed.setSelectedIndex(1);
+		_cbb_Speed.addActionListener(this);
+		
+		_cbb_Rule = new JComboBox(_controller.getRules());
+		_cbb_Rule.setSelectedIndex(0);
+		_cbb_Rule.addActionListener(this);
+		
 		this.setTitle("Conway's game of life");
 		this.setSize(1000, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
-		_field = new Field();
-		_field.setBackground(Color.black);
-		_field.addMouseListener(this);
-		_field.addMouseMotionListener(this);
-		_field.addMouseWheelListener(this);
-		_field.addComponentListener(this);
 		
 		
 		JPanel player = new JPanel();
@@ -173,8 +189,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		JPanel rule = new JPanel();
 		rule.setLayout(new FlowLayout());
 		rule.add(new JLabel("Rule : "));
-		rule.add(new JComboBox());
-		rule.add(new JButton(new ImageIcon(manager.get("src/resources/param.png"))));
+		rule.add(_cbb_Rule);
+		rule.add(_btn_ruleParameter);
 		
 		JPanel option = new JPanel();
 		option.setLayout(new BoxLayout(option, BoxLayout.PAGE_AXIS));
@@ -216,9 +232,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		
 		//game.addObserver(field);
-		_controller = new Controller();
-		_controller.addObserverToGame(_field);
-		_controller.empty();
 
 		this.addWindowListener(this);
 
@@ -300,6 +313,19 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		else if(e.getSource() == _cbb_Speed) {
 			
 			_controller.setSpeed(Controller.getSpeeds()[_cbb_Speed.getSelectedIndex()]);
+		}
+		
+		/*else if(e.getSource() == _cbb_Rule) {
+			try {
+				_controller.setRule(_controller.getRulesName()[_cbb_Rule.getSelectedIndex()]);
+			} catch (BadRuleNameException ex) {
+				Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
+			}
+		}*/
+		
+		else if(e.getSource() == _btn_ruleParameter) {
+			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, true);
+			dialog.setVisible(true);
 		}
 		
 		this.updateBtnPlay();
