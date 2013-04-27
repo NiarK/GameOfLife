@@ -17,54 +17,55 @@ public class GameExecution extends Observable implements Runnable {
 	private Field _field;
 	private Rule _rule;
 	
-	public GameExecution(Field field, Rule rule) {
-		this._field = field;
+	public GameExecution(Point size, Rule rule) {
+		this._field = new Field(size);
 		this._rule = rule;
 	}
 	
 	@Override
-	public void run() {
+	public synchronized void run() {
+		
 		this._rule.update(this._field);
+		
 		
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
-	public void empty() {
+	public synchronized void empty() {
+
 		_rule.empty(_field);
 		
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
-	public void randomlyFill() {
+	public synchronized void randomlyFill() {
+		
 		_rule.randomlyFill(_field);
 		
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
-	public HashMap<Point, Cell> getCells() {
-		return this._field.getCells();
+	public synchronized HashMap<Point, Cell> getCells() {
+		return (HashMap<Point, Cell>)this._field.getCells().clone();
 	}
 	
-	public Point getSize() {
+	public Point getFieldSize() {
 		return this._field.getSize();
 	}
 	
-	public void toggleCell(Point position) {
-		
-		if(
-				position.x >= 0 && 
-				position.x < _field.getSize().x && 
-				position.y >= 0 && 
-				position.y < _field.getSize().y
-				) {
-		
-			if( _field.getCells().containsKey(position) ) {
+	public synchronized void toggleCell(Point position) {
+
+		if (position.x >= 0
+			&& position.x < _field.getSize().x
+			&& position.y >= 0
+			&& position.y < _field.getSize().y) {
+
+			if (_field.getCells().containsKey(position)) {
 				_field.getCells().remove(position);
-			}
-			else {
+			} else {
 				_field.getCells().put(position, new Cell(position));
 			}
 
@@ -73,5 +74,17 @@ public class GameExecution extends Observable implements Runnable {
 			this.setChanged();
 			this.notifyObservers();
 		}
+
+	}
+	
+	public synchronized void setFieldSize(Point size) {
+		_field.setSize(size);
+		
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public synchronized void setRule(Rule rule) {
+		_rule = rule;
 	}
 }

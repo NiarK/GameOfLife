@@ -5,12 +5,10 @@
 package model.gameoflife;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 /**
@@ -147,7 +145,7 @@ public class StandardRule implements Rule {
 	}
 
 	@Override
-	public synchronized Field update(Field field) {
+	public Field update(Field field) {
 
 		this.updateEmergingPlaces(field);
 
