@@ -76,8 +76,8 @@ public class StandardRule implements Rule {
 	
 	/**
 	 * Initialise les règles pour le jeu de la vie
-	 * Born : 3 et 6
-	 * Survive : 2 et 3
+	 * Born : 1
+	 * Survive : 1 et 2
 	 */
 	public static StandardRule B1S12Rule() {
 		
