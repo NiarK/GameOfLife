@@ -9,17 +9,17 @@ import java.util.HashSet;
 import model.gameoflife.Search;
 
 /**
- * Prend les cellules adjacentes (sous forme de +)
+ *
  * @author Quentin
  */
-public class CrossSearch implements Search{
+public class Triangle  implements Search{
     private boolean torus;
 
-    public CrossSearch(boolean torus) {
+    public Triangle(boolean torus) {
         this.torus = torus;
     }
 
-    public CrossSearch() {
+    public Triangle() {
         this.torus = false;
     }
 
@@ -30,39 +30,19 @@ public class CrossSearch implements Search{
     public void setTorus(boolean torus) {
         this.torus = torus;
     }
-    
-    
-    
 
     @Override
     public HashSet<Point> getNeighbor(int width, int height, Point place) {
         HashSet<Point> hs = new HashSet<>();
-        
         if(torus){
-            // Voisin en haut.
-            Point neighbor = (Point)place.clone();
-            if(neighbor.y == 0)
-                neighbor.y = height - 1;
-            else
-                neighbor.y -= 1;
-            hs.add(neighbor);
-
             // Voisin à droite.
-            neighbor = (Point)place.clone();
+            Point neighbor = (Point)place.clone();
             if(neighbor.x == width - 1)
                 neighbor.x = 0;
             else
                 neighbor.x += 1;
             hs.add(neighbor);
-
-            // Voisin en bas.
-            neighbor = (Point)place.clone();
-            if(neighbor.y == height - 1)
-                neighbor.y = 0;
-            else
-                neighbor.y += 1;
-            hs.add(neighbor);
-
+            
             // Voisin à gauche.
             neighbor = (Point)place.clone();
             if(neighbor.x == 0)
@@ -70,39 +50,56 @@ public class CrossSearch implements Search{
             else
                 neighbor.x -= 1;
             hs.add(neighbor);
+            
+            neighbor = (Point)place.clone();
+            if(neighbor.x%2 == 1){
+                if(neighbor.y == 0)
+                    neighbor.y = height - 1;
+                else
+                    neighbor.y -= 1;
+                hs.add(neighbor);
+            }
+            else{
+                if(neighbor.y == height - 1)
+                    neighbor.y = 0;
+                else
+                    neighbor.y += 1;
+                hs.add(neighbor);
+            }
         }
         else{
             Point neighbor = (Point)place.clone();
-
-            // Voisin en haut.
-            if(neighbor.y > 0) {
-                neighbor.y -= 1;
-                hs.add(neighbor);
-            }
-
-            neighbor = (Point)place.clone();
             // Voisin à droite.
             if(neighbor.x < width - 1) {
                 neighbor.x += 1;
                 hs.add(neighbor);
             }
-
-            neighbor = (Point)place.clone();
-            // Voisin en bas.
-            if(neighbor.y < height - 1) {
-                neighbor.y += 1;
-                hs.add(neighbor);
-            }
-
             neighbor = (Point)place.clone();
             // Voisin à gauche.
             if(neighbor.x > 0) {
                 neighbor.x -= 1;
                 hs.add(neighbor);
             }
+            
+            neighbor = (Point)place.clone();
+            if(neighbor.x%2 == 1){
+                // Voisin en haut.
+                if(neighbor.y > 0) {
+                    neighbor.y -= 1;
+                    hs.add(neighbor);
+                }
+            }
+            else{
+                neighbor = (Point)place.clone();
+                // Voisin à droite.
+                if(neighbor.x < width - 1) {
+                    neighbor.x += 1;
+                    hs.add(neighbor);
+                }
+            }
         }
-        
         return hs;
     }
+    
     
 }
