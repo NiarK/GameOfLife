@@ -4,8 +4,8 @@
  */
 package view;
 
-import controller.BadRuleNameException;
 import controller.Controller;
+import controller.RuleParameter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -31,9 +31,13 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import model.image.ImageManager;
@@ -44,6 +48,8 @@ import model.image.ImageManager;
  */
 public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener {
 	
+	private RuleParameter _currentRuleParameter;
+	
 	private JButton		_btn_Pause;
 	private JButton		_btn_Play;
 	private JButton		_btn_Next;
@@ -52,12 +58,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton		_btn_ruleParameter;
 	
 	private JComboBox	_cbb_Speed;
-	private JComboBox	_cbb_Rule;
+	//private JComboBox	_cbb_Rule;
 	
 	private JTextField	_txt_Column;
 	private JTextField	_txt_Row;
 	private JSlider		_sli_Column;
 	private JSlider		_sli_Row;
+	private JLabel		_lbl_rule;
 	
 	Point _mousePosition;
 	
@@ -79,6 +86,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_controller = new Controller();
 		_controller.addObserverToGame(_field);
 		_controller.empty();
+		
+		_currentRuleParameter = _controller.getRules()[0];
 		
 		_mousePosition = new Point();
 		
@@ -106,6 +115,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_ruleParameter.addActionListener(this);
 		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
 		
+		_lbl_rule = new JLabel();
+		
 		_sli_Column = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 		_sli_Column.addChangeListener(this);
 		
@@ -125,16 +136,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_cbb_Speed.setSelectedIndex(1);
 		_cbb_Speed.addActionListener(this);
 		
-		_cbb_Rule = new JComboBox(_controller.getRules());
+		/*_cbb_Rule = new JComboBox(_controller.getRules());
 		_cbb_Rule.setSelectedIndex(0);
-		_cbb_Rule.addActionListener(this);
+		_cbb_Rule.addActionListener(this);*/
 		
 		this.setTitle("Conway's game of life");
 		this.setSize(1000, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
 		
 		
 		JPanel player = new JPanel();
@@ -176,7 +185,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		speed.add(new JLabel("Speed : "));
 		speed.add(_cbb_Speed);
 		
-		JPanel type = new JPanel();
+		/*JPanel type = new JPanel();
 		type.setLayout(new FlowLayout());
 		type.add(new JLabel("Type : "));
 		type.add(new JComboBox());
@@ -184,13 +193,18 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		JPanel search = new JPanel();
 		search.setLayout(new FlowLayout());
 		search.add(new JLabel("Search : "));
-		search.add(new JComboBox());
+		search.add(new JComboBox());*/
+		
+		JPanel ruleBtn = new JPanel();
+		ruleBtn.setLayout(new FlowLayout());
+		ruleBtn.add(_btn_ruleParameter);
 		
 		JPanel rule = new JPanel();
 		rule.setLayout(new FlowLayout());
-		rule.add(new JLabel("Rule : "));
-		rule.add(_cbb_Rule);
-		rule.add(_btn_ruleParameter);
+		rule.add(_lbl_rule);
+		this.updateRuleLabel();
+		//rule.add(_cbb_Rule);
+		//rule.add(_btn_ruleParameter);
 		
 		JPanel option = new JPanel();
 		option.setLayout(new BoxLayout(option, BoxLayout.PAGE_AXIS));
@@ -199,14 +213,18 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		option.add(Box.createVerticalGlue());
 		option.add(fieldAction);
 		option.add(Box.createVerticalGlue());
+		option.add(new JSeparator());
+		option.add(speed);
+		option.add(new JSeparator());
 		option.add(sizeLabel);
 		option.add(sizeColumn);
 		option.add(sizeRow);
 		option.add(Box.createVerticalGlue());
-		option.add(speed);
-		option.add(type);
-		option.add(search);
+		option.add(new JSeparator());
+		/*option.add(type);
+		option.add(search);*/
 		option.add(rule);
+		option.add(ruleBtn);
 		//option.add(Box.createVerticalGlue());
 		
 		JTabbedPane panel = new JTabbedPane();
@@ -222,14 +240,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		
 		this.setContentPane(main);
-		this.setVisible(true);
-		/*try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-			//Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-		}*/
-		//SwingUtilities.updateComponentTreeUI(this);
-		
 		
 		//game.addObserver(field);
 
@@ -257,6 +267,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 	}
 
+	public void updateRuleLabel() {
+		_lbl_rule.setText("Rule : " + _currentRuleParameter.getName() + " - " + _currentRuleParameter.getScientificName());
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == _btn_Pause) {
@@ -285,7 +299,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		
 		else if(e.getSource() == _txt_Column) {
-			System.out.println("txt");
+			
 			try {
 				int val = Integer.parseInt(_txt_Column.getText());
 				_sli_Column.setValue(val);
@@ -324,8 +338,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}*/
 		
 		else if(e.getSource() == _btn_ruleParameter) {
-			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, true);
-			dialog.setVisible(true);
+			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
+			RuleParameter rp = dialog.showDialog();
+			
+			if(rp != null) {
+				_currentRuleParameter = rp;
+				_controller.setRule(_currentRuleParameter);
+				this.updateRuleLabel();
+			}
 		}
 		
 		this.updateBtnPlay();

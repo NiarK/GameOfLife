@@ -7,14 +7,13 @@ package view;
 import controller.Controller;
 import controller.RuleParameter;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -29,6 +28,11 @@ import javax.swing.JPanel;
  */
 public final class RuleParameterDialog extends JDialog implements ActionListener {
 
+	private boolean _sendData;
+	
+	private RuleParameter _customRule;
+	private RuleParameter _rule;
+	
 	private JComboBox _cbb_Rule;
 	
 	private JCheckBox[] _chb_Borns;
@@ -41,14 +45,22 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	private JButton _btn_Cancel;
 
 	
-	public RuleParameterDialog(JFrame parent, Controller controller, boolean modal) {
-		super(parent, "Rule parameters", modal);
+	public RuleParameterDialog(JFrame parent, Controller controller, RuleParameter rp) {
+		super(parent, "Rule parameters", true);
+		
+		_sendData = false;
 		
 		this.setSize(400, 400);
 		this.setLocationRelativeTo(null);
 		
+		//_customRule = new RuleParameter("Custom");
+		
 		_cbb_Rule = new JComboBox(controller.getRules());
+		_cbb_Rule.addItem(new RuleParameter("Custom"));
 		_cbb_Rule.addActionListener(this);
+		
+		_customRule = (RuleParameter)_cbb_Rule.getItemAt(_cbb_Rule.getItemCount() - 1);
+		_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 		
 		_pnl_Born = new JPanel();
 		_pnl_Born.setBorder(BorderFactory.createTitledBorder("Born"));
@@ -95,9 +107,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		Box validation = Box.createHorizontalBox();
 		validation.add(Box.createHorizontalGlue());
 		validation.add(_btn_Ok);
-		validation.add(Box.createHorizontalGlue());
+		validation.add(Box.createRigidArea(new Dimension(10, 0)));
 		validation.add(_btn_Cancel);
-		validation.add(Box.createHorizontalGlue());
+		validation.add(Box.createRigidArea(new Dimension(10, 0)));
 		
 		Box center = Box.createVerticalBox();
 		center.add(_pnl_Born);
@@ -130,6 +142,27 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		this.setContentPane(panelType);
 		
 		this.initBSCheckBox();
+		
+		if(rp != null){
+			
+			boolean updateCustom = true;
+					
+			for(int i = 0; i < _cbb_Rule.getItemCount() - 2; ++i) {
+				RuleParameter item = (RuleParameter)_cbb_Rule.getItemAt(i);
+				if(rp.getName().equals(item.getName())) {
+					_cbb_Rule.setSelectedIndex(i);
+					updateCustom = false;
+					break;
+				}
+			}
+			
+			if(updateCustom) {
+				_customRule.copy(rp);
+				_cbb_Rule.setSelectedIndex(_cbb_Rule.getItemCount() - 1);
+			}
+		}
+		
+		_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 	}
 	
 	public void initBSCheckBox() {
@@ -140,6 +173,7 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		_chb_Borns = new JCheckBox[nbBorn];
 		for(int i = 0; i < nbBorn; ++i) {
 			_chb_Borns[i] = new JCheckBox(Integer.toString(i+1));
+			_chb_Borns[i].addActionListener(this); 
 			_pnl_Born.add(_chb_Borns[i]);
 		}
 		
@@ -147,6 +181,7 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		_chb_Survives = new JCheckBox[nbSurvive];
 		for(int i = 0; i < nbSurvive; ++i) {
 			_chb_Survives[i] = new JCheckBox(Integer.toString(i+1));
+			_chb_Survives[i].addActionListener(this);
 			_pnl_Survive.add(_chb_Survives[i]);
 		}
 		
@@ -183,16 +218,61 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == _cbb_Rule) {
 			this.updateBSCheckBox();
+			
+			_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 		}
 		
 		else if(ae.getSource() == _btn_Ok) {
+			_sendData = true;
 			this.dispose();
 		}
 		
 		else if(ae.getSource() == _btn_Cancel) {
+			_sendData = false;
 			this.dispose();
+		}
+		
+		else if( Arrays.asList(_chb_Borns).contains(ae.getSource()) ) {
+			this.updateCustomRuleWithSelectedRule();
+			
+			JCheckBox chb = (JCheckBox)ae.getSource();
+			
+			if(chb.isSelected()) {
+				_customRule.addBorn(Integer.parseInt(chb.getText()));
+			}
+			else {
+				_customRule.removeBorn(Integer.parseInt(chb.getText()));
+			}
+			
+			_cbb_Rule.setSelectedIndex(_cbb_Rule.getItemCount() - 1);
+		}
+		
+		else if( Arrays.asList(_chb_Survives).contains(ae.getSource()) ) {
+			this.updateCustomRuleWithSelectedRule();
+			
+			JCheckBox chb = (JCheckBox)ae.getSource();
+			
+			if(chb.isSelected()) {
+				_customRule.addSurvive(Integer.parseInt(chb.getText()));
+			}
+			else {
+				_customRule.removeSurvive(Integer.parseInt(chb.getText()));
+			}
+			
+			_cbb_Rule.setSelectedIndex(_cbb_Rule.getItemCount() - 1);
 		}
 	}
 	
+	public void updateCustomRuleWithSelectedRule() {
+		if (_cbb_Rule.getSelectedIndex() + 1 != _cbb_Rule.getItemCount()) {
+			_customRule.copy((RuleParameter) _cbb_Rule.getSelectedItem());
+		}
+	}
 	
+	public RuleParameter showDialog() {
+		
+		this.setVisible(true);
+		
+		return (_sendData)? _rule : null;
+	}
 }
