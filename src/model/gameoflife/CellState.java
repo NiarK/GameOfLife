@@ -20,7 +20,7 @@ public class CellState {
 		this._isLiving = live;
 	}
 
-	public boolean isLiving() {
+	public boolean isAlive() {
 		return _isLiving;
 	}
 

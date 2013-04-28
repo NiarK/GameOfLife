@@ -4,9 +4,9 @@
  */
 package model.gameoflife.search;
 
+import model.gameoflife.Search;
 import java.awt.Point;
 import java.util.HashSet;
-import model.gameoflife.Search;
 
 /**
  * Prend les cellules adjacentes (sous forme de +)

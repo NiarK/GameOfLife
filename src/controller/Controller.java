@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import model.gameoflife.Field;
 import model.gameoflife.GameExecution;
 import model.gameoflife.StandardRule;
+import model.gameoflife.search.StandardSearch;
 import model.simulator.Simulator;
 import view.Window;
 
@@ -214,7 +215,7 @@ public final class Controller {
 	
 	public void setRule(RuleParameter rp) {
 		
-		StandardRule rule = new StandardRule();
+		StandardRule rule = new StandardRule(new StandardSearch());
 		
 		rule.setBorn(rp.getBorn());
 		rule.setSurvive(rp.getSurvive());

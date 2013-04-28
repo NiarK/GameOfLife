@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 package model.gameoflife.search;
+import model.gameoflife.Search;
 import java.awt.Point;
 import java.util.HashSet;
-import model.gameoflife.Search;
 
 /**
  * Prend les cellules en diagonale directe (sous forme de X)

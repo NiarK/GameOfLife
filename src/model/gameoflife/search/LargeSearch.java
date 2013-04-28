@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 package model.gameoflife.search;
+import model.gameoflife.Search;
 import java.awt.Point;
 import java.util.HashSet;
-import model.gameoflife.Search;
 
 /**
  * Fais une recherche standart en ajoutant les cases à une distance de 2 alignés

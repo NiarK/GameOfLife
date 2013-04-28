@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import model.gameoflife.search.StandardSearch;
 
 /**
  * Permet d'appliquer les règles standard du jeu de la vie.
@@ -20,12 +21,16 @@ public class StandardRule implements Rule {
 	private HashSet<Integer> _born;
 	private HashSet<Integer> _survive;
 	
+	private Search _search;
+	
 	/**
 	 * Constructeur par défaut
 	 */
-	public StandardRule(){
+	public StandardRule(Search search){
 		this._born = new HashSet<>();
 		this._survive = new HashSet<>();
+		
+		this._search = search;
 	}
 
 	/**
@@ -34,7 +39,7 @@ public class StandardRule implements Rule {
 	 * Survive : 2 et 3
 	 */
 	public static StandardRule gameOfLifeRule() {
-		StandardRule rule = new StandardRule();
+		StandardRule rule = new StandardRule(new StandardSearch());
 		
 		HashSet b = new HashSet();
 		b.add(3);
@@ -56,7 +61,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule highLifeRule() {
 		
-		StandardRule rule = new StandardRule();
+		StandardRule rule = new StandardRule(new StandardSearch());
 		
 		HashSet b = new HashSet();
 		b.add(3);
@@ -79,7 +84,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule B1S12Rule() {
 		
-		StandardRule rule = new StandardRule();
+		StandardRule rule = new StandardRule(new StandardSearch());
 		
 		HashSet b = new HashSet();
 		b.add(1);
@@ -101,7 +106,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule seedsRule() {
 		
-		StandardRule rule = new StandardRule();
+		StandardRule rule = new StandardRule(new StandardSearch());
 		
 		HashSet b = new HashSet();
 		b.add(2);
@@ -153,7 +158,7 @@ public class StandardRule implements Rule {
 		HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
 
 		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
-			Integer neighborNumber = this.getNeighborNumber(cells, entry.getKey());
+			Integer neighborNumber = this.getNeighborNumber(field, entry.getKey());
 
 			if( ! this._survive.contains(neighborNumber) ) {
 				Cell cell = entry.getValue();
@@ -191,13 +196,21 @@ public class StandardRule implements Rule {
 	 * @param field Le terrain dans lequel se situe la case.
 	 * @param place La case en question.
 	 */
-	private int getNeighborNumber(HashMap<Point, Cell> cells, Point place) {
+	private int getNeighborNumber(Field field, Point place) {
 
-		//HashMap<Point, Cell> cells = field.getCells();
+		HashMap<Point, Cell> cells = field.getCells();
 		Point neighbor = (Point)place.clone();
 		int cpt = 0;
 
-		// Voisin en haut à gauche.
+		HashSet<Point> neighbors = _search.getNeighbor(field.getSize().x,field.getSize().y, place);
+		
+		for(Point n : neighbors) {
+			if(cells.containsKey(n)) {
+				++cpt;
+			}
+		}
+		
+		/*// Voisin en haut à gauche.
 		neighbor.x -= 1;
 		neighbor.y -= 1;
 		if(cells.containsKey(neighbor)) {
@@ -244,7 +257,7 @@ public class StandardRule implements Rule {
 		neighbor.y -= 1;
 		if(cells.containsKey(neighbor)) {
 			++cpt;
-		}
+		}*/
 
 		return cpt;
 	}
@@ -279,7 +292,13 @@ public class StandardRule implements Rule {
 		Point size = field.getSize();
 		place = (Point)place.clone();
 
-		// gestion du voisin au dessus à gauche
+		HashSet<Point> neighbors = _search.getNeighbor(field.getSize().x, field.getSize().y, place);
+		
+		for(Point n : neighbors) {
+			this.incrementEmergingNeighbor(n, field);
+		}
+		
+		/*// gestion du voisin au dessus à gauche
 		place.x -= 1;
 		place.y -= 1;
 
@@ -342,7 +361,7 @@ public class StandardRule implements Rule {
 		if(place.x >= 0) {
 
 			incrementEmergingNeighbor(place, field);
-		}
+		}*/
 	}
 	
 	/**
@@ -359,7 +378,7 @@ public class StandardRule implements Rule {
 
 			cell.update();
 
-			if( ! cell.getState().isLiving() ) {
+			if( ! cell.getState().isAlive() ) {
 
 				it.remove();
 			}
