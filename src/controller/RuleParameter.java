@@ -5,7 +5,6 @@
 package controller;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -19,9 +18,31 @@ public class RuleParameter {
 	private String _name;
 
 	public RuleParameter() {
+		this("");
+		/*_born = new TreeSet<>();
+		_survive = new TreeSet<>();
+		_name = null;*/
+	}
+	
+	public RuleParameter(String name) {
 		_born = new TreeSet<>();
 		_survive = new TreeSet<>();
-		_name = null;
+		
+		if( name == null ) {
+			name = "";
+		}
+		_name = name;
+	}
+	
+	/*public RuleParameter(RuleParameter rule) {
+		this._born = new TreeSet<>(rule._born);
+		this._survive = new TreeSet<>(rule._survive);
+		this._name = new String(rule._name);
+	}*/
+	
+	public void copy(RuleParameter rule) {
+		this._born = new TreeSet<>(rule._born);
+		this._survive = new TreeSet<>(rule._survive);
 	}
 	
 	public void addBorn(Integer b) {
@@ -40,16 +61,7 @@ public class RuleParameter {
 		_survive.remove(s);
 	}
 
-	public void removeName() {
-		this.setName(null);
-	}
-	
-	public String getName() {
-		
-		if( _name != null ) {
-			return _name;
-		}
-		
+	public String getScientificName() {
 		String str = "B";
 		
 		for(Integer b : _born) {
@@ -64,9 +76,25 @@ public class RuleParameter {
 		
 		return str;
 	}
+	
+	public void removeName() {
+		this.setName(null);
+	}
+	
+	public String getName() {
+		
+		if( ! _name.equals("") ) {
+			return _name;
+		}
+		
+		return this.getScientificName();
+	}
 
-	public void setName(String _name) {
-		this._name = _name;
+	public void setName(String name) {
+		if(name == null) {
+			name = "";
+		}
+		this._name = name;
 	}
 
 	public void setBorn(HashSet<Integer> born) {
@@ -89,5 +117,13 @@ public class RuleParameter {
 	public String toString() {
 		return this.getName();
 	}
+
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone(); //To change body of generated methods, choose Tools | Templates.
+	}
+	
+	
 	
 }

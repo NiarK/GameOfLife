@@ -18,7 +18,7 @@ import view.Window;
  *
  * @author pierre
  */
-public class Controller {
+public final class Controller {
 	
 	public static final int SPEED_VERY_FAST	= 10;
 	public static final int SPEED_FAST		= 50;
@@ -212,9 +212,14 @@ public class Controller {
 		return speeds;
 	}
 	
-	public void setRule(RuleParameter rp) throws BadRuleNameException {
+	public void setRule(RuleParameter rp) {
 		
-		//TODO: do stuff...
+		StandardRule rule = new StandardRule();
+		
+		rule.setBorn(rp.getBorn());
+		rule.setSurvive(rp.getSurvive());
+		
+		_game.setRule(rule);
 	}
 	
 	public String[] getFieldTypes() {
