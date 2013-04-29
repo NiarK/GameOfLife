@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import model.gameoflife.search.StandardSearch;
+import model.gameoflife.search.SquareSearch;
 
 /**
  * Permet d'appliquer les règles standard du jeu de la vie.
@@ -39,7 +39,7 @@ public class StandardRule implements Rule {
 	 * Survive : 2 et 3
 	 */
 	public static StandardRule gameOfLifeRule() {
-		StandardRule rule = new StandardRule(new StandardSearch());
+		StandardRule rule = new StandardRule(new SquareSearch());
 		
 		HashSet b = new HashSet();
 		b.add(3);
@@ -61,7 +61,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule highLifeRule() {
 		
-		StandardRule rule = new StandardRule(new StandardSearch());
+		StandardRule rule = new StandardRule(new SquareSearch());
 		
 		HashSet b = new HashSet();
 		b.add(3);
@@ -84,7 +84,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule B1S12Rule() {
 		
-		StandardRule rule = new StandardRule(new StandardSearch());
+		StandardRule rule = new StandardRule(new SquareSearch());
 		
 		HashSet b = new HashSet();
 		b.add(1);
@@ -106,7 +106,7 @@ public class StandardRule implements Rule {
 	 */
 	public static StandardRule seedsRule() {
 		
-		StandardRule rule = new StandardRule(new StandardSearch());
+		StandardRule rule = new StandardRule(new SquareSearch());
 		
 		HashSet b = new HashSet();
 		b.add(2);

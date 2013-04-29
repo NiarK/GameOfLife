@@ -5,13 +5,20 @@
 package controller;
 
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.gameoflife.Field;
 import model.gameoflife.GameExecution;
+import model.gameoflife.Search;
 import model.gameoflife.StandardRule;
-import model.gameoflife.search.StandardSearch;
+import model.gameoflife.search.PlusSearch;
+import model.gameoflife.search.CrossSearch;
+import model.gameoflife.search.HexagoneSearch;
+import model.gameoflife.search.SquareSearch;
+import model.gameoflife.search.TriangleSearch;
 import model.simulator.Simulator;
 import view.Window;
 
@@ -31,7 +38,7 @@ public final class Controller {
 	private Simulator _simulator;
 	
 	private RuleParameter[] _rules;
-	private String[][] _searchName;
+	private String[] _search;
 	private String[] _typeName;
 	
 	public Controller() {
@@ -40,19 +47,6 @@ public final class Controller {
 		_typeName[0] = "Square";
 		_typeName[1] = "Hexagone";
 		_typeName[2] = "Triangle";
-		
-		_searchName = new String[_typeName.length][];
-		_searchName[0] = new String[4];
-		_searchName[0][0] = "Round";
-		_searchName[0][1] = "Plus";
-		_searchName[0][2] = "Cross";
-		_searchName[0][3] = "Large";
-		_searchName[1] = new String[2];
-		_searchName[1][0] = "Small";
-		_searchName[1][1] = "Large";
-		_searchName[2] = new String[2];
-		_searchName[2][0] = "Small";
-		_searchName[2][1] = "Large";
 		
 		this.initRuleParameter();
 		
@@ -72,11 +66,15 @@ public final class Controller {
 	}
 	
 	public void initRuleParameter() {
-		/*_rulesName = new String[4];
-		_rulesName[0] = "Game of life";
-		_rulesName[1] = "High life";
-		_rulesName[2] = "Seeds";
-		_rulesName[3] = "B1S12";*/
+		
+		String standardSearch = "Square";
+		
+		_search = new String[5];
+		_search[0] = standardSearch;
+		_search[1] = "Plus";
+		_search[2] = "Cross";
+		_search[3] = "Hexagone";
+		_search[4] = "Triangle";
 		
 		_rules = new RuleParameter[4];
 		
@@ -86,23 +84,28 @@ public final class Controller {
 		_rules[0].setName("Game of life");
 		_rules[0].setBorn(rule.getBorn());
 		_rules[0].setSurvive(rule.getSurvive());
+		_rules[0].setSearch(standardSearch);
 		
 		rule = StandardRule.highLifeRule();
 		_rules[1] = new RuleParameter();
 		_rules[1].setName("High life");
 		_rules[1].setBorn(rule.getBorn());
 		_rules[1].setSurvive(rule.getSurvive());
+		_rules[1].setSearch(standardSearch);
 		
 		rule = StandardRule.seedsRule();
 		_rules[2] = new RuleParameter();
 		_rules[2].setName("Seeds");
 		_rules[2].setBorn(rule.getBorn());
 		_rules[2].setSurvive(rule.getSurvive());
+		_rules[2].setSearch(standardSearch);
 		
 		rule = StandardRule.B1S12Rule();
 		_rules[3] = new RuleParameter();
 		_rules[3].setBorn(rule.getBorn());
 		_rules[3].setSurvive(rule.getSurvive());
+		_rules[3].setSearch(standardSearch);
+		
 	}
 	
 	/**
@@ -215,7 +218,9 @@ public final class Controller {
 	
 	public void setRule(RuleParameter rp) {
 		
-		StandardRule rule = new StandardRule(new StandardSearch());
+		Search s = this.getSearch(rp);
+		
+		StandardRule rule = new StandardRule(s);
 		
 		rule.setBorn(rp.getBorn());
 		rule.setSurvive(rp.getSurvive());
@@ -227,8 +232,30 @@ public final class Controller {
 		return _typeName;
 	}
 	
-	public String[] getSearcchType(int indexOfFieldType) {
-		return _searchName[indexOfFieldType];
+	public String[] getSearchType() {
+		return _search;
+		//return _search.keySet().toArray(new String[_search.keySet().size()]);
+	}
+	
+	private Search getSearch(RuleParameter rp) {
+		
+		if(rp.getName().equals(_search[0])){
+			return new SquareSearch(rp.isTorus());
+		}
+		else if(rp.getName().equals(_search[1])){
+			return new PlusSearch(rp.isTorus());
+		}
+		else if(rp.getName().equals(_search[2])){
+			return new CrossSearch(rp.isTorus());
+		}
+		else if(rp.getName().equals(_search[3])){
+			return new HexagoneSearch(rp.isTorus());
+		}
+		else if(rp.getName().equals(_search[4])){
+			return new TriangleSearch(rp.isTorus());
+		}
+		
+		return new SquareSearch(rp.isTorus());
 	}
 	
 	public RuleParameter[] getRules() {

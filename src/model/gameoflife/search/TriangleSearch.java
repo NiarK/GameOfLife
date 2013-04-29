@@ -12,14 +12,14 @@ import java.util.HashSet;
  *
  * @author Quentin
  */
-public class Triangle  implements Search{
+public class TriangleSearch implements Search{
     private boolean torus;
 
-    public Triangle(boolean torus) {
+    public TriangleSearch(boolean torus) {
         this.torus = torus;
     }
 
-    public Triangle() {
+    public TriangleSearch() {
         this.torus = false;
     }
 

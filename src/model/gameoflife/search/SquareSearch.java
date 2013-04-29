@@ -11,15 +11,15 @@ import java.util.HashSet;
  * Prend les cellules en diagonale directe et adjacentes
  * @author Quentin
  */
-public class StandardSearch implements Search{
+public class SquareSearch implements Search{
 
     private boolean torus;
 
-    public StandardSearch(boolean torus) {
+    public SquareSearch(boolean torus) {
         this.torus = torus;
     }
 
-    public StandardSearch() {
+    public SquareSearch() {
         this.torus = false;
     }
 

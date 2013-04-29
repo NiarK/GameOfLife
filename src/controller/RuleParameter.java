@@ -15,6 +15,8 @@ public class RuleParameter {
 	
 	private TreeSet<Integer> _born;
 	private TreeSet<Integer> _survive;
+	private String _search;
+	private boolean _torus;
 	private String _name;
 
 	public RuleParameter() {
@@ -27,6 +29,8 @@ public class RuleParameter {
 	public RuleParameter(String name) {
 		_born = new TreeSet<>();
 		_survive = new TreeSet<>();
+		_torus = false;
+		_search = null;
 		
 		if( name == null ) {
 			name = "";
@@ -113,6 +117,22 @@ public class RuleParameter {
 		return new HashSet(_survive);
 	}
 
+	public String getSearch() {
+		return _search;
+	}
+
+	public void setSearch(String name) {
+		this._search = name;
+	}
+
+	public boolean isTorus() {
+		return _torus;
+	}
+
+	public void setTorus(boolean torus) {
+		this._torus = torus;
+	}
+	
 	@Override
 	public String toString() {
 		return this.getName();

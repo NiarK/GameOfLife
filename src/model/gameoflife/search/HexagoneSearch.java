@@ -12,15 +12,15 @@ import java.util.HashSet;
  *
  * @author Quentin
  */
-public class Hexagone  implements Search{
+public class HexagoneSearch  implements Search{
 
     private boolean torus;
 
-    public Hexagone(boolean torus) {
+    public HexagoneSearch(boolean torus) {
         this.torus = torus;
     }
 
-    public Hexagone() {
+    public HexagoneSearch() {
         this.torus = false;
     }
 

@@ -32,7 +32,10 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	
 	private RuleParameter _customRule;
 	private RuleParameter _rule;
+	//private String _search;
 	
+	private JCheckBox _chb_Torus;
+	private JComboBox _cbb_Search;
 	private JComboBox _cbb_Rule;
 	
 	private JCheckBox[] _chb_Borns;
@@ -55,12 +58,17 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		
 		//_customRule = new RuleParameter("Custom");
 		
+		_chb_Torus = new JCheckBox("Torus");
+		
+		_cbb_Search = new JComboBox(controller.getSearchType());
+		_cbb_Search.addActionListener(this);
+		
 		_cbb_Rule = new JComboBox(controller.getRules());
 		_cbb_Rule.addItem(new RuleParameter("Custom"));
 		_cbb_Rule.addActionListener(this);
 		
 		_customRule = (RuleParameter)_cbb_Rule.getItemAt(_cbb_Rule.getItemCount() - 1);
-		_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
+		//_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 		
 		_pnl_Born = new JPanel();
 		_pnl_Born.setBorder(BorderFactory.createTitledBorder("Born"));
@@ -80,29 +88,12 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		
 		JPanel search = new JPanel();
 		search.add(new JLabel("Search : "));
-		search.add(new JComboBox(controller.getRules()));
+		search.add(_cbb_Search);
+		search.add(_chb_Torus);
 		
 		JPanel rule = new JPanel();
 		rule.add(new JLabel("Rule : "));
 		rule.add(_cbb_Rule);
-		
-		/*born.add(_chb_borns[0]);
-		born.add(_chb_borns[1]);
-		born.add(_chb_borns[2]);
-		born.add(_chb_borns[3]);
-		born.add(_chb_borns[4]);
-		born.add(_chb_borns[5]);
-		born.add(_chb_borns[6]);
-		born.add(_chb_borns[7]);*/
-		
-		/*survive.add(_chb_survives[0]);
-		survive.add(_chb_survives[1]);
-		survive.add(_chb_survives[2]);
-		survive.add(_chb_survives[3]);
-		survive.add(_chb_survives[4]);
-		survive.add(_chb_survives[5]);
-		survive.add(_chb_survives[6]);
-		survive.add(_chb_survives[7]);*/
 		
 		Box validation = Box.createHorizontalBox();
 		validation.add(Box.createHorizontalGlue());
@@ -144,6 +135,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		this.initBSCheckBox();
 		
 		if(rp != null){
+			
+			_cbb_Search.setSelectedItem(rp.getSearch());
+			_chb_Torus.setSelected(rp.isTorus());
 			
 			boolean updateCustom = true;
 					
@@ -222,7 +216,14 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 			_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 		}
 		
+		else if(ae.getSource() == _cbb_Search) {
+			
+		}
+		
 		else if(ae.getSource() == _btn_Ok) {
+			_rule.setSearch((String)_cbb_Search.getSelectedItem());
+			_rule.setTorus(_chb_Torus.isSelected());
+					
 			_sendData = true;
 			this.dispose();
 		}

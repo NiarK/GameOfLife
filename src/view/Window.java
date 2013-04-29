@@ -64,7 +64,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JTextField	_txt_Row;
 	private JSlider		_sli_Column;
 	private JSlider		_sli_Row;
-	private JLabel		_lbl_rule;
+	private JLabel		_lbl_Rule;
+	private JLabel		_lbl_Search;
 	
 	Point _mousePosition;
 	
@@ -115,7 +116,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_ruleParameter.addActionListener(this);
 		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
 		
-		_lbl_rule = new JLabel();
+		_lbl_Rule = new JLabel();
+		_lbl_Search = new JLabel();
 		
 		_sli_Column = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 		_sli_Column.addChangeListener(this);
@@ -201,7 +203,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		JPanel rule = new JPanel();
 		rule.setLayout(new FlowLayout());
-		rule.add(_lbl_rule);
+		rule.add(_lbl_Rule);
+		
+		JPanel search = new JPanel();
+		search.setLayout(new FlowLayout());
+		search.add(_lbl_Search);
+		
 		this.updateRuleLabel();
 		//rule.add(_cbb_Rule);
 		//rule.add(_btn_ruleParameter);
@@ -224,6 +231,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		/*option.add(type);
 		option.add(search);*/
 		option.add(rule);
+		option.add(search);
 		option.add(ruleBtn);
 		//option.add(Box.createVerticalGlue());
 		
@@ -268,7 +276,24 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	public void updateRuleLabel() {
-		_lbl_rule.setText("Rule : " + _currentRuleParameter.getName() + " - " + _currentRuleParameter.getScientificName());
+		
+		String textRule = "Rule : ";
+		
+		if( ! _currentRuleParameter.getName().equals(_currentRuleParameter.getScientificName()) ) {
+			textRule += _currentRuleParameter.getName() + " - ";
+		}
+		
+		textRule += _currentRuleParameter.getScientificName();
+		
+		_lbl_Rule.setText(textRule);
+		
+		String textSearch = "Search : " + _currentRuleParameter.getSearch();
+		
+		if( _currentRuleParameter.isTorus() ) {
+			textSearch += " - Torus";
+		}
+		
+		_lbl_Search.setText(textSearch);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
