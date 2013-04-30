@@ -125,6 +125,10 @@ public final class Controller {
 	public void play() {
 		_simulator.play();
 	}
+        
+        public void save(String name){
+            _game.saveGame(name);
+        }
 	
 	public void next() {
 		

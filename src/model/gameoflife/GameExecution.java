@@ -87,4 +87,8 @@ public class GameExecution extends Observable implements Runnable {
 	public synchronized void setRule(Rule rule) {
 		_rule = rule;
 	}
+        
+        public void saveGame(String name){
+            _field.saveGame(name);
+        }
 }

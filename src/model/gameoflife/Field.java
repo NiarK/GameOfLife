@@ -1,6 +1,10 @@
 package model.gameoflife;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -183,4 +187,50 @@ public class Field {
 		return str;
 	}
 	
+        public void saveGame(String name){
+            File monFichier = new java.io.File(name+".cells"); 
+            try 
+            {
+                monFichier.createNewFile(); // Cette fonction doit être appelée au sein d'un bloc TRY 
+            }
+            catch (IOException e) 
+            {
+                System.out.println("Impossible de créer le fichier"); 
+            } 
+            try 
+            { 
+                FileOutputStream monFluxFichier = new java.io.FileOutputStream(monFichier);
+                Iterator<Map.Entry<Point, Cell>> it = _cells.entrySet().iterator();
+
+                String title = "<cells>";
+                String begin = "\n\t<cell>\n\t\t<x>";
+                String end = "</y>\n\t</cell>";
+                String middle = "</x>\n\t\t<y>";
+                String titleend = "\n</cells>";
+                
+                byte[] bbegin = begin.getBytes();
+                byte[] bmiddle = middle.getBytes();
+                byte[] bend = end.getBytes();
+                
+                monFluxFichier.write(title.getBytes());
+		while(it.hasNext()) {
+                    monFluxFichier.write(bbegin);
+                    Point cell = it.next().getKey();
+                    String x = Integer.toString(cell.x);
+                    monFluxFichier.write(x.getBytes());
+                    monFluxFichier.write(bmiddle);
+                    String y = Integer.toString(cell.y);
+                    monFluxFichier.write(y.getBytes());
+                    monFluxFichier.write(bend);
+		}
+                monFluxFichier.write(titleend.getBytes());
+            }
+            catch (FileNotFoundException e) 
+            { 
+            System.out.println("Impossible de trouver le fichier"); 
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
 }

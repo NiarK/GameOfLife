@@ -55,6 +55,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton		_btn_Next;
 	private JButton		_btn_RandomlyFill;
 	private JButton		_btn_Empty;
+	private JButton		_btn_Save;
+	private JButton		_btn_Download;
 	private JButton		_btn_ruleParameter;
 	
 	private JComboBox	_cbb_Speed;
@@ -114,6 +116,15 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_Empty.addActionListener(this);
 		_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
 		
+                _btn_Save = new JButton();
+		_btn_Save.addActionListener(this);
+		_btn_Save.setIcon(new ImageIcon(manager.get("src/resources/save.png")));
+		
+                _btn_Download = new JButton();
+		_btn_Download.addActionListener(this);
+		_btn_Download.setIcon(new ImageIcon(manager.get("src/resources/download.png")));
+		
+                
 		_btn_ruleParameter = new JButton();
 		_btn_ruleParameter.addActionListener(this);
 		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
@@ -166,6 +177,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		fieldAction.add(Box.createHorizontalGlue());
 		fieldAction.add(_btn_Empty);
 		fieldAction.add(Box.createHorizontalGlue());
+                
+                JPanel xmlAction = new JPanel();
+		xmlAction.setLayout(new BoxLayout(xmlAction, BoxLayout.LINE_AXIS));
+		xmlAction.add(Box.createHorizontalGlue());
+		xmlAction.add(_btn_Save);
+		xmlAction.add(Box.createHorizontalGlue());
+		xmlAction.add(_btn_Download);
+		xmlAction.add(Box.createHorizontalGlue());
 		
 		JPanel sizeLabel = new JPanel();
 		sizeLabel.setLayout(new FlowLayout());
@@ -222,6 +241,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		option.add(Box.createVerticalGlue());
 		option.add(fieldAction);
 		option.add(Box.createVerticalGlue());
+		option.add(xmlAction);
+		option.add(Box.createVerticalGlue());
 		option.add(new JSeparator());
 		option.add(speed);
 		option.add(new JSeparator());
@@ -238,7 +259,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		//option.add(Box.createVerticalGlue());
 		
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab("Otpion", option);
+		panel.addTab("Option", option);
 		panel.addTab("Patterns", null);
 		
 		
@@ -311,6 +332,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			else {
 				_controller.play();
 			}
+		}
+                
+                else if(e.getSource() == _btn_Save) {
+                       _controller.save("Test");
+		}
+                
+                else if(e.getSource() == _btn_Download) {
 		}
 		
 		else if(e.getSource() == _btn_Next) {
