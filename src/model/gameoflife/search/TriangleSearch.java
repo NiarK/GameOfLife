@@ -52,38 +52,19 @@ public class TriangleSearch implements Search{
             hs.add(neighbor);
             
             neighbor = (Point)place.clone();
-            if(neighbor.y%2 == 1){
-                if(neighbor.x%2 == 1){
-                    if(neighbor.y == 0)
-                        neighbor.y = height - 1;
-                    else
-                        neighbor.y -= 1;
-                    hs.add(neighbor);
-                }
-                else{
-                    if(neighbor.y == height - 1)
-                        neighbor.y = 0;
-                    else
-                        neighbor.y += 1;
-                    hs.add(neighbor);
-                }
+            if(neighbor.y%2 == neighbor.x%2){
+                if(neighbor.y == 0)
+                    neighbor.y = height - 1;
+                else
+                    neighbor.y -= 1;
+                hs.add(neighbor);
             }
-            else
-            {
-                if(neighbor.x%2 == 0){
-                    if(neighbor.y == 0)
-                        neighbor.y = height - 1;
-                    else
-                        neighbor.y -= 1;
-                    hs.add(neighbor);
-                }
-                else{
-                    if(neighbor.y == height - 1)
-                        neighbor.y = 0;
-                    else
-                        neighbor.y += 1;
-                    hs.add(neighbor);
-                }
+            else{
+                if(neighbor.y == height - 1)
+                    neighbor.y = 0;
+                else
+                    neighbor.y += 1;
+                hs.add(neighbor);
             }
         }
         else{
@@ -101,37 +82,19 @@ public class TriangleSearch implements Search{
             }
             
             neighbor = (Point)place.clone();
-            if(neighbor.y%2 == 1){
-                if(neighbor.x%2 == 1){
-                    // Voisin en haut.
-                    if(neighbor.y > 0) {
-                        neighbor.y -= 1;
-                        hs.add(neighbor);
-                    }
-                }
-                else{
-                    // Voisin à droite.
-                    if(neighbor.x < width - 1) {
-                        neighbor.x += 1;
-                        hs.add(neighbor);
-                    }
+            if(neighbor.y%2 == neighbor.x%2){
+                // Voisin en haut.
+                if(neighbor.y > 0) {
+                    neighbor.y -= 1;
+                    hs.add(neighbor);
                 }
             }
             else
             {
-                if(neighbor.x%2 == 0){
-                    // Voisin en haut.
-                    if(neighbor.y > 0) {
-                        neighbor.y -= 1;
-                        hs.add(neighbor);
-                    }
-                }
-                else{
-                    // Voisin à droite.
-                    if(neighbor.x < width - 1) {
-                        neighbor.x += 1;
-                        hs.add(neighbor);
-                    }
+                // Voisin en bas.
+                if(neighbor.y < height - 1) {
+                    neighbor.y += 1;
+                    hs.add(neighbor);
                 }
             }
         }

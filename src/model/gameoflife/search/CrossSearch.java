@@ -92,35 +92,30 @@ public class CrossSearch  implements Search{
                 neighbor.y -= 1;
                 neighbor.x -= 1;
                 hs.add(neighbor);
-                neighbor.y += 1;
-                neighbor.x += 1;
             }
 
+            neighbor = (Point)place.clone();
             // Voisin en haut à droite.
             if(neighbor.y > 0 && neighbor.x < width - 1) {
                 neighbor.y -= 1;
                 neighbor.x += 1;
                 hs.add(neighbor);
-                neighbor.y += 1;
-                neighbor.x -= 1;
             }
 
+            neighbor = (Point)place.clone();
             // Voisin en bas à droite.
             if(neighbor.y < height - 1 && neighbor.x < width - 1) {
                 neighbor.y += 1;
                 neighbor.x += 1;
                 hs.add(neighbor);
-                neighbor.y -= 1;
-                neighbor.x -= 1;
             }
 
+            neighbor = (Point)place.clone();
             // Voisin en bas à gauche.
             if(neighbor.x > 0 && neighbor.y < height - 1) {
                 neighbor.y += 1;
                 neighbor.x -= 1;
                 hs.add(neighbor);
-                neighbor.x += 1;
-                neighbor.y -= 1;
             }
         }
         
