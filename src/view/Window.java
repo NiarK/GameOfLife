@@ -77,14 +77,16 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		
-		_field = new Field();
+		_controller = new Controller();
+		
+		_field = new Field(8);
 		_field.setBackground(Color.black);
 		_field.addMouseListener(this);
 		_field.addMouseMotionListener(this);
 		_field.addMouseWheelListener(this);
 		_field.addComponentListener(this);
 		
-		_controller = new Controller();
+		//_controller = new Controller();
 		_controller.addObserverToGame(_field);
 		_controller.empty();
 		

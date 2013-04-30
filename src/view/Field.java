@@ -19,7 +19,7 @@ import model.gameoflife.GameExecution;
  *
  * @author pierre
  */
-public class Field extends JPanel implements Observer/*, Runnable */ {
+public final class Field extends JPanel implements Observer/*, Runnable */ {
 
 	private HashMap<Point, Cell> _cells;
 	private Point _size;
@@ -30,11 +30,13 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 	private double _zoom;
 	private Point _oldComponentSize;
 	
+	private view.Cell _cell;
+	
 	public static double ZOOM_UNIT = 0.9;
-	//private boolean _exec;
+	
 
 	//private view.Cell c;
-	public Field() {
+	public Field(int neighbors) {
 		super();
 
 		/*CellImageParameter p = new CellImageParameter("cell.png", new Point(10,10), 5,5,5);
@@ -56,6 +58,7 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 
 		_oldComponentSize = new Point(this.getWidth(), this.getHeight());
 
+		this.setNeighbors(neighbors);
 		//_exec = true;
 
 	}
@@ -103,13 +106,20 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 				&& coord.y >= p1.y
 				&& coord.x <= p2.x
 				&& coord.y <= p2.y) {
-				g.fillOval(
+				
+				Point position = new Point(_position);
+				position.x = (int) (_cellSize * _zoom) * coord.x + _offset.x;
+				position.y = (int) (_cellSize * _zoom) * coord.y + _offset.y;
+				
+				int size = (int) (_cellSize * _zoom);
+				_cell.draw(g, position, size);
+				/*g.fillOval(
 						(int) (_cellSize * _zoom) * coord.x + _offset.x,
 						(int) (_cellSize * _zoom) * coord.y + _offset.y,
 						/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
-						 (int) ((_cellSize * coord.y + _offset.y) * _zoom), */
+						 (int) ((_cellSize * coord.y + _offset.y) * _zoom), *
 						(int) (_cellSize * _zoom),
-						(int) (_cellSize * _zoom));
+						(int) (_cellSize * _zoom));*/
 
 			}
 		}
@@ -128,6 +138,10 @@ public class Field extends JPanel implements Observer/*, Runnable */ {
 		}
 	}
 
+	public synchronized void setNeighbors(int n) {
+		_cell = new view.Cell();
+	}
+	
 	public Point cellCoordinate(Point coord) {
 		Point cell = new Point();
 		cell.x = (coord.x - _offset.x - 1) / (int) (_cellSize * _zoom);
