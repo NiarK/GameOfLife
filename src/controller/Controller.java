@@ -34,11 +34,13 @@ public final class Controller {
 	public static final int SPEED_LOW		= 500;
 	public static final int SPEED_VERY_LOW	= 1000;
 	
+	//private int _neighborMaximumNumber;
+	
 	private GameExecution _game;
 	private Simulator _simulator;
 	
 	private RuleParameter[] _rules;
-	private String[] _search;
+	private String[] _searchName;
 	private String[] _typeName;
 	
 	public Controller() {
@@ -69,12 +71,12 @@ public final class Controller {
 		
 		String standardSearch = "Square";
 		
-		_search = new String[5];
-		_search[0] = standardSearch;
-		_search[1] = "Plus";
-		_search[2] = "Cross";
-		_search[3] = "Hexagone";
-		_search[4] = "Triangle";
+		_searchName = new String[5];
+		_searchName[0] = standardSearch;
+		_searchName[1] = "Plus";
+		_searchName[2] = "Cross";
+		_searchName[3] = "Hexagone";
+		_searchName[4] = "Triangle";
 		
 		_rules = new RuleParameter[4];
 		
@@ -220,12 +222,22 @@ public final class Controller {
 		
 		Search s = this.getSearch(rp);
 		
-		StandardRule rule = new StandardRule(s);
+		//_neighborMaximumNumber = s.getNeighborMaximumNumber();
+		
+		final StandardRule rule = new StandardRule(s);
 		
 		rule.setBorn(rp.getBorn());
 		rule.setSurvive(rp.getSurvive());
 		
-		_game.setRule(rule);
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.setRule(rule);
+			}
+		});
+		
+		t.start();
 	}
 	
 	public String[] getFieldTypes() {
@@ -233,25 +245,25 @@ public final class Controller {
 	}
 	
 	public String[] getSearchType() {
-		return _search;
+		return _searchName;
 		//return _search.keySet().toArray(new String[_search.keySet().size()]);
 	}
 	
 	private Search getSearch(RuleParameter rp) {
 		
-		if(rp.getName().equals(_search[0])){
+		if(rp.getSearch().equals(_searchName[0])){
 			return new SquareSearch(rp.isTorus());
 		}
-		else if(rp.getName().equals(_search[1])){
+		else if(rp.getSearch().equals(_searchName[1])){
 			return new PlusSearch(rp.isTorus());
 		}
-		else if(rp.getName().equals(_search[2])){
+		else if(rp.getSearch().equals(_searchName[2])){
 			return new CrossSearch(rp.isTorus());
 		}
-		else if(rp.getName().equals(_search[3])){
+		else if(rp.getSearch().equals(_searchName[3])){
 			return new HexagoneSearch(rp.isTorus());
 		}
-		else if(rp.getName().equals(_search[4])){
+		else if(rp.getSearch().equals(_searchName[4])){
 			return new TriangleSearch(rp.isTorus());
 		}
 		
@@ -260,5 +272,12 @@ public final class Controller {
 	
 	public RuleParameter[] getRules() {
 		return _rules;
+	}
+	
+	
+	public int getNeighborMaximumNumber(String searchName) {
+		RuleParameter rp = new RuleParameter();
+		rp.setSearch(searchName);
+		return this.getSearch(rp).getNeighborMaximumNumber();
 	}
 }

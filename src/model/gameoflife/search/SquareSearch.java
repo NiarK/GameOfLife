@@ -180,4 +180,9 @@ public class SquareSearch implements Search{
         return hs;
     }
     
+	
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 8;
+	}
 }

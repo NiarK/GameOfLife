@@ -126,4 +126,11 @@ public class CrossSearch  implements Search{
         
         return hs;
     }
+
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 4;
+	}
+	
+	
 }

@@ -420,6 +420,4 @@ public class StandardRule implements Rule {
 	public void setSurvive(HashSet<Integer> survive) {
 		this._survive = survive;
 	}
-
-	
 }

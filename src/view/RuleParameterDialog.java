@@ -46,10 +46,14 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	
 	private JButton _btn_Ok;
 	private JButton _btn_Cancel;
+	
+	private Controller _controller;
 
 	
 	public RuleParameterDialog(JFrame parent, Controller controller, RuleParameter rp) {
 		super(parent, "Rule parameters", true);
+		
+		_controller = controller;
 		
 		_sendData = false;
 		
@@ -60,10 +64,10 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		
 		_chb_Torus = new JCheckBox("Torus");
 		
-		_cbb_Search = new JComboBox(controller.getSearchType());
+		_cbb_Search = new JComboBox(_controller.getSearchType());
 		_cbb_Search.addActionListener(this);
 		
-		_cbb_Rule = new JComboBox(controller.getRules());
+		_cbb_Rule = new JComboBox(_controller.getRules());
 		_cbb_Rule.addItem(new RuleParameter("Custom"));
 		_cbb_Rule.addActionListener(this);
 		
@@ -82,9 +86,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		_btn_Cancel = new JButton("Cancel");
 		_btn_Cancel.addActionListener(this);
 		
-		JPanel type = new JPanel();
+		/*JPanel type = new JPanel();
 		type.add(new JLabel("Type : "));
-		type.add(new JComboBox(controller.getRules()));
+		type.add(new JComboBox(controller.getRules()));*/
 		
 		JPanel search = new JPanel();
 		search.add(new JLabel("Search : "));
@@ -120,17 +124,17 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		panelSearch.add(search, BorderLayout.NORTH);
 		panelSearch.add(panelRule, BorderLayout.CENTER);
 		
-		JPanel panelType = new JPanel();
+		/*JPanel panelType = new JPanel();
 		panelType.setLayout(new BorderLayout());
 		panelType.add(type, BorderLayout.NORTH);
-		panelType.add(panelSearch, BorderLayout.CENTER);
+		panelType.add(panelSearch, BorderLayout.CENTER);*/
 		
 		/*JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
 		main.add(top, BorderLayout.NORTH);
 		main.add(center, BorderLayout.CENTER);*/
 		
-		this.setContentPane(panelType);
+		this.setContentPane(panelSearch);
 		
 		this.initBSCheckBox();
 		
@@ -160,8 +164,8 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	}
 	
 	public void initBSCheckBox() {
-		int nbBorn = 8;
-		int nbSurvive = 8;
+		int nbBorn = _controller.getNeighborMaximumNumber((String)_cbb_Search.getSelectedItem());
+		int nbSurvive = _controller.getNeighborMaximumNumber((String)_cbb_Search.getSelectedItem());
 		
 		_pnl_Born.removeAll();
 		_chb_Borns = new JCheckBox[nbBorn];
@@ -180,6 +184,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		}
 		
 		this.updateBSCheckBox();
+		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	public void updateBSCheckBox() {
@@ -208,6 +215,26 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		}
 	}
 
+	public void updateRuleWithBSCheckBox() {
+		
+		if(_rule != null) {
+			_rule.emptyBorn();
+			_rule.emptySurvive();
+
+			for(int i = 0; i < _chb_Borns.length; ++i) {
+				if(_chb_Borns[i].isSelected()) {
+					_rule.addBorn(Integer.parseInt(_chb_Borns[i].getText()));
+				}
+			}
+
+			for(int i = 0; i < _chb_Survives.length; ++i) {
+				if(_chb_Survives[i].isSelected()) {
+					_rule.addSurvive(Integer.parseInt(_chb_Survives[i].getText()));
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == _cbb_Rule) {
@@ -217,7 +244,8 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		}
 		
 		else if(ae.getSource() == _cbb_Search) {
-			
+			this.initBSCheckBox();
+			this.updateRuleWithBSCheckBox();
 		}
 		
 		else if(ae.getSource() == _btn_Ok) {

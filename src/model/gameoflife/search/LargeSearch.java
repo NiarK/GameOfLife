@@ -243,4 +243,9 @@ public class LargeSearch implements Search{
         return hs;
     }
     
+	
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 12;
+	}
 }

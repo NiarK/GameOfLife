@@ -187,4 +187,10 @@ public class HexagoneSearch  implements Search{
         }
         return hs;
     }
+	
+	
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 6;
+	}
 }

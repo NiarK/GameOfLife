@@ -18,5 +18,7 @@ public interface Search {
      * @param place La case en question.
      */
     public HashSet<Point> getNeighbor(int width, int height, Point place);
+	
+	public int getNeighborMaximumNumber();
     
 }

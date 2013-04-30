@@ -57,6 +57,10 @@ public class RuleParameter {
 		_born.remove(b);
 	}
 	
+	public void emptyBorn() {
+		_born.clear();
+	}
+	
 	public void addSurvive(Integer s) {
 		_survive.add(s);
 	}
@@ -65,6 +69,10 @@ public class RuleParameter {
 		_survive.remove(s);
 	}
 
+	public void emptySurvive() {
+		_survive.clear();
+	}
+	
 	public String getScientificName() {
 		String str = "B";
 		

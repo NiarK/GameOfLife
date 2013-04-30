@@ -105,4 +105,9 @@ public class PlusSearch implements Search{
         return hs;
     }
     
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 4;
+	}
+	
 }

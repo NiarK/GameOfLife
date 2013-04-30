@@ -139,4 +139,8 @@ public class TriangleSearch implements Search{
     }
     
     
+	@Override
+	public int getNeighborMaximumNumber() {
+		return 12;
+	}
 }
