@@ -247,7 +247,7 @@ public class Field {
                 DocumentBuilder constructeur = fabrique.newDocumentBuilder();
 
                 // lecture du contenu d'un fichier XML avec DOM
-                File xml = new File("Test.cells");
+                File xml = new File(name);
                 Document document = constructeur.parse(xml);
 
                 //traitement du document

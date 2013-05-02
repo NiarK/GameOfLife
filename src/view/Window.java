@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -28,8 +30,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -46,7 +53,7 @@ import model.image.ImageManager;
  *
  * @author pierre
  */
-public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener {
+public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener {
 	
 	private RuleParameter _currentRuleParameter;
 	
@@ -69,16 +76,30 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JLabel		_lbl_Rule;
 	private JLabel		_lbl_Search;
 	
+	private JMenuBar	_menuBar;
+	private JMenu		_menuFile;
+	private JMenu		_menuAction;
+	private JMenu		_menuParameters;
+	private JMenu		_menuZoom;
+	private JMenuItem	_itemSave;
+	private JMenuItem	_itemLoad;
+	private JMenuItem	_itemPlay;
+	private JMenuItem	_itemNext;
+	private JMenuItem	_itemRandom;
+	private JMenuItem	_itemEmpty;
+	private JMenuItem	_itemSpeedP;
+	private JMenuItem	_itemSpeedM;
+	private JMenuItem	_itemSize;
+	private JMenuItem	_itemParameters;
+	private JMenuItem	_itemPlus;
+	private JMenuItem	_itemMoins;
+	
 	Point _mousePosition;
-	
 	private Field _field;
-	
 	private Controller _controller;
 
 	public Window() {
-		
 		ImageManager manager = ImageManager.getInstance();
-		
 		_controller = new Controller();
 		
 		_field = new Field(8);
@@ -87,6 +108,55 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_field.addMouseMotionListener(this);
 		_field.addMouseWheelListener(this);
 		_field.addComponentListener(this);
+		
+		_menuBar = new JMenuBar();
+		_menuFile = new JMenu("File");
+		_menuAction = new JMenu("Action");
+		_menuParameters = new JMenu("Parameters");
+		_menuZoom = new JMenu("Zoom");
+		_itemSave = new JMenuItem("Save (s)");
+		_itemSave.addActionListener(this);
+		_itemLoad = new JMenuItem("Load (o)");
+		_itemLoad.addActionListener(this);
+		_itemPlay = new JMenuItem("Play/Pause (p)");
+		_itemPlay.addActionListener(this);
+		_itemNext = new JMenuItem("Next Step (space)");
+		_itemNext.addActionListener(this);
+		_itemRandom = new JMenuItem("Random (r)");
+		_itemRandom.addActionListener(this);
+		_itemEmpty = new JMenuItem("Stop (suppr)");
+		_itemEmpty.addActionListener(this);
+		_itemSpeedP = new JMenuItem("Speed + (PgPr)");
+		_itemSpeedP.addActionListener(this);
+		_itemSpeedM = new JMenuItem("Speed - (PgSv)");
+		_itemSpeedM.addActionListener(this);
+		_itemSize = new JMenuItem("Size");
+		_itemSize.addActionListener(this);
+		_itemParameters = new JMenuItem("Parameters (Enter)");
+		_itemParameters.addActionListener(this);
+		_itemPlus = new JMenuItem("Zoom + (+)");
+		_itemPlus.addActionListener(this);
+		_itemMoins = new JMenuItem("Zoom - (-)");
+		_itemMoins.addActionListener(this);
+		
+		_menuBar.add(_menuFile);
+		_menuBar.add(_menuAction);
+		_menuBar.add(_menuParameters);
+		_menuBar.add(_menuZoom);
+		_menuFile.add(_itemSave);
+		_menuFile.add(_itemLoad);
+		_menuAction.add(_itemPlay);
+		_menuAction.add(_itemNext);
+		_menuAction.add(_itemRandom);
+		_menuAction.add(_itemEmpty);
+		_menuParameters.add(_itemSpeedP);
+		_menuParameters.add(_itemSpeedM);
+		_menuParameters.add(_itemSize);
+		_menuParameters.add(_itemParameters);
+		_menuZoom.add(_itemPlus);
+		_menuZoom.add(_itemMoins);
+		
+		setJMenuBar(_menuBar);
 		
 		//_controller = new Controller();
 		_controller.addObserverToGame(_field);
@@ -98,35 +168,43 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		_btn_Pause = new JButton();
 		_btn_Pause.addActionListener(this);
+		_btn_Pause.addKeyListener(this);
 		_btn_Pause.setIcon(new ImageIcon(manager.get("src/resources/pause.png")));
 		
 		_btn_Play = new JButton();
 		_btn_Play.addActionListener(this);
+		_btn_Play.addKeyListener(this);
 		_btn_Play.setIcon(new ImageIcon(manager.get("src/resources/play.png")));
 		
 		_btn_Next = new JButton();
 		_btn_Next.addActionListener(this);
+		_btn_Next.addKeyListener(this);
 		_btn_Next.setIcon(new ImageIcon(manager.get("src/resources/next.png")));
 		
 		_btn_RandomlyFill = new JButton();
 		_btn_RandomlyFill.addActionListener(this);
+		_btn_RandomlyFill.addKeyListener(this);
 		_btn_RandomlyFill.setIcon(new ImageIcon(manager.get("src/resources/random.png")));
 		
 		_btn_Empty = new JButton();
 		_btn_Empty.addActionListener(this);
+		_btn_Empty.addKeyListener(this);
 		_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
 		
                 _btn_Save = new JButton();
 		_btn_Save.addActionListener(this);
+		_btn_Save.addKeyListener(this);
 		_btn_Save.setIcon(new ImageIcon(manager.get("src/resources/save.png")));
 		
                 _btn_Download = new JButton();
 		_btn_Download.addActionListener(this);
+		_btn_Download.addKeyListener(this);
 		_btn_Download.setIcon(new ImageIcon(manager.get("src/resources/download.png")));
 		
                 
 		_btn_ruleParameter = new JButton();
 		_btn_ruleParameter.addActionListener(this);
+		_btn_ruleParameter.addKeyListener(this);
 		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
 		
 		_lbl_Rule = new JLabel();
@@ -134,9 +212,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		_sli_Column = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 		_sli_Column.addChangeListener(this);
+		_sli_Column.addKeyListener(this);
 		
 		_sli_Row = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 		_sli_Row.addChangeListener(this);
+		_sli_Row.addKeyListener(this);
 		
 		_txt_Column = new JTextField(3);
 		_txt_Column.setText(Integer.toString(_sli_Row.getValue()));
@@ -150,6 +230,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_cbb_Speed = new JComboBox(this.getSpeeds());
 		_cbb_Speed.setSelectedIndex(1);
 		_cbb_Speed.addActionListener(this);
+		_cbb_Speed.addKeyListener(this);
 		
 		/*_cbb_Rule = new JComboBox(_controller.getRules());
 		_cbb_Rule.setSelectedIndex(0);
@@ -273,8 +354,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		this.setContentPane(main);
 		
 		//game.addObserver(field);
-
+		this.setFocusable(true);
 		this.addWindowListener(this);
+		this.addKeyListener(this);
 
 	}
 	
@@ -325,7 +407,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_controller.pause();
 		}
 		
-		else if(e.getSource() == _btn_Play) {
+		else if(e.getSource() == _btn_Play || e.getSource() == _itemPlay) {
 			if(_controller.isPlayed()) {
 				_controller.pause();
 			}
@@ -334,26 +416,34 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}
                 
-                else if(e.getSource() == _btn_Save) {
-                       _controller.save("Test");
+                else if(e.getSource() == _btn_Save || e.getSource() == _itemSave) {
+		    JFileChooser fc = new JFileChooser();
+		    fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+
+		    if( fc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION )
+		    {
+			String name = JOptionPane.showInputDialog(null, "Nom du fichier :");
+			_controller.save(fc.getSelectedFile().getAbsolutePath()+"/"+name);
+		    }
 		}
                 
-                else if(e.getSource() == _btn_Download) {
-                       _controller.load("Test");
+                else if(e.getSource() == _btn_Download || e.getSource() == _itemLoad) {
+                    JFileChooser fc = new JFileChooser();
+		    if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+		       // chemin absolu du fichier choisi
+		       _controller.load(fc.getSelectedFile().getAbsolutePath());
+		    }
 		}
-                
-                else if(e.getSource() == _btn_Download) {
-		}
-		
-		else if(e.getSource() == _btn_Next) {
+                		
+		else if(e.getSource() == _btn_Next || e.getSource() == _itemNext) {
 			_controller.next();
 		}
 		
-		else if(e.getSource() == _btn_RandomlyFill) {
+		else if(e.getSource() == _btn_RandomlyFill || e.getSource() == _itemRandom) {
 			_controller.randomlyFill();
 		}
 		
-		else if(e.getSource() == _btn_Empty) {
+		else if(e.getSource() == _btn_Empty || e.getSource() == _itemEmpty) {
 			_controller.empty();
 		}
 		
@@ -396,7 +486,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}*/
 		
-		else if(e.getSource() == _btn_ruleParameter) {
+		else if(e.getSource() == _btn_ruleParameter || e.getSource() == _itemParameters) {
 			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 			RuleParameter rp = dialog.showDialog();
 			
@@ -405,6 +495,18 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_controller.setRule(_currentRuleParameter);
 				this.updateRuleLabel();
 			}
+		}
+		
+		else if(e.getSource() == _itemPlus){
+		    int unit = -1;
+		
+		    _field.zoom(unit);
+		}
+		
+		else if(e.getSource() == _itemMoins){
+		    int unit = 1;
+		
+		    _field.zoom(unit);
 		}
 		
 		this.updateBtnPlay();
@@ -527,7 +629,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	public void mouseWheelMoved(MouseWheelEvent mwe) {
 		
 		int unit = mwe.getWheelRotation();
-		
 		_field.zoom(unit);
 	}
 
@@ -571,6 +672,87 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					_sli_Row.getValue()));
 		}
 	}
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+	System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
+	
+	if(e.getKeyCode() == 80){
+	    if(_controller.isPlayed()) {
+		_controller.pause();
+	    }
+	    else {
+		_controller.play();
+	    }
+	}
+	else if(e.getKeyCode() == 83){
+	    JFileChooser fc = new JFileChooser();
+	    fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+
+	    if( fc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION )
+	    {
+		String name = JOptionPane.showInputDialog(null, "Nom du fichier :");
+		_controller.save(fc.getSelectedFile().getAbsolutePath()+"/"+name);
+	    }
+	    
+	}
+	else if(e.getKeyCode() == 79){
+	    JFileChooser fc = new JFileChooser();
+	    if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+	       // chemin absolu du fichier choisi
+	       _controller.load(fc.getSelectedFile().getAbsolutePath());
+	    }
+	}
+	else if(e.getKeyCode() == 32){
+	    _controller.next();
+	}
+	else if(e.getKeyCode() == 82){
+	    _controller.randomlyFill();
+	}
+	else if(e.getKeyCode() == 127){
+	    _controller.empty();
+	}
+	else if(e.getKeyCode() == 82){
+	    _controller.randomlyFill();
+	}
+	else if(e.getKeyCode() == 61){
+	    int unit = -1;
+	    _field.zoom(unit);
+	}
+	else if(e.getKeyCode() == 54){
+	    int unit = 1;
+	    _field.zoom(unit);
+	}
+	else if(e.getKeyCode() == 40){
+	    _field.moveField(new Point(0,-10));
+	}
+	else if(e.getKeyCode() == 38){
+	    _field.moveField(new Point(0,10));
+	}
+	else if(e.getKeyCode() == 37){
+	    _field.moveField(new Point(10,0));
+	}
+	else if(e.getKeyCode() == 39){
+	    _field.moveField(new Point(-10,0));
+	}
+	else if(e.getKeyCode() == 10){
+	    RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
+	    RuleParameter rp = dialog.showDialog();
+
+	    if(rp != null) {
+		    _currentRuleParameter = rp;
+		    _controller.setRule(_currentRuleParameter);
+		    this.updateRuleLabel();
+	    }
+	}
+	
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
 	
 	
 	
