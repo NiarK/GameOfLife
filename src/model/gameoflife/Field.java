@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Observable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -187,7 +191,7 @@ public class Field {
 		return str;
 	}
 	
-        public void saveGame(String name){
+        public void save(String name){
             File monFichier = new java.io.File(name+".cells"); 
             try 
             {
@@ -231,6 +235,45 @@ public class Field {
             }
             catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        }
+        
+        public void load(String name){
+            try{
+                // création d'une fabrique de documents
+                DocumentBuilderFactory fabrique = DocumentBuilderFactory.newInstance();
+
+                // création d'un constructeur de documents
+                DocumentBuilder constructeur = fabrique.newDocumentBuilder();
+
+                // lecture du contenu d'un fichier XML avec DOM
+                File xml = new File("Test.cells");
+                Document document = constructeur.parse(xml);
+
+                //traitement du document
+                Element racine = document.getDocumentElement();
+		String tag = "cell";
+		NodeList liste = racine.getElementsByTagName(tag);
+		HashMap<Point,Cell> hm = new HashMap();
+		for(int i=0; i<liste.getLength(); i++){
+			Element e = (Element)liste.item(i);
+                        NodeList coordXElement = e.getElementsByTagName("x");
+                        NodeList coordYElement = e.getElementsByTagName("y");
+                        int x = Integer.parseInt(coordXElement.item(0).getTextContent());
+                        int y = Integer.parseInt(coordYElement.item(0).getTextContent());
+                        Point coord = new Point(x,y);
+                        hm.put(coord, new Cell(coord));
+		}
+                this.setCells(hm);
+            }catch(ParserConfigurationException pce){
+                System.out.println("Erreur de configuration du parseur DOM");
+                System.out.println("lors de l'appel à fabrique.newDocumentBuilder();");
+            }catch(SAXException se){
+                System.out.println("Erreur lors du parsing du document");
+                System.out.println("lors de l'appel à construteur.parse(xml)");
+            }catch(IOException ioe){
+                System.out.println("Erreur d'entrée/sortie");
+                System.out.println("lors de l'appel à construteur.parse(xml)");
             }
         }
 }

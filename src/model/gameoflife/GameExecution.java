@@ -88,7 +88,13 @@ public class GameExecution extends Observable implements Runnable {
 		_rule = rule;
 	}
         
-        public void saveGame(String name){
-            _field.saveGame(name);
+        public void save(String name){
+            _field.save(name);
+        }
+        
+        public void load(String name){
+            _field.load(name);
+            this.setChanged();
+            this.notifyObservers();
         }
 }

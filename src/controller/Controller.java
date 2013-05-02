@@ -126,8 +126,28 @@ public final class Controller {
 		_simulator.play();
 	}
         
-        public void save(String name){
-            _game.saveGame(name);
+        public void save(final String name){
+            Thread t = new Thread(new Runnable() {
+
+		@Override
+		public void run() {
+			_game.save(name);
+		}
+            });
+
+            t.start();
+        }
+	
+        public void load(final String name){
+            Thread t = new Thread(new Runnable() {
+
+		@Override
+		public void run() {
+			_game.load(name);
+		}
+            });
+
+            t.start();
         }
 	
 	public void next() {

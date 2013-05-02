@@ -339,6 +339,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
                 
                 else if(e.getSource() == _btn_Download) {
+                       _controller.load("Test");
+		}
+                
+                else if(e.getSource() == _btn_Download) {
 		}
 		
 		else if(e.getSource() == _btn_Next) {
