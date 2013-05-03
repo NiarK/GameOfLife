@@ -42,6 +42,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -49,11 +50,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import model.image.ImageManager;
 
-/**
- *
- * @author pierre
- */
-public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener {
+
+public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener{
 	
 	private RuleParameter _currentRuleParameter;
 	
@@ -76,23 +74,23 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JLabel		_lbl_Rule;
 	private JLabel		_lbl_Search;
 	
-	private JMenuBar	_menuBar;
-	private JMenu		_menuFile;
-	private JMenu		_menuAction;
-	private JMenu		_menuParameters;
-	private JMenu		_menuZoom;
-	private JMenuItem	_itemSave;
-	private JMenuItem	_itemLoad;
-	private JMenuItem	_itemPlay;
-	private JMenuItem	_itemNext;
-	private JMenuItem	_itemRandom;
-	private JMenuItem	_itemEmpty;
-	private JMenuItem	_itemSpeedP;
-	private JMenuItem	_itemSpeedM;
-	private JMenuItem	_itemSize;
-	private JMenuItem	_itemParameters;
-	private JMenuItem	_itemPlus;
-	private JMenuItem	_itemMoins;
+	private JMenuBar	_menu_bar;
+	private JMenu		_menu_file;
+	private JMenu		_menu_action;
+	private JMenu		_menu_parameters;
+	private JMenu		_menu_zoom;
+	private JMenuItem	_item_save;
+	private JMenuItem	_item_load;
+	private JMenuItem	_item_play;
+	private JMenuItem	_item_next;
+	private JMenuItem	_item_random;
+	private JMenuItem	_item_empty;
+	private JMenuItem	_item_speed_p;
+	private JMenuItem	_item_speed_m;
+	private JMenuItem	_item_size;
+	private JMenuItem	_item_parameters;
+	private JMenuItem	_item_plus;
+	private JMenuItem	_item_moins;
 	
 	Point _mousePosition;
 	private Field _field;
@@ -109,54 +107,70 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_field.addMouseWheelListener(this);
 		_field.addComponentListener(this);
 		
-		_menuBar = new JMenuBar();
-		_menuFile = new JMenu("File");
-		_menuAction = new JMenu("Action");
-		_menuParameters = new JMenu("Parameters");
-		_menuZoom = new JMenu("Zoom");
-		_itemSave = new JMenuItem("Save (s)");
-		_itemSave.addActionListener(this);
-		_itemLoad = new JMenuItem("Load (o)");
-		_itemLoad.addActionListener(this);
-		_itemPlay = new JMenuItem("Play/Pause (p)");
-		_itemPlay.addActionListener(this);
-		_itemNext = new JMenuItem("Next Step (space)");
-		_itemNext.addActionListener(this);
-		_itemRandom = new JMenuItem("Random (r)");
-		_itemRandom.addActionListener(this);
-		_itemEmpty = new JMenuItem("Stop (suppr)");
-		_itemEmpty.addActionListener(this);
-		_itemSpeedP = new JMenuItem("Speed + (PgPr)");
-		_itemSpeedP.addActionListener(this);
-		_itemSpeedM = new JMenuItem("Speed - (PgSv)");
-		_itemSpeedM.addActionListener(this);
-		_itemSize = new JMenuItem("Size");
-		_itemSize.addActionListener(this);
-		_itemParameters = new JMenuItem("Parameters (Enter)");
-		_itemParameters.addActionListener(this);
-		_itemPlus = new JMenuItem("Zoom + (+)");
-		_itemPlus.addActionListener(this);
-		_itemMoins = new JMenuItem("Zoom - (-)");
-		_itemMoins.addActionListener(this);
+		_menu_bar = new JMenuBar();
+		_menu_file = new JMenu("File");
+		_menu_file.setMnemonic(KeyEvent.VK_F);
+		_menu_action = new JMenu("Action");
+		_menu_action.setMnemonic(KeyEvent.VK_A);
+		_menu_parameters = new JMenu("Parameters");
+		_menu_parameters.setMnemonic(KeyEvent.VK_M);
+		_menu_zoom = new JMenu("Zoom");
+		_menu_zoom.setMnemonic(KeyEvent.VK_Z);
+		_item_save = new JMenuItem("Save");
+		_item_save.addActionListener(this);
+		_item_save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
+		_item_load = new JMenuItem("Load");
+		_item_load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
+		_item_load.addActionListener(this);
+		_item_play = new JMenuItem("Play/Pause");
+		_item_play.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK));
+		_item_play.addActionListener(this);
+		_item_next = new JMenuItem("Next Step");
+		_item_next.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK));
+		_item_next.addActionListener(this);
+		_item_random = new JMenuItem("Random");
+		_item_random.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
+		_item_random.addActionListener(this);
+		_item_empty = new JMenuItem("Stop");
+		_item_empty.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK));
+		_item_empty.addActionListener(this);
+		_item_speed_p = new JMenuItem("Speed +");
+		_item_speed_p.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK));
+		_item_speed_p.addActionListener(this);
+		_item_speed_m = new JMenuItem("Speed -");
+		_item_speed_m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK));
+		_item_speed_m.addActionListener(this);
+		_item_size = new JMenuItem("Size");
+		_item_size.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
+		_item_size.addActionListener(this);
+		_item_parameters = new JMenuItem("Parameters");
+		_item_parameters.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
+		_item_parameters.addActionListener(this);
+		_item_plus = new JMenuItem("Zoom +");
+		_item_plus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_MASK));
+		_item_plus.addActionListener(this);
+		_item_moins = new JMenuItem("Zoom -");
+		_item_moins.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_MASK));
+		_item_moins.addActionListener(this);
 		
-		_menuBar.add(_menuFile);
-		_menuBar.add(_menuAction);
-		_menuBar.add(_menuParameters);
-		_menuBar.add(_menuZoom);
-		_menuFile.add(_itemSave);
-		_menuFile.add(_itemLoad);
-		_menuAction.add(_itemPlay);
-		_menuAction.add(_itemNext);
-		_menuAction.add(_itemRandom);
-		_menuAction.add(_itemEmpty);
-		_menuParameters.add(_itemSpeedP);
-		_menuParameters.add(_itemSpeedM);
-		_menuParameters.add(_itemSize);
-		_menuParameters.add(_itemParameters);
-		_menuZoom.add(_itemPlus);
-		_menuZoom.add(_itemMoins);
+		_menu_bar.add(_menu_file);
+		_menu_bar.add(_menu_action);
+		_menu_bar.add(_menu_parameters);
+		_menu_bar.add(_menu_zoom);
+		_menu_file.add(_item_save);
+		_menu_file.add(_item_load);
+		_menu_action.add(_item_play);
+		_menu_action.add(_item_next);
+		_menu_action.add(_item_random);
+		_menu_action.add(_item_empty);
+		_menu_parameters.add(_item_speed_p);
+		_menu_parameters.add(_item_speed_m);
+		_menu_parameters.add(_item_size);
+		_menu_parameters.add(_item_parameters);
+		_menu_zoom.add(_item_plus);
+		_menu_zoom.add(_item_moins);
 		
-		setJMenuBar(_menuBar);
+		setJMenuBar(_menu_bar);
 		
 		//_controller = new Controller();
 		_controller.addObserverToGame(_field);
@@ -354,9 +368,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		this.setContentPane(main);
 		
 		//game.addObserver(field);
+		this.addKeyListener(this);
 		this.setFocusable(true);
 		this.addWindowListener(this);
-		this.addKeyListener(this);
 
 	}
 	
@@ -407,7 +421,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_controller.pause();
 		}
 		
-		else if(e.getSource() == _btn_Play || e.getSource() == _itemPlay) {
+		else if(e.getSource() == _btn_Play || e.getSource() == _item_play) {
 			if(_controller.isPlayed()) {
 				_controller.pause();
 			}
@@ -416,7 +430,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}
                 
-                else if(e.getSource() == _btn_Save || e.getSource() == _itemSave) {
+                else if(e.getSource() == _btn_Save || e.getSource() == _item_save) {
 		    JFileChooser fc = new JFileChooser();
 		    fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
 
@@ -427,7 +441,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		    }
 		}
                 
-                else if(e.getSource() == _btn_Download || e.getSource() == _itemLoad) {
+                else if(e.getSource() == _btn_Download || e.getSource() == _item_load) {
                     JFileChooser fc = new JFileChooser();
 		    if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
 		       // chemin absolu du fichier choisi
@@ -435,15 +449,15 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		    }
 		}
                 		
-		else if(e.getSource() == _btn_Next || e.getSource() == _itemNext) {
+		else if(e.getSource() == _btn_Next || e.getSource() == _item_next) {
 			_controller.next();
 		}
 		
-		else if(e.getSource() == _btn_RandomlyFill || e.getSource() == _itemRandom) {
+		else if(e.getSource() == _btn_RandomlyFill || e.getSource() == _item_random) {
 			_controller.randomlyFill();
 		}
 		
-		else if(e.getSource() == _btn_Empty || e.getSource() == _itemEmpty) {
+		else if(e.getSource() == _btn_Empty || e.getSource() == _item_empty) {
 			_controller.empty();
 		}
 		
@@ -486,7 +500,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}*/
 		
-		else if(e.getSource() == _btn_ruleParameter || e.getSource() == _itemParameters) {
+		else if(e.getSource() == _btn_ruleParameter || e.getSource() == _item_parameters) {
 			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 			RuleParameter rp = dialog.showDialog();
 			
@@ -497,13 +511,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}
 		
-		else if(e.getSource() == _itemPlus){
+		else if(e.getSource() == _item_plus){
 		    int unit = -1;
 		
 		    _field.zoom(unit);
 		}
 		
-		else if(e.getSource() == _itemMoins){
+		else if(e.getSource() == _item_moins){
 		    int unit = 1;
 		
 		    _field.zoom(unit);
@@ -656,77 +670,30 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 //		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-	@Override
-	public void stateChanged(ChangeEvent ce) {
-		if(ce.getSource() == _sli_Column) {
-			_txt_Column.setText(Integer.toString(_sli_Column.getValue()));
-			_controller.setFieldSize(
-					new Point(
-					_sli_Column.getValue(),
-					_sli_Row.getValue()));
-		} else if (ce.getSource() == _sli_Row) {
-			_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
-			_controller.setFieldSize(
-					new Point(
-					_sli_Column.getValue(),
-					_sli_Row.getValue()));
-		}
+    @Override
+    public void stateChanged(ChangeEvent ce) {
+	if(ce.getSource() == _sli_Column) {
+		_txt_Column.setText(Integer.toString(_sli_Column.getValue()));
+		_controller.setFieldSize(
+				new Point(
+				_sli_Column.getValue(),
+				_sli_Row.getValue()));
+	} else if (ce.getSource() == _sli_Row) {
+		_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
+		_controller.setFieldSize(
+				new Point(
+				_sli_Column.getValue(),
+				_sli_Row.getValue()));
 	}
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
-	System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
-	
-	if(e.getKeyCode() == 80){
-	    if(_controller.isPlayed()) {
-		_controller.pause();
-	    }
-	    else {
-		_controller.play();
-	    }
-	}
-	else if(e.getKeyCode() == 83){
-	    JFileChooser fc = new JFileChooser();
-	    fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-
-	    if( fc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION )
-	    {
-		String name = JOptionPane.showInputDialog(null, "Nom du fichier :");
-		_controller.save(fc.getSelectedFile().getAbsolutePath()+"/"+name);
-	    }
-	    
-	}
-	else if(e.getKeyCode() == 79){
-	    JFileChooser fc = new JFileChooser();
-	    if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
-	       // chemin absolu du fichier choisi
-	       _controller.load(fc.getSelectedFile().getAbsolutePath());
-	    }
-	}
-	else if(e.getKeyCode() == 32){
-	    _controller.next();
-	}
-	else if(e.getKeyCode() == 82){
-	    _controller.randomlyFill();
-	}
-	else if(e.getKeyCode() == 127){
-	    _controller.empty();
-	}
-	else if(e.getKeyCode() == 82){
-	    _controller.randomlyFill();
-	}
-	else if(e.getKeyCode() == 61){
-	    int unit = -1;
-	    _field.zoom(unit);
-	}
-	else if(e.getKeyCode() == 54){
-	    int unit = 1;
-	    _field.zoom(unit);
-	}
-	else if(e.getKeyCode() == 40){
+	//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
+	if(e.getKeyCode() == 40){
 	    _field.moveField(new Point(0,-10));
 	}
 	else if(e.getKeyCode() == 38){
@@ -738,22 +705,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	else if(e.getKeyCode() == 39){
 	    _field.moveField(new Point(-10,0));
 	}
-	else if(e.getKeyCode() == 10){
-	    RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
-	    RuleParameter rp = dialog.showDialog();
-
-	    if(rp != null) {
-		    _currentRuleParameter = rp;
-		    _controller.setRule(_currentRuleParameter);
-		    this.updateRuleLabel();
-	    }
-	}
-	
     }
 
     @Override
     public void keyReleased(KeyEvent e) {}
-	
 	
 	
 }
