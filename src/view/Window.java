@@ -23,6 +23,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -431,22 +433,47 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
                 
                 else if(e.getSource() == _btn_Save || e.getSource() == _item_save) {
+		    boolean test = false;
 		    JFileChooser fc = new JFileChooser();
-		    fc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		    fc.setSelectedFile(new File("Cellule.cells"));
+		    do{
+			if( fc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION )
+			{
+			    String path = fc.getSelectedFile().getPath();
+			    File toto = new File(path); 
+			    if( !toto.exists() ) 
+				_controller.save(path);
+			    else if(JOptionPane.showConfirmDialog(null, "Ce fichier existe déjà, l'écraser?", "Confirmer l'écrasement", JOptionPane.OK_CANCEL_OPTION) == 0)
+			    {
+				_controller.save(path);
+			    }
+			    else
+				test = true;
 
-		    if( fc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION )
-		    {
-			String name = JOptionPane.showInputDialog(null, "Nom du fichier :");
-			_controller.save(fc.getSelectedFile().getAbsolutePath()+"/"+name);
-		    }
+			}
+			else
+			{
+			    test = false;
+			}
+		    }while(test);
 		}
                 
                 else if(e.getSource() == _btn_Download || e.getSource() == _item_load) {
                     JFileChooser fc = new JFileChooser();
-		    if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
-		       // chemin absolu du fichier choisi
-		       _controller.load(fc.getSelectedFile().getAbsolutePath());
-		    }
+		    boolean test;
+		    do{
+			test = false;
+			if(fc.showOpenDialog(this)==JFileChooser.APPROVE_OPTION){
+			    if(fc.getSelectedFile().getAbsolutePath().endsWith(".cells")){
+				_controller.load(fc.getSelectedFile().getAbsolutePath());
+			    }
+			    else
+			    {
+				JOptionPane.showMessageDialog(null,"Vous devez choisir un fichier .cells");
+				test = true;
+			    }   
+			}
+		    }while(test);
 		}
                 		
 		else if(e.getSource() == _btn_Next || e.getSource() == _item_next) {

@@ -192,7 +192,7 @@ public class Field {
 	}
 	
         public void save(String name){
-            File monFichier = new java.io.File(name+".cells"); 
+            File monFichier = new java.io.File(name); 
             try 
             {
                 monFichier.createNewFile(); // Cette fonction doit être appelée au sein d'un bloc TRY 
