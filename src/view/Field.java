@@ -4,15 +4,11 @@
  */
 package view;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
-import model.gameoflife.Cell;
 import model.gameoflife.GameExecution;
 
 /**
@@ -21,16 +17,16 @@ import model.gameoflife.GameExecution;
  */
 public final class Field extends JPanel implements Observer/*, Runnable */ {
 
-	private HashMap<Point, Cell> _cells;
+	/*private HashMap<Point, Cell> _cells;
 	private Point _size;
 	private int _cellSize;
 	private Point _position;
 	private Point _offset;
 	private Point _indicator;
 	private double _zoom;
-	private Point _oldComponentSize;
+	private Point _oldComponentSize;*/
 	
-	private view.Cell _cell;
+	private FieldDrawManager _drawer;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
@@ -42,7 +38,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		/*CellImageParameter p = new CellImageParameter("cell.png", new Point(10,10), 5,5,5);
 		 c = new view.Cell(new CellState(), p);
 		 */
-		_cells = new HashMap<>();
+		/*_cells = new HashMap<>();
 
 		_cellSize = 15;
 
@@ -50,22 +46,36 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 
 		_offset = new Point(0, 0);
 
-		_size = new Point(0, 0);
+		_size = new Point(1, 1);
 
 		_indicator = null;
 
 		_zoom = 1;
 
-		_oldComponentSize = new Point(this.getWidth(), this.getHeight());
+		_oldComponentSize = new Point(this.getWidth(), this.getHeight());*/
 
-		this.setNeighbors(neighbors);
+		_drawer = new FieldDrawManager(new Point(this.getWidth(), this.getHeight()));
+		_drawer.setCellSize(10);
+		/*_drawer.setCellSize(15);
+		_drawer.setComponentSize(new Point(this.getWidth(), this.getHeight()));
+		_drawer.setFieldSize(_size);
+		_drawer.setIndicator(_indicator);
+		_drawer.setOffset(_offset);
+		_drawer.setPosition(_position);
+		_drawer.setZoom(_zoom);*/
+		
+		
+		//this.setNeighbors(neighbors);
 		//_exec = true;
 
 	}
 
+	@Override
 	public synchronized void paintComponent(Graphics g) {
 
-		g.setColor(Color.BLACK);
+		_drawer.draw(g);
+		
+		/*g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 		//TODO: Mettre ce calcul autre part
@@ -78,7 +88,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 					(int) (_cellSize * _zoom) * _indicator.x + _offset.x,
 					(int) (_cellSize * _zoom) * _indicator.y + _offset.y,
 					/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
-					 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
+					 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*
 					(int) (_cellSize * _zoom),
 					(int) (_cellSize * _zoom));
 		}
@@ -119,10 +129,10 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 						/*(int) ((_cellSize * coord.x + _offset.x) * _zoom), 
 						 (int) ((_cellSize * coord.y + _offset.y) * _zoom), *
 						(int) (_cellSize * _zoom),
-						(int) (_cellSize * _zoom));*/
+						(int) (_cellSize * _zoom));*
 
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -131,26 +141,44 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		if (o instanceof GameExecution) {
 			GameExecution game = (GameExecution) o;
 			
-			_cells = game.getCells();
-			_size = game.getFieldSize();
+			_drawer.setCells(game.getCells());
+			_drawer.setFieldSize(game.getFieldSize());
+			/*_cells = game.getCells();
+			_size = game.getFieldSize();*/
 
 			this.repaint();
 		}
 	}
 
 	public synchronized void setNeighbors(int n) {
-		_cell = new view.Cell();
+		if ( n == 6 ) {
+			_drawer = new HexagonalDrawManager(_drawer);
+		}
+		else if ( n == 3 ) {
+			_drawer = new FieldDrawManager(_drawer);
+		}
+		else {
+			_drawer = new FieldDrawManager(_drawer);
+		}
 	}
 	
-	public Point cellCoordinate(Point coord) {
+	/**
+	 * Retourne la position de la cellule a partir d'une position dans le composant.
+	 * @param coord La position dans le composant.
+	 * @return La coordonnée de la céllule
+	 */
+	/*public Point cellCoordinate(Point coord) {
 		Point cell = new Point();
 		cell.x = (coord.x - _offset.x - 1) / (int) (_cellSize * _zoom);
 		cell.y = (coord.y - _offset.y - 1) / (int) (_cellSize * _zoom);
 		return cell;
-	}
+	}*/
 
 	public void setIndicatorPosition(Point coord) {
-		coord = this.cellCoordinate(coord);
+		if(_drawer.setIndicatorPosition(coord)){
+			this.repaint();
+		}
+		/*coord = this.cellCoordinate(coord);
 		if (isInsideTheField(coord)) {
 			if (!coord.equals(_indicator)) {
 				_indicator = coord;
@@ -159,27 +187,31 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 			}
 		} else {
 			_indicator = null;
-		}
+		}*/
 	}
 
-	public boolean isInsideTheField(Point coord) {
+	/*public boolean isInsideTheField(Point coord) {
 		return coord.x >= 0 && coord.x < _size.x
 			&& coord.y >= 0 && coord.y < _size.y;
-	}
+	}*/
 
 	public void moveField(Point movement) {
 		/*_offset.x += movement.x;
 		 _offset.y += movement.y;*/
-		_position.x += movement.x;
+		_drawer.moveField(movement);
+		/*_position.x += movement.x;
 		_position.y += movement.y;
 		_offset.x = _position.x - (int) (_size.x * _cellSize * _zoom) / 2;
-		_offset.y = _position.y - (int) (_size.y * _cellSize * _zoom) / 2;
+		_offset.y = _position.y - (int) (_size.y * _cellSize * _zoom) / 2;*/
 
 		this.repaint();
 	}
 
 	public void zoom(int unit) {
-		_zoom *= Math.pow(Field.ZOOM_UNIT, unit);
+		
+		_drawer.zoom(unit);
+		
+		/*_zoom *= Math.pow(Field.ZOOM_UNIT, unit);
 		//System.out.println(_zoom);
 
 		if (_zoom > 1) {
@@ -188,15 +220,20 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 			_zoom = 0.2;
 		}
 
+		_drawer.setZoom(_zoom);*/
+		
 		this.repaint();
 	}
 
 	public Point getIndicator() {
-		return _indicator;
+		return _drawer.getIndicator();//_indicator;
 	}
 
 	public void resize() {
-		Point size = new Point();
+		
+		_drawer.setComponentSize(new Point(this.getWidth(),this.getHeight()));
+		_drawer.resize();
+		/*Point size = new Point();
 		size.x = this.getWidth() - _oldComponentSize.x;
 		size.y = this.getHeight() - _oldComponentSize.y;
 
@@ -204,7 +241,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_position.y += size.y / 2;
 
 		_oldComponentSize.x = this.getWidth();
-		_oldComponentSize.y = this.getHeight();
+		_oldComponentSize.y = this.getHeight();*/
 	}
 	
 }

@@ -18,6 +18,7 @@ public class RuleParameter {
 	private String _search;
 	private boolean _torus;
 	private String _name;
+	private int _neighbor;
 
 	public RuleParameter() {
 		this("");
@@ -36,6 +37,7 @@ public class RuleParameter {
 			name = "";
 		}
 		_name = name;
+		_neighbor = 0;
 	}
 	
 	/*public RuleParameter(RuleParameter rule) {
@@ -146,10 +148,17 @@ public class RuleParameter {
 		return this.getName();
 	}
 
-
-	@Override
+	/*@Override
 	protected Object clone() throws CloneNotSupportedException {
-		return super.clone(); //To change body of generated methods, choose Tools | Templates.
+	return super.clone(); //To change body of generated methods, choose Tools | Templates.
+	}*/
+	
+	public int getNeighbor() {
+		return _neighbor;
+	}
+
+	public void setNeighbor(int neighbor) {
+		this._neighbor = neighbor;
 	}
 	
 	

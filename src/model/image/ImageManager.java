@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import view.Cell;
+import view.FieldDrawManager;
 
 /**
  *
@@ -48,7 +48,7 @@ public class ImageManager {
 				img = ImageIO.read(new File(filename));
 				_images.put(filename, img);
 			} catch (IOException ex) {
-				Logger.getLogger(Cell.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(FieldDrawManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 		
