@@ -151,11 +151,12 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	}
 
 	public synchronized void setNeighbors(int n) {
+		System.out.println(n);
 		if ( n == 6 ) {
 			_drawer = new HexagonalDrawManager(_drawer);
 		}
-		else if ( n == 3 ) {
-			_drawer = new FieldDrawManager(_drawer);
+		else if ( n == 3 || n == 12) {
+			_drawer = new TriangularDrawManager(_drawer);
 		}
 		else {
 			_drawer = new FieldDrawManager(_drawer);

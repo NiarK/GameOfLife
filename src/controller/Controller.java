@@ -5,18 +5,16 @@
 package controller;
 
 import java.awt.Point;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.gameoflife.Field;
 import model.gameoflife.GameExecution;
 import model.gameoflife.Search;
 import model.gameoflife.StandardRule;
 import model.gameoflife.search.PlusSearch;
 import model.gameoflife.search.CrossSearch;
 import model.gameoflife.search.HexagoneSearch;
+import model.gameoflife.search.LargeTriangleSearch;
 import model.gameoflife.search.SquareSearch;
 import model.gameoflife.search.TriangleSearch;
 import model.simulator.Simulator;
@@ -71,12 +69,13 @@ public final class Controller {
 		
 		String standardSearch = "Square";
 		
-		_searchName = new String[5];
+		_searchName = new String[6];
 		_searchName[0] = standardSearch;
 		_searchName[1] = "Plus";
 		_searchName[2] = "Cross";
 		_searchName[3] = "Hexagone";
 		_searchName[4] = "Triangle";
+		_searchName[5] = "Large triangle";
 		
 		_rules = new RuleParameter[4];
 		
@@ -289,6 +288,9 @@ public final class Controller {
 		}
 		else if(rp.getSearch().equals(_searchName[4])){
 			return new TriangleSearch(rp.isTorus());
+		}
+		else if(rp.getSearch().equals(_searchName[5])){
+			return new LargeTriangleSearch(rp.isTorus());
 		}
 		
 		return new SquareSearch(rp.isTorus());

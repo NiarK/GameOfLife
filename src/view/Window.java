@@ -60,9 +60,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_Next;
 	private JButton _btn_RandomlyFill;
 	private JButton _btn_Empty;
-	private JButton _btn_Save;
-	private JButton _btn_Download;
-	private JButton _btn_ruleParameter;
+	/*private JButton _btn_Save;
+	private JButton _btn_Load;*/
+	private JButton _btn_RuleParameter;
 	private JComboBox _cbb_Speed;
 	//private JComboBox	_cbb_Rule;
 	private JTextField _txt_Column;
@@ -201,21 +201,21 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_Empty.addKeyListener(this);
 		_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
 
-		_btn_Save = new JButton();
+		/*_btn_Save = new JButton();
 		_btn_Save.addActionListener(this);
 		_btn_Save.addKeyListener(this);
 		_btn_Save.setIcon(new ImageIcon(manager.get("src/resources/save.png")));
 
-		_btn_Download = new JButton();
-		_btn_Download.addActionListener(this);
-		_btn_Download.addKeyListener(this);
-		_btn_Download.setIcon(new ImageIcon(manager.get("src/resources/open.png")));
+		_btn_Load = new JButton();
+		_btn_Load.addActionListener(this);
+		_btn_Load.addKeyListener(this);
+		_btn_Load.setIcon(new ImageIcon(manager.get("src/resources/open.png")));*/
 
 
-		_btn_ruleParameter = new JButton();
-		_btn_ruleParameter.addActionListener(this);
-		_btn_ruleParameter.addKeyListener(this);
-		_btn_ruleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
+		_btn_RuleParameter = new JButton();
+		_btn_RuleParameter.addActionListener(this);
+		_btn_RuleParameter.addKeyListener(this);
+		_btn_RuleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
 
 		_lbl_Rule = new JLabel();
 		_lbl_Search = new JLabel();
@@ -269,13 +269,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		fieldAction.add(_btn_Empty);
 		fieldAction.add(Box.createHorizontalGlue());
 
-		JPanel xmlAction = new JPanel();
+		/*JPanel xmlAction = new JPanel();
 		xmlAction.setLayout(new BoxLayout(xmlAction, BoxLayout.LINE_AXIS));
 		xmlAction.add(Box.createHorizontalGlue());
 		xmlAction.add(_btn_Save);
 		xmlAction.add(Box.createHorizontalGlue());
-		xmlAction.add(_btn_Download);
-		xmlAction.add(Box.createHorizontalGlue());
+		xmlAction.add(_btn_Load);
+		xmlAction.add(Box.createHorizontalGlue());*/
 
 		JPanel sizeLabel = new JPanel();
 		sizeLabel.setLayout(new FlowLayout());
@@ -311,7 +311,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		JPanel ruleBtn = new JPanel();
 		ruleBtn.setLayout(new FlowLayout());
-		ruleBtn.add(_btn_ruleParameter);
+		ruleBtn.add(_btn_RuleParameter);
 
 		JPanel rule = new JPanel();
 		rule.setLayout(new FlowLayout());
@@ -331,8 +331,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		option.add(player);
 		option.add(Box.createVerticalGlue());
 		option.add(fieldAction);
-		option.add(Box.createVerticalGlue());
-		option.add(xmlAction);
+		/*option.add(Box.createVerticalGlue());
+		option.add(xmlAction);*/
 		option.add(Box.createVerticalGlue());
 		option.add(new JSeparator());
 		option.add(speed);
@@ -423,7 +423,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_controller.play();
 			}
 		} 
-		else if (e.getSource() == _btn_Save || e.getSource() == _item_save) {
+		else if (/*e.getSource() == _btn_Save || */e.getSource() == _item_save) {
 			boolean test = false;
 			JFileChooser fc = new JFileChooser();
 			fc.setSelectedFile(new File("Cellule.cells"));
@@ -444,7 +444,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				}
 			} while (test);
 		} 
-		else if (e.getSource() == _btn_Download || e.getSource() == _item_load) {
+		else if (/*e.getSource() == _btn_Load || */e.getSource() == _item_load) {
 			JFileChooser fc = new JFileChooser();
 			boolean test;
 			do {
@@ -498,7 +498,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		 Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
 		 }
 		 }*/ 
-		else if (e.getSource() == _btn_ruleParameter || e.getSource() == _item_parameters) {
+		else if (e.getSource() == _btn_RuleParameter || e.getSource() == _item_parameters) {
 			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 			RuleParameter rp = dialog.showDialog();
 

@@ -67,14 +67,14 @@ public class HexagonalDrawManager extends FieldDrawManager {
 	
 
 	@Override
-	protected synchronized void drawCells(Graphics g) {
-		Point p1 = new Point();
+	protected synchronized void drawCells(Graphics g, Point p1, Point p2) {
+		/*point p1 = new Point();
 		Point p2 = new Point();
 
 		p1.x = (int) (-_offset.x / _zoom) / _cellSize;
 		p1.y = (int) (-_offset.y / _zoom) / _cellSize;
 		p2.x = (int) ((_componentSize.x - _offset.x) / (int)(_cellSize * _zoom));
-		p2.y = (int) ((_componentSize.y - _offset.y) / (int)(_cellSize * _zoom));
+		p2.y = (int) ((_componentSize.y - _offset.y) / (int)(_cellSize * _zoom));*/
 		
 		for (Map.Entry<Point, Cell> entry : _cells.entrySet()) {
 			Point coord = entry.getKey();

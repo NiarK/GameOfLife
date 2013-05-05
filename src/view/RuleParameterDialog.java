@@ -144,8 +144,8 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 			_chb_Torus.setSelected(rp.isTorus());
 			
 			boolean updateCustom = true;
-					
-			for(int i = 0; i < _cbb_Rule.getItemCount() - 2; ++i) {
+			
+			for(int i = 0; i < _cbb_Rule.getItemCount() - 1; ++i) {
 				RuleParameter item = (RuleParameter)_cbb_Rule.getItemAt(i);
 				if(rp.getName().equals(item.getName())) {
 					_cbb_Rule.setSelectedIndex(i);

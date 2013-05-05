@@ -84,14 +84,7 @@ public class FieldDrawManager {
 			(int) (_cellSize * _zoom));
 	}
 	
-	protected synchronized void drawCells(Graphics g) {
-		Point p1 = new Point();
-		Point p2 = new Point();
-
-		p1.x = (int) (-_offset.x / _zoom) / _cellSize;
-		p1.y = (int) (-_offset.y / _zoom) / _cellSize;
-		p2.x = (int) ((_componentSize.x - _offset.x) / (int)(_cellSize * _zoom));
-		p2.y = (int) ((_componentSize.y - _offset.y) / (int)(_cellSize * _zoom));
+	protected synchronized void drawCells(Graphics g, Point p1, Point p2) {
 		
 		for (Map.Entry<Point, Cell> entry : _cells.entrySet()) {
 			Point coord = entry.getKey();
@@ -123,16 +116,26 @@ public class FieldDrawManager {
 		_offset.x = _position.x - (int) (_fieldSize.x * _cellSize * _zoom) / 2;
 		_offset.y = _position.y - (int) (_fieldSize.y * _cellSize * _zoom) / 2;
 
-		if (_indicator != null) {
-			g.setColor(Color.LIGHT_GRAY);
-			this.drawIndicator(g);
-		}
 
 		g.setColor(Color.DARK_GRAY);
 		this.drawBorder(g);
 
+		Point p1 = new Point();
+		Point p2 = new Point();
+
+		p1.x = (int) (-_offset.x / _zoom) / _cellSize;
+		p1.y = (int) (-_offset.y / _zoom) / _cellSize;
+		p2.x = (int) ((_componentSize.x - _offset.x) / (int)(_cellSize * _zoom));
+		p2.y = (int) ((_componentSize.y - _offset.y) / (int)(_cellSize * _zoom));
+		
 		g.setColor(Color.red);
-		this.drawCells(g);
+		this.drawCells(g, p1, p2);
+		
+		
+		if (_indicator != null) {
+			g.setColor(Color.LIGHT_GRAY);
+			this.drawIndicator(g);
+		}
 		
 	}
 
