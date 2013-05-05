@@ -12,14 +12,14 @@ import java.util.HashSet;
  *
  * @author Quentin
  */
-public class TriangleLargeSearch implements Search{
+public class LargeTriangleSearch implements Search{
     private boolean torus;
 
-    public TriangleLargeSearch(boolean torus) {
+    public LargeTriangleSearch(boolean torus) {
         this.torus = torus;
     }
 
-    public TriangleLargeSearch() {
+    public LargeTriangleSearch() {
         this.torus = false;
     }
 

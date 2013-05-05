@@ -104,6 +104,6 @@ public class TriangleSearch implements Search{
     
 	@Override
 	public int getNeighborMaximumNumber() {
-		return 4;
+		return 3;
 	}
 }
