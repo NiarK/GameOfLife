@@ -141,7 +141,7 @@ public class StandardRule implements Rule {
 	}
 	
 	@Override
-	public Field randomlyFill(Field field) {
+	public void randomlyFill(Field field) {
 
 		Point size = field.getSize();
 		HashMap<Point, Cell> cells = new HashMap();//field.getCells();
@@ -167,17 +167,52 @@ public class StandardRule implements Rule {
 		field.setCells(cells);
 
 
-		return updateEmergingPlaces(field);
+		updateEmergingPlaces(field);
 	}
-
+	
 	@Override
-	public Field update(Field field) {
+	public void updateEmergingPlaces(Field field){
 
-		this.updateEmergingPlaces(field);
+		HashMap<Point, Cell>	cells			= field.getCells();
+		HashMap<Point, Integer> emergingPlaces	= field.getEmergingPlaces(); //new HashMap<>();//
+		emergingPlaces.clear();
 
+		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
+
+			if(entry.getValue().getState().isAlive()) {
+				updateEmergingPlace(entry.getKey(), field);
+			}
+		}
+	}
+	
+	@Override
+	public void calculEmergingCells(Field field) {
+		
 		HashMap<Point, Cell> cells = field.getCells();
 		HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
+		
+		for(Map.Entry<Point, Integer> entry : emergingPlaces.entrySet()) {
 
+			Integer neighborNumber = entry.getValue();
+
+			if(this._born.contains(neighborNumber)) {
+				Point coord = entry.getKey();
+				Cell c = Cell.getEmergingCell(coord);
+				cells.put(coord, c);
+			}
+		}
+	}
+	
+	@Override
+	public void calculNextCellsGeneration(Field field) {
+
+		// Mets à jour les cellules vides ayant des voisins
+		//this.updateEmergingPlaces(field);
+
+		HashMap<Point, Cell> cells = field.getCells();
+		//HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
+
+		// Mets à jour l'états suivant de chaque cellules
 		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
 			Integer neighborNumber = this.getNeighborNumber(field, entry.getKey());
 
@@ -187,7 +222,8 @@ public class StandardRule implements Rule {
 			}
 		}
 
-		for(Map.Entry<Point, Integer> entry : emergingPlaces.entrySet()) {
+		// Fait naitre les cellules qui doivent naitres
+		/*for(Map.Entry<Point, Integer> entry : emergingPlaces.entrySet()) {
 
 			Integer neighborNumber = entry.getValue();
 
@@ -196,14 +232,33 @@ public class StandardRule implements Rule {
 				Cell c = new Cell(coord);
 				cells.put(coord, c);
 			}
-		}
-
-		this.updateCells(cells);
+		}*/
+		
+		// Mets à jour l'état des cellules
+		//this.updateCells(cells);
 		//field.setCells(cells);
 		
-		return field;
+//		return field;
 	}
+	
+	@Override
+	public void updateCellsState(HashMap<Point, Cell> cells) {
 
+		Iterator<Map.Entry<Point, Cell>> it = cells.entrySet().iterator();
+
+		while(it.hasNext()) {
+
+			Cell cell = it.next().getValue();
+
+			cell.update();
+
+			if( ! cell.getState().isAlive() ) {
+
+				it.remove();
+			}
+		}
+	}
+	
 	@Override
 	public void empty(Field _field) {
 		_field.setCells(new HashMap<Point, Cell>());
@@ -220,87 +275,19 @@ public class StandardRule implements Rule {
 	private int getNeighborNumber(Field field, Point place) {
 
 		HashMap<Point, Cell> cells = field.getCells();
-		Point neighbor = (Point)place.clone();
+		//Point neighbor = (Point)place.clone();
 		int cpt = 0;
 
 		HashSet<Point> neighbors = _search.getNeighbor(field.getSize().x,field.getSize().y, place);
 		
 		for(Point n : neighbors) {
-			if(cells.containsKey(n)) {
+			if(cells.containsKey(n) && cells.get(n).getState().isAlive()) {
 				++cpt;
 			}
 		}
 		
-		/*// Voisin en haut à gauche.
-		neighbor.x -= 1;
-		neighbor.y -= 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin en haut.
-		neighbor.x += 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin en haut à droite.
-		neighbor.x += 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin à droite.
-		neighbor.y += 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin en bas à droite.
-		neighbor.y += 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin en bas.
-		neighbor.x -= 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin en bas à gauche.
-		neighbor.x -= 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}
-
-		// Voisin à gauche.
-		neighbor.y -= 1;
-		if(cells.containsKey(neighbor)) {
-			++cpt;
-		}*/
 
 		return cpt;
-	}
-
-	/**
-	 * Mets à jour les cases où les cellules vont naitre.
-	 * @param field Le terrain à mettre à jour.
-	 * @return Le terrain mis à jour.
-	 */
-	private Field updateEmergingPlaces(Field field){
-
-		HashMap<Point, Cell>	cells			= field.getCells();
-		HashMap<Point, Integer> emergingPlaces	= field.getEmergingPlaces(); //new HashMap<>();//
-		emergingPlaces.clear();
-
-		for(Map.Entry<Point, Cell> entry : cells.entrySet()) {
-
-			updateEmergingPlace(entry.getKey(), field);
-
-		}
-
-		return field;
 	}
 
 	/**
@@ -317,92 +304,6 @@ public class StandardRule implements Rule {
 		
 		for(Point n : neighbors) {
 			this.incrementEmergingNeighbor(n, field);
-		}
-		
-		/*// gestion du voisin au dessus à gauche
-		place.x -= 1;
-		place.y -= 1;
-
-		if(place.x >= 0 && place.y >= 0) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Gestion du voisin au dessus
-		place.x += 1;
-
-		if(place.y >= 0) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin au dessus à droite
-		place.x += 1;
-
-		if(place.x < size.x && place.y >= 0) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin à droite
-		place.y += 1;
-
-		if(place.x < size.x) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin en dessous à droite
-		place.y += 1;
-
-		if(place.x < size.x && place.y < size.y) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin en dessous
-		place.x -= 1;
-
-		if(place.y < size.y) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin en dessous à gauche
-		place.x -= 1;
-
-		if(place.x >= 0 && place.y < size.y) {
-
-			incrementEmergingNeighbor(place, field);
-		}
-
-		// Voisin à gauche
-		place.y -= 1;
-
-		if(place.x >= 0) {
-
-			incrementEmergingNeighbor(place, field);
-		}*/
-	}
-	
-	/**
-	 * Mets à jour l'état de toutes les cellules.
-	 * @param cells Cellules a mettre à jour.
-	 */
-	private void updateCells(HashMap<Point, Cell> cells) {
-
-		Iterator<Map.Entry<Point, Cell>> it = cells.entrySet().iterator();
-
-		while(it.hasNext()) {
-
-			Cell cell = it.next().getValue();
-
-			cell.update();
-
-			if( ! cell.getState().isAlive() ) {
-
-				it.remove();
-			}
 		}
 	}
 

@@ -19,8 +19,14 @@ public class Cell {
 	public Cell(Point coord){
 		this._coordinate = coord;
 		
-		this._state = null;
-		this._nextState = new CellState();
+		this._state = new CellState(true);
+		this._nextState = new CellState(true);
+	}
+	
+	public static Cell getEmergingCell(Point coord) {
+		Cell c = new Cell(coord);
+		c._state = new CellState(false);
+		return c;
 	}
 	
 	/**
