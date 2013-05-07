@@ -25,7 +25,10 @@ public class GameExecution extends Observable implements Runnable {
 	@Override
 	public synchronized void run() {
 		
-		this._rule.update(this._field);
+		this._rule.updateEmergingPlaces(this._field);
+		this._rule.calculNextCellsGeneration(this._field);
+		this._rule.calculEmergingCells(this._field);
+		this._rule.updateCellsState(this._field.getCells());
 		
 		
 		this.setChanged();
