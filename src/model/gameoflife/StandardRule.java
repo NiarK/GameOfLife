@@ -55,6 +55,27 @@ public class StandardRule implements Rule {
 	}
 	
 	/**
+	 * Initialise les règles pour le jeu de la vie standard
+	 * Born : 2
+	 * Survive : 3 et 4
+	 */
+	public static StandardRule hexagonalGameOfLifeRule() {
+		StandardRule rule = new StandardRule(new SquareSearch());
+		
+		HashSet b = new HashSet();
+		b.add(2);
+		
+		HashSet s = new HashSet();
+		s.add(3);
+		s.add(4);
+		
+		rule.setBorn(b);
+		rule.setSurvive(s);
+		
+		return rule;
+	}
+	
+	/**
 	 * Initialise les règles pour le jeu de la vie : HighLife
 	 * Born : 3 et 6
 	 * Survive : 2 et 3
