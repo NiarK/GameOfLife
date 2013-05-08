@@ -17,162 +17,162 @@ import java.util.logging.Logger;
  */
 public class GameExecution extends Observable implements Runnable {
 
-	private Field _field;
-	private Rule _rule;
+    private Field _field;
+    private Rule _rule;
 
-	public GameExecution(Point size, Rule rule) {
-		this._field = new Field(size);
-		this._rule = rule;
-	}
+    public GameExecution(Point size, Rule rule) {
+        this._field = new Field(size);
+        this._rule = rule;
+    }
 
-	@Override
-	public synchronized void run() {
-		try {
-			/*this._rule.updateEmergingPlaces(this._field);
-			this._rule.calculNextCellsGeneration(this._field);
-			this._rule.calculEmergingCells(this._field);
-			this._rule.updateCellsState(this._field.getCells());*/
+    @Override
+    public synchronized void run() {
+        try {
+            /*this._rule.updateEmergingPlaces(this._field);
+            this._rule.calculNextCellsGeneration(this._field);
+            this._rule.calculEmergingCells(this._field);
+            this._rule.updateCellsState(this._field.getCells());*/
 
-			EmergingProcess ep = new EmergingProcess();
-			ep.setCells(_field.getCells());
-			Thread emergingProcess = new Thread(ep);
-			
-			EvolutionProcess Evp = new EvolutionProcess();
-			Evp.setCells(_field.getCells());
-			Thread evolutionProcess = new Thread(Evp);
-			
-			Thread updateProcess = new Thread(new UpdateProcess());
-			
-			emergingProcess.start();
-			evolutionProcess.start();
-			
-			evolutionProcess.join(0);
-			emergingProcess.join(0);
-			
-			updateProcess.start();
-			updateProcess.join(0);
+            EmergingProcess ep = new EmergingProcess();
+            ep.setCells(_field.getCells());
+            Thread emergingProcess = new Thread(ep);
 
-			this.setChanged();
-			this.notifyObservers();
-		} catch (InterruptedException ex) {
-			Logger.getLogger(GameExecution.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+            EvolutionProcess Evp = new EvolutionProcess();
+            Evp.setCells(_field.getCells());
+            Thread evolutionProcess = new Thread(Evp);
 
-	public synchronized void empty() {
+            Thread updateProcess = new Thread(new UpdateProcess());
 
-		_rule.empty(_field);
+            emergingProcess.start();
+            evolutionProcess.start();
 
-		this.setChanged();
-		this.notifyObservers();
-	}
+            evolutionProcess.join(0);
+            emergingProcess.join(0);
 
-	public synchronized void randomlyFill() {
+            updateProcess.start();
+            updateProcess.join(0);
 
-		_rule.randomlyFill(_field);
+            this.setChanged();
+            this.notifyObservers();
+        }
+        catch (InterruptedException ex) {
+            Logger.getLogger(GameExecution.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-		this.setChanged();
-		this.notifyObservers();
-	}
+    public synchronized void empty() {
 
-	public synchronized HashMap<Point, Cell> getCells() {
-		return (HashMap<Point, Cell>) this._field.getCells().clone();
-	}
+        _rule.empty(_field);
 
-	public Point getFieldSize() {
-		return this._field.getSize();
-	}
+        this.setChanged();
+        this.notifyObservers();
+    }
 
-	public synchronized void toggleCell(Point position) {
+    public synchronized void randomlyFill() {
 
-		if (position.x >= 0
-				&& position.x < _field.getSize().x
-				&& position.y >= 0
-				&& position.y < _field.getSize().y) {
+        _rule.randomlyFill(_field);
 
-			if (_field.getCells().containsKey(position)) {
-				_field.getCells().remove(position);
-			} else {
-				_field.getCells().put(position, new Cell(position));
-			}
+        this.setChanged();
+        this.notifyObservers();
+    }
 
-			//_rule.updateEmergingPlace(position, _field);
+    public synchronized HashMap<Point, Cell> getCells() {
+        return (HashMap<Point, Cell>) this._field.getCells().clone();
+    }
 
-			this.setChanged();
-			this.notifyObservers();
-		}
+    public Point getFieldSize() {
+        return this._field.getSize();
+    }
 
-	}
+    public synchronized void toggleCell(Point position) {
 
-	public synchronized void setFieldSize(Point size) {
-		_field.setSize(size);
+        if (position.x >= 0
+            && position.x < _field.getSize().x
+            && position.y >= 0
+            && position.y < _field.getSize().y) {
 
-		this.setChanged();
-		this.notifyObservers();
-	}
+            if (_field.getCells().containsKey(position)) {
+                _field.getCells().remove(position);
+            }
+            else {
+                _field.getCells().put(position, new Cell(position));
+            }
 
-	public synchronized void setRule(Rule rule) {
-		_rule = rule;
-	}
-        
-	public int save(String name){
-		return _field.save(name);
-	}
-	
-	public int load(String name){
-		int value = _field.load(name);
-		this.setChanged();
-		this.notifyObservers();
-		return value;
-	}
-	
-	public ArrayList patternList(){
-	    return _field.patternList();
-	}
-	
-	private class EmergingProcess implements Runnable {
+            //_rule.updateEmergingPlace(position, _field);
 
-		HashMap<Point, Cell> _cloneCells;
-		HashMap<Point, Integer> _cloneEmergingPlaces;
-		
-		public void setCells(HashMap<Point, Cell> cells) {
-			_cloneCells = (HashMap<Point, Cell>) cells.clone();
-		}
-		public void setEmergingPlaces(HashMap<Point, Integer> emergingPlaces) {
-			_cloneEmergingPlaces = (HashMap<Point, Integer>) emergingPlaces.clone();
-		}
-		
-		@Override
-		public void run() {
-			_rule.updateEmergingPlaces(_cloneCells, _field);
-			this.setEmergingPlaces(_field.getEmergingPlaces());
-			_rule.calculEmergingCells(_cloneEmergingPlaces, _field);
-		}
-		
-	}
-	
-	private class EvolutionProcess implements Runnable {
-		
-		HashMap<Point, Cell> _cloneCells;
-		
-		public void setCells(HashMap<Point, Cell> cells) {
-			_cloneCells = (HashMap<Point, Cell>) cells.clone();
-		}
-		
-		@Override
-		public void run() {
-			
-			_rule.calculNextCellsGeneration(_cloneCells, _field);
-		}
-		
-	}
-	
-	private class UpdateProcess implements Runnable {
+            this.setChanged();
+            this.notifyObservers();
+        }
 
-		@Override
-		public void run() {
-			_rule.updateCellsState( _field.getCells());
-		}
-		
-	}
+    }
+
+    public synchronized void setFieldSize(Point size) {
+        _field.setSize(size);
+
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    public synchronized void setRule(Rule rule) {
+        _rule = rule;
+    }
+
+    public int save(String name) {
+        return _field.save(name);
+    }
+
+    public int load(String name) {
+        int value = _field.load(name);
+        this.setChanged();
+        this.notifyObservers();
+        return value;
+    }
+
+    public ArrayList patternList() {
+        return _field.patternList();
+    }
+
+    private class EmergingProcess implements Runnable {
+
+        HashMap<Point, Cell> _cloneCells;
+        HashMap<Point, Integer> _cloneEmergingPlaces;
+
+        public void setCells(HashMap<Point, Cell> cells) {
+            _cloneCells = (HashMap<Point, Cell>) cells.clone();
+        }
+
+        public void setEmergingPlaces(HashMap<Point, Integer> emergingPlaces) {
+            _cloneEmergingPlaces = (HashMap<Point, Integer>) emergingPlaces.clone();
+        }
+
+        @Override
+        public void run() {
+            _rule.updateEmergingPlaces(_cloneCells, _field);
+            this.setEmergingPlaces(_field.getEmergingPlaces());
+            _rule.calculEmergingCells(_cloneEmergingPlaces, _field);
+        }
+    }
+
+    private class EvolutionProcess implements Runnable {
+
+        HashMap<Point, Cell> _cloneCells;
+
+        public void setCells(HashMap<Point, Cell> cells) {
+            _cloneCells = (HashMap<Point, Cell>) cells.clone();
+        }
+
+        @Override
+        public void run() {
+
+            _rule.calculNextCellsGeneration(_cloneCells, _field);
+        }
+    }
+
+    private class UpdateProcess implements Runnable {
+
+        @Override
+        public void run() {
+            _rule.updateCellsState(_field.getCells());
+        }
+    }
 }
