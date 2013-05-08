@@ -271,11 +271,15 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	pnl_patterns.setLayout(new BoxLayout(pnl_patterns, BoxLayout.Y_AXIS));
 	_patterns = _controller.patternList();
 	_bg_Patterns =  new ButtonGroup();
-	_rb_Patterns = new JRadioButton[_patterns.size()];
+	_rb_Patterns = new JRadioButton[_patterns.size()+1];
+	_rb_Patterns[0] = new JRadioButton("None");
+	_rb_Patterns[0].setSelected(true);
+	_bg_Patterns.add(_rb_Patterns[0]);
+	pnl_patterns.add(_rb_Patterns[0]);
 	for(int i = 0; i < _patterns.size(); i++){
-	    _rb_Patterns[i] = new JRadioButton(_patterns.get(i).toString());
-	    _bg_Patterns.add(_rb_Patterns[i]);
-	    pnl_patterns.add(_rb_Patterns[i]);
+	    _rb_Patterns[i+1] = new JRadioButton(_patterns.get(i).toString());
+	    _bg_Patterns.add(_rb_Patterns[i+1]);
+	    pnl_patterns.add(_rb_Patterns[i+1]);
 	}
 
 	this.setTitle("Conway's game of life");
