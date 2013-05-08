@@ -5,6 +5,7 @@
 package model.gameoflife;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -91,13 +92,18 @@ public class GameExecution extends Observable implements Runnable {
 		_rule = rule;
 	}
         
-        public void save(String name){
-            _field.save(name);
+        public int save(String name){
+            return _field.save(name);
         }
         
-        public void load(String name){
-            _field.load(name);
+        public int load(String name){
+            int value = _field.load(name);
             this.setChanged();
             this.notifyObservers();
+	    return value;
         }
+	
+	public ArrayList patternList(){
+	    return _field.patternList();
+	}
 }

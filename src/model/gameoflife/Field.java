@@ -191,13 +191,13 @@ public class Field {
 	return str;
     }
 
-    public void save(String name) {
+    public int save(String name) {
 	File f = new java.io.File(name);
 	try {
 	    f.createNewFile();
 	} catch (IOException e) {
 	    System.err.println("Could not create file");
-	    JOptionPane.showMessageDialog(null, "Could not create file");
+	    return 2;
 	}
 	try {
 	    FileOutputStream FOS = new java.io.FileOutputStream(f);
@@ -225,15 +225,17 @@ public class Field {
 		FOS.write(bend);
 	    }
 	    FOS.write(titleend.getBytes());
+	    return 1;
 	} catch (FileNotFoundException e) {
 	    System.err.println("Can not find the file");
-	    JOptionPane.showMessageDialog(null, "Can not find the file");
+	    return 3;
 	} catch (IOException ex) {
 	    ex.printStackTrace();
+	    return 4;
 	}
     }
 
-    public void load(String name) {
+    public int load(String name) {
 	try {
 	    // création d'une fabrique de documents
 	    DocumentBuilderFactory DBF = DocumentBuilderFactory.newInstance();
@@ -260,18 +262,34 @@ public class Field {
 		hm.put(coord, new Cell(coord));
 	    }
 	    this.setCells(hm);
+	    return 1;
 	} catch (ParserConfigurationException pce) {
 	    System.err.println("Configuration error DOM parser");
-	    JOptionPane.showMessageDialog(null, "Configuration error DOM parser");
 	    System.err.println("when calling to DBF.newDocumentBuilder();");
+	    return 2;
 	} catch (SAXException se) {
 	    System.err.println("Error while parsing the document");
-	    JOptionPane.showMessageDialog(null, "Error while parsing the document");
 	    System.err.println("when calling to DB.parse(xml)");
+	    return 3;
 	} catch (IOException ioe) {
 	    System.err.println("Error I/O");
-	    JOptionPane.showMessageDialog(null, "Error I/O");
 	    System.err.println("when calling to DB.parse(xml)");
+	    return 4;
 	}
+    }
+
+    public ArrayList patternList() {
+	String[] list;
+	ArrayList result = new ArrayList();
+	int i;
+	File f = new File("src/pattern/");
+
+	list = f.list();
+	for (i = 0; i < list.length; i++) {
+	    if (list[i].endsWith(".pattern")) {
+		result.add(list[i].substring(0, list[i].length() - 8));
+	    }
+	}
+	return result;
     }
 }

@@ -6,6 +6,7 @@ package controller;
 
 import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,28 +133,28 @@ public final class Controller {
 		_simulator.play();
 	}
         
-        public void save(final String name){
-            Thread t = new Thread(new Runnable() {
+        public int save(final String name){
+            /*Thread t = new Thread(new Runnable() {
 
 		@Override
-		public void run() {
-			_game.save(name);
-		}
+		public void run() {*/
+			return _game.save(name);
+		/*}
             });
 
-            t.start();
+            t.start();*/
         }
 	
-        public void load(final String name){
-            Thread t = new Thread(new Runnable() {
+        public int load(final String name){
+            /*Thread t = new Thread(new Runnable() {
 
 		@Override
-		public void run() {
-			_game.load(name);
-		}
+		public void run() {*/
+			return _game.load(name);
+		/*}
             });
 
-            t.start();
+            t.start();*/
         }
 	
 	public void next() {
@@ -314,20 +315,7 @@ public final class Controller {
 		return this.getSearch(rp).getNeighborMaximumNumber();
 	}
 	
-	public String[] patternList(){
-	    String[] list;
-	    String[] result = null;
-	    int i;
-	    int j = 0;
-	    System.out.println(this.getClass().getClassLoader().getResource("pat1.pattern"));
-	    File f = new File("../pat1.pattern");
-	    list = f.list();
-	    for(i=0; i<list.length;i++){
-		if(list[i].endsWith(".pattern")){
-		    System.out.println(list[i].substring(0,list[i].length()-8));
-		    result[j] = list[i].substring(0,list[i].length()-8);
-		}
-	    }
-	    return result;
+	public ArrayList patternList(){
+	    return _game.patternList();
 	}
 }

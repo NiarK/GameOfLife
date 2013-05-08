@@ -24,14 +24,17 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,6 +43,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
@@ -68,30 +72,33 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
     private JSlider _sli_Row;
     private JLabel _lbl_Rule;
     private JLabel _lbl_Search;
-    private JMenuBar _menu_bar;
-    private JMenu _menu_file;
-    private JMenu _menu_action;
-    private JMenu _menu_parameters;
-    private JMenu _menu_zoom;
-    private JMenu _menu_window;
-    private JMenuItem _itm_save;
-    private JMenuItem _itm_load;
-    private JMenuItem _itm_play;
-    private JMenuItem _itm_next;
-    private JMenuItem _itm_random;
-    private JMenuItem _itm_empty;
-    private JMenuItem _itm_speed_p;
-    private JMenuItem _itm_speed_m;
+    private JMenuBar _mnu_Bar;
+    private JMenu _mnu_File;
+    private JMenu _mnu_Action;
+    private JMenu _mnu_Parameters;
+    private JMenu _mnu_Zoom;
+    private JMenu _mnu_Window;
+    private JMenuItem _itm_Save;
+    private JMenuItem _itm_Load;
+    private JMenuItem _itm_Play;
+    private JMenuItem _itm_Next;
+    private JMenuItem _itm_Random;
+    private JMenuItem _itm_Empty;
+    private JMenuItem _itm_Speed_p;
+    private JMenuItem _itm_Speed_m;
     //private JMenuItem _itm_size;
-    private JMenuItem _itm_parameters;
-    private JMenuItem _itm_plus;
-    private JMenuItem _itm_moins;
-    private JCheckBoxMenuItem _itm_optionsVisible;
+    private JMenuItem _itm_Parameters;
+    private JMenuItem _itm_Plus;
+    private JMenuItem _itm_Moins;
+    private JCheckBoxMenuItem _itm_OptionsVisible;
     Point _mousePosition;
     private Field _field;
     private Controller _controller;
     private JTabbedPane _panel;
     private JPanel main;
+    private ArrayList _patterns;
+    private ButtonGroup _bg_Patterns;
+    private JRadioButton[] _rb_Patterns;
 
     public Window() {
 	ImageManager manager = ImageManager.getInstance();
@@ -104,77 +111,75 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	_field.addMouseWheelListener(this);
 	_field.addComponentListener(this);
 
-	_menu_bar = new JMenuBar();
-	_menu_file = new JMenu("File");
-	_menu_file.setMnemonic(KeyEvent.VK_F);
-	_menu_action = new JMenu("Action");
-	_menu_action.setMnemonic(KeyEvent.VK_A);
-	_menu_parameters = new JMenu("Parameters");
-	_menu_parameters.setMnemonic(KeyEvent.VK_M);
-	_menu_zoom = new JMenu("Zoom");
-	_menu_zoom.setMnemonic(KeyEvent.VK_Z);
-	_menu_window = new JMenu("Window");
-	_menu_window.setMnemonic(KeyEvent.VK_W);
-	_itm_save = new JMenuItem("Save");
-	_itm_save.addActionListener(this);
-	_itm_save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
-	_itm_load = new JMenuItem("Load");
-	_itm_load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
-	_itm_load.addActionListener(this);
-	_itm_play = new JMenuItem("Play/Pause");
-	_itm_play.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK));
-	_itm_play.addActionListener(this);
-	_itm_next = new JMenuItem("Next Step");
-	_itm_next.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK));
-	_itm_next.addActionListener(this);
-	_itm_random = new JMenuItem("Random");
-	_itm_random.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
-	_itm_random.addActionListener(this);
-	_itm_empty = new JMenuItem("Stop");
-	_itm_empty.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK));
-	_itm_empty.addActionListener(this);
-	_itm_speed_p = new JMenuItem("Speed +");
-	_itm_speed_p.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK));
-	_itm_speed_p.addActionListener(this);
-	_itm_speed_m = new JMenuItem("Speed -");
-	_itm_speed_m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK));
-	_itm_speed_m.addActionListener(this);
+	_mnu_Bar = new JMenuBar();
+	_mnu_File = new JMenu("File");
+	_mnu_File.setMnemonic(KeyEvent.VK_F);
+	_mnu_Action = new JMenu("Action");
+	_mnu_Action.setMnemonic(KeyEvent.VK_A);
+	_mnu_Parameters = new JMenu("Parameters");
+	_mnu_Parameters.setMnemonic(KeyEvent.VK_P);
+	_mnu_Zoom = new JMenu("Zoom");
+	_mnu_Zoom.setMnemonic(KeyEvent.VK_Z);
+	_mnu_Window = new JMenu("Window");
+	_mnu_Window.setMnemonic(KeyEvent.VK_W);
+	_itm_Save = new JMenuItem("Save");
+	_itm_Save.addActionListener(this);
+	_itm_Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
+	_itm_Load = new JMenuItem("Load");
+	_itm_Load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
+	_itm_Load.addActionListener(this);
+	_itm_Play = new JMenuItem("Play/Pause");
+	_itm_Play.setAccelerator(KeyStroke.getKeyStroke("SPACE"));
+	_itm_Play.addActionListener(this);
+	_itm_Next = new JMenuItem("Next Step");
+	_itm_Next.setAccelerator(KeyStroke.getKeyStroke("ENTER"));
+	_itm_Next.addActionListener(this);
+	_itm_Random = new JMenuItem("Random");
+	_itm_Random.setAccelerator(KeyStroke.getKeyStroke("R"));
+	_itm_Random.addActionListener(this);
+	_itm_Empty = new JMenuItem("Stop");
+	_itm_Empty.setAccelerator(KeyStroke.getKeyStroke("DELETE"));
+	_itm_Empty.addActionListener(this);
+	_itm_Speed_p = new JMenuItem("Speed +");
+	_itm_Speed_p.setAccelerator(KeyStroke.getKeyStroke("PAGE_UP"));
+	_itm_Speed_p.addActionListener(this);
+	_itm_Speed_m = new JMenuItem("Speed -");
+	_itm_Speed_m.setAccelerator(KeyStroke.getKeyStroke("PAGE_DOWN"));
+	_itm_Speed_m.addActionListener(this);
 	/*_itm_size = new JMenuItem("Size");
 	_itm_size.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
 	_itm_size.addActionListener(this);*/
-	_itm_parameters = new JMenuItem("Parameters");
-	_itm_parameters.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
-	_itm_parameters.addActionListener(this);
-	_itm_plus = new JMenuItem("Zoom +");
-	_itm_plus.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_MASK));
-	_itm_plus.addActionListener(this);
-	_itm_moins = new JMenuItem("Zoom -");
-	_itm_moins.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_MASK));
-	_itm_moins.addActionListener(this);
-	_itm_optionsVisible = new JCheckBoxMenuItem("Parameter display", true);
-	_itm_optionsVisible.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_MASK));
-	_itm_optionsVisible.addActionListener(this);
+	_itm_Parameters = new JMenuItem("Parameters");
+	_itm_Parameters.setAccelerator(KeyStroke.getKeyStroke("ESCAPE"));
+	_itm_Parameters.addActionListener(this);
+	_itm_Plus = new JMenuItem("Zoom +");
+	_itm_Plus.addActionListener(this);
+	_itm_Moins = new JMenuItem("Zoom -");
+	_itm_Moins.addActionListener(this);
+	_itm_OptionsVisible = new JCheckBoxMenuItem("Parameter display", true);
+	_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("H"));
+	_itm_OptionsVisible.addActionListener(this);
 
-	_menu_bar.add(_menu_file);
-	_menu_bar.add(_menu_action);
-	_menu_bar.add(_menu_parameters);
-	_menu_bar.add(_menu_zoom);
-	_menu_bar.add(_menu_window);
-	_menu_file.add(_itm_save);
-	_menu_file.add(_itm_load);
-	_menu_action.add(_itm_play);
-	_menu_action.add(_itm_next);
-	_menu_action.add(_itm_random);
-	_menu_action.add(_itm_empty);
-	_menu_parameters.add(_itm_speed_p);
-	_menu_parameters.add(_itm_speed_m);
+	_mnu_Bar.add(_mnu_File);
+	_mnu_Bar.add(_mnu_Action);
+	_mnu_Bar.add(_mnu_Parameters);
+	_mnu_Bar.add(_mnu_Zoom);
+	_mnu_Bar.add(_mnu_Window);
+	_mnu_File.add(_itm_Save);
+	_mnu_File.add(_itm_Load);
+	_mnu_Action.add(_itm_Play);
+	_mnu_Action.add(_itm_Next);
+	_mnu_Action.add(_itm_Random);
+	_mnu_Action.add(_itm_Empty);
+	_mnu_Parameters.add(_itm_Speed_p);
+	_mnu_Parameters.add(_itm_Speed_m);
 	//_menu_parameters.add(_itm_size);
-	_menu_parameters.add(_itm_parameters);
-	_menu_zoom.add(_itm_plus);
-	_menu_zoom.add(_itm_moins);
-	_menu_window.add(_itm_optionsVisible);
+	_mnu_Parameters.add(_itm_Parameters);
+	_mnu_Zoom.add(_itm_Plus);
+	_mnu_Zoom.add(_itm_Moins);
+	_mnu_Window.add(_itm_OptionsVisible);
 
-	setJMenuBar(_menu_bar);
+	setJMenuBar(_mnu_Bar);
 
 	_controller.addObserverToGame(_field);
 	_controller.empty();
@@ -187,26 +192,31 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	_btn_Pause.addActionListener(this);
 	_btn_Pause.addKeyListener(this);
 	_btn_Pause.setIcon(new ImageIcon(manager.get("src/resources/pause.png")));
-
+	_btn_Pause.setFocusable(false);
+	
 	_btn_Play = new JButton();
 	_btn_Play.addActionListener(this);
 	_btn_Play.addKeyListener(this);
 	_btn_Play.setIcon(new ImageIcon(manager.get("src/resources/play.png")));
+	_btn_Play.setFocusable(false);
 
 	_btn_Next = new JButton();
 	_btn_Next.addActionListener(this);
 	_btn_Next.addKeyListener(this);
 	_btn_Next.setIcon(new ImageIcon(manager.get("src/resources/next.png")));
+	_btn_Next.setFocusable(false);
 
 	_btn_RandomlyFill = new JButton();
 	_btn_RandomlyFill.addActionListener(this);
 	_btn_RandomlyFill.addKeyListener(this);
 	_btn_RandomlyFill.setIcon(new ImageIcon(manager.get("src/resources/random.png")));
+	_btn_RandomlyFill.setFocusable(false);
 
 	_btn_Empty = new JButton();
 	_btn_Empty.addActionListener(this);
 	_btn_Empty.addKeyListener(this);
 	_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
+	_btn_Empty.setFocusable(false);
 
 	/*_btn_Save = new JButton();
 	_btn_Save.addActionListener(this);
@@ -223,6 +233,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	_btn_RuleParameter.addActionListener(this);
 	_btn_RuleParameter.addKeyListener(this);
 	_btn_RuleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
+	_btn_RuleParameter.setFocusable(false);
 
 	_lbl_Rule = new JLabel();
 	_lbl_Search = new JLabel();
@@ -230,10 +241,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	_sli_Column = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 	_sli_Column.addChangeListener(this);
 	_sli_Column.addKeyListener(this);
+	_sli_Column.setFocusable(false);
 
 	_sli_Row = new JSlider(JSlider.HORIZONTAL, 1, 999, 50);
 	_sli_Row.addChangeListener(this);
 	_sli_Row.addKeyListener(this);
+	_sli_Row.setFocusable(false);
 
 	_txt_Column = new JTextField(3);
 	_txt_Column.setText(Integer.toString(_sli_Row.getValue()));
@@ -248,10 +261,22 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	_cbb_Speed.setSelectedIndex(1);
 	_cbb_Speed.addActionListener(this);
 	_cbb_Speed.addKeyListener(this);
+	_cbb_Speed.setFocusable(false);
 
 	/*_cbb_Rule = new JComboBox(_controller.getRules());
 	_cbb_Rule.setSelectedIndex(0);
 	_cbb_Rule.addActionListener(this);*/
+	
+	JPanel pnl_patterns = new JPanel();
+	pnl_patterns.setLayout(new BoxLayout(pnl_patterns, BoxLayout.Y_AXIS));
+	_patterns = _controller.patternList();
+	_bg_Patterns =  new ButtonGroup();
+	_rb_Patterns = new JRadioButton[_patterns.size()];
+	for(int i = 0; i < _patterns.size(); i++){
+	    _rb_Patterns[i] = new JRadioButton(_patterns.get(i).toString());
+	    _bg_Patterns.add(_rb_Patterns[i]);
+	    pnl_patterns.add(_rb_Patterns[i]);
+	}
 
 	this.setTitle("Conway's game of life");
 	this.setSize(1000, 600);
@@ -358,7 +383,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	_panel = new JTabbedPane();
 	_panel.addTab("Option", option);
-	_panel.addTab("Patterns", null);
+	_panel.addTab("Patterns", pnl_patterns);
 
 
 	main = new JPanel();
@@ -422,15 +447,28 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	if (e.getSource() == _btn_Pause) {
 	    _controller.pause();
-	} else if (e.getSource() == _btn_Play || e.getSource() == _itm_play) {
+	} else if (e.getSource() == _btn_Play || e.getSource() == _itm_Play) {
 	    if (_controller.isPlayed()) {
 		_controller.pause();
 	    } else {
 		_controller.play();
 	    }
-	} else if (e.getSource() == _itm_optionsVisible) {
+	} else if (e.getSource() == _itm_OptionsVisible) {
 	    _panel.setVisible(!_panel.isVisible());
-	} else if (/*e.getSource() == _btn_Save || */e.getSource() == _itm_save) {
+
+	    this.revalidate();
+	    this.repaint();
+	} else if (e.getSource() == _itm_Speed_p) {
+	    if(_cbb_Speed.getSelectedIndex() > 0){
+		_cbb_Speed.setSelectedIndex(_cbb_Speed.getSelectedIndex() - 1);
+		_controller.setSpeed(Controller.getSpeeds()[_cbb_Speed.getSelectedIndex()]);
+	    }
+	} else if (e.getSource() == _itm_Speed_m) {
+	    if(_cbb_Speed.getSelectedIndex() < _cbb_Speed.getItemCount() - 1){
+		_cbb_Speed.setSelectedIndex(_cbb_Speed.getSelectedIndex() + 1);
+		_controller.setSpeed(Controller.getSpeeds()[_cbb_Speed.getSelectedIndex()]);
+	    }
+	} else if (/*e.getSource() == _btn_Save || */e.getSource() == _itm_Save) {
 	    boolean test = false;
 	    JFileChooser fc = new JFileChooser();
 	    fc.setSelectedFile(new File("Cellule.cells"));
@@ -439,9 +477,27 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		    String path = fc.getSelectedFile().getPath();
 		    File f = new File(path);
 		    if (!f.exists()) {
-			_controller.save(path);
-		    } else if (JOptionPane.showConfirmDialog(null, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-			_controller.save(path);
+			int value = _controller.save(path);
+			if (value != 1) {
+			    if (value == 2) {
+				JOptionPane.showMessageDialog(this, "Could not create file");
+			    } else if (value == 3) {
+				JOptionPane.showMessageDialog(this, "Can not find the file");
+			    } else if (value == 4) {
+				JOptionPane.showMessageDialog(this, "Error during saving");
+			    }
+			}
+		    } else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
+			int value = _controller.save(path);
+			if (value != 1) {
+			    if (value == 2) {
+				JOptionPane.showMessageDialog(this, "Could not create file");
+			    } else if (value == 3) {
+				JOptionPane.showMessageDialog(this, "Can not find the file");
+			    } else if (value == 4) {
+				JOptionPane.showMessageDialog(this, "Error during saving");
+			    }
+			}
 		    } else {
 			test = true;
 		    }
@@ -450,25 +506,34 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		    test = false;
 		}
 	    } while (test);
-	} else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_load) {
+	} else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Load) {
 	    JFileChooser fc = new JFileChooser();
 	    boolean test;
 	    do {
 		test = false;
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 		    if (fc.getSelectedFile().getAbsolutePath().endsWith(".cells")) {
-			_controller.load(fc.getSelectedFile().getAbsolutePath());
+			int value = _controller.load(fc.getSelectedFile().getAbsolutePath());
+			if (value != 1) {
+			    if (value == 2) {
+				JOptionPane.showMessageDialog(this, "Configuration error DOM parser");
+			    } else if (value == 3) {
+				JOptionPane.showMessageDialog(this, "Error while parsing the document");
+			    } else if (value == 4) {
+				JOptionPane.showMessageDialog(this, "Error Input/Output");
+			    }
+			}
 		    } else {
-			JOptionPane.showMessageDialog(null, "You must select a file .cells");
+			JOptionPane.showMessageDialog(this, "You must select a file .cells");
 			test = true;
 		    }
 		}
 	    } while (test);
-	} else if (e.getSource() == _btn_Next || e.getSource() == _itm_next) {
+	} else if (e.getSource() == _btn_Next || e.getSource() == _itm_Next) {
 	    _controller.next();
-	} else if (e.getSource() == _btn_RandomlyFill || e.getSource() == _itm_random) {
+	} else if (e.getSource() == _btn_RandomlyFill || e.getSource() == _itm_Random) {
 	    _controller.randomlyFill();
-	} else if (e.getSource() == _btn_Empty || e.getSource() == _itm_empty) {
+	} else if (e.getSource() == _btn_Empty || e.getSource() == _itm_Empty) {
 	    _controller.empty();
 	} else if (e.getSource() == _txt_Column) {
 
@@ -491,7 +556,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	    }
 
 	} else if (e.getSource() == _cbb_Speed) {
-
 	    _controller.setSpeed(Controller.getSpeeds()[_cbb_Speed.getSelectedIndex()]);
 	} /*else if(e.getSource() == _cbb_Rule) {
 	try {
@@ -499,7 +563,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	} catch (BadRuleNameException ex) {
 	Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
 	}
-	}*/ else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_parameters) {
+	}*/ else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_Parameters) {
 	    RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 	    RuleParameter rp = dialog.showDialog();
 
@@ -509,11 +573,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		this.updateRuleLabel();
 		_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()));
 	    }
-	} else if (e.getSource() == _itm_plus) {
+	} else if (e.getSource() == _itm_Plus) {
 	    int unit = -1;
 
 	    _field.zoom(unit);
-	} else if (e.getSource() == _itm_moins) {
+	} else if (e.getSource() == _itm_Moins) {
 	    int unit = 1;
 
 	    _field.zoom(unit);
@@ -643,6 +707,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	if (ce.getSource() == _field) {
 	    _field.resize();
+	    _field.repaint();
 	}
 
     }
