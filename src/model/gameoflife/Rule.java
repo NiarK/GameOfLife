@@ -19,11 +19,11 @@ public interface Rule {
 	 * Mets à jour les cases où les cellules vont naitre.
 	 * @param field Le terrain à mettre à jour.
 	 */
-	public abstract void updateEmergingPlaces(Field field);
+	public abstract void updateEmergingPlaces(HashMap<Point, Cell> clusterCells, Field field);
 	
-	public abstract void calculEmergingCells(Field field);
+	public abstract void calculEmergingCells(HashMap<Point, Integer> clusterPlaces, Field field);
 	
-	public abstract void calculNextCellsGeneration(Field field);
+	public abstract void calculNextCellsGeneration(HashMap<Point, Cell> clusterCells, Field field);
 	
 	/**
 	 * Mets à jour l'état de toutes les cellules.

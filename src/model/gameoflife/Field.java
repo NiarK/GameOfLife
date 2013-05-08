@@ -143,7 +143,12 @@ public class Field {
 			
 			Point c = entry.getKey();
 			
-			cells[c.y][c.x] = "O";
+			if(entry.getValue().getState().isAlive()) {
+				cells[c.y][c.x] = "0";
+			}
+			else {
+				cells[c.y][c.x] = "X";
+			}
 		}
 		
 		for(Map.Entry<Point, Integer> entry : this._emergingPlaces.entrySet()) {
