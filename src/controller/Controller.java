@@ -5,6 +5,7 @@
 package controller;
 
 import java.awt.Point;
+import java.io.File;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -311,5 +312,22 @@ public final class Controller {
 		RuleParameter rp = new RuleParameter();
 		rp.setSearch(searchName);
 		return this.getSearch(rp).getNeighborMaximumNumber();
+	}
+	
+	public String[] patternList(){
+	    String[] list;
+	    String[] result = null;
+	    int i;
+	    int j = 0;
+	    System.out.println(this.getClass().getClassLoader().getResource("pat1.pattern"));
+	    File f = new File("../pat1.pattern");
+	    list = f.list();
+	    for(i=0; i<list.length;i++){
+		if(list[i].endsWith(".pattern")){
+		    System.out.println(list[i].substring(0,list[i].length()-8));
+		    result[j] = list[i].substring(0,list[i].length()-8);
+		}
+	    }
+	    return result;
 	}
 }
