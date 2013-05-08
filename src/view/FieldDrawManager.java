@@ -110,6 +110,7 @@ public class FieldDrawManager {
 	public synchronized void draw(Graphics g) {
 
 		g.setColor(Color.BLACK);
+		//g.setColor(new Color(0, 0, 0, 1));
 		g.fillRect(0, 0, _componentSize.x, _componentSize.y);
 
 		//TODO: Mettre ce calcul autre part

@@ -402,44 +402,44 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
     }
 
-    public String[] getSpeeds() {
-	Integer[] int_Speeds = Controller.getSpeeds();
-	String[] str_Speeds = new String[int_Speeds.length];
 
-	for (int i = 0; i < str_Speeds.length; ++i) {
-	    str_Speeds[i] = Integer.toString(int_Speeds[i]) + " ms";
+	public String[] getSpeeds() {
+		Integer[] int_Speeds = Controller.getSpeeds();
+		String[] str_Speeds = new String[int_Speeds.length];
+
+		for (int i = 0; i < str_Speeds.length; ++i) {
+			str_Speeds[i] = Integer.toString(int_Speeds[i]) + " ms";
+		}
+
+		return str_Speeds;
 	}
 
-	return str_Speeds;
-    }
-
-    public void updateBtnPlay() {
-	if (_controller.isPlayed()) {
-	    _btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/pause.png")));
-	} else {
-	    _btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/play.png")));
+	public void updateBtnPlay() {
+		if (_controller.isPlayed()) {
+			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/pause.png")));
+		} else {
+			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/play.png")));
+		}
 	}
-    }
+	public void updateRuleLabel() {
 
-    public void updateRuleLabel() {
+		String textRule = "Rule : ";
 
-	String textRule = "Rule : ";
+		if (!_currentRuleParameter.getName().equals(_currentRuleParameter.getScientificName())) {
+			textRule += _currentRuleParameter.getName() + " - ";
+		}
 
-	if (!_currentRuleParameter.getName().equals(_currentRuleParameter.getScientificName())) {
-	    textRule += _currentRuleParameter.getName() + " - ";
-	}
+		textRule += _currentRuleParameter.getScientificName();
 
-	textRule += _currentRuleParameter.getScientificName();
+		_lbl_Rule.setText(textRule);
 
-	_lbl_Rule.setText(textRule);
+		String textSearch = "Search : " + _currentRuleParameter.getSearch();
 
-	String textSearch = "Search : " + _currentRuleParameter.getSearch();
+		if (_currentRuleParameter.isTorus()) {
+			textSearch += " - Torus";
+		}
 
-	if (_currentRuleParameter.isTorus()) {
-	    textSearch += " - Torus";
-	}
-
-	_lbl_Search.setText(textSearch);
+		_lbl_Search.setText(textSearch);
     }
 
     @Override
@@ -477,34 +477,33 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		    String path = fc.getSelectedFile().getPath();
 		    File f = new File(path);
 		    if (!f.exists()) {
-			int value = _controller.save(path);
-			if (value != 1) {
-			    if (value == 2) {
-				JOptionPane.showMessageDialog(this, "Could not create file");
-			    } else if (value == 3) {
-				JOptionPane.showMessageDialog(this, "Can not find the file");
-			    } else if (value == 4) {
-				JOptionPane.showMessageDialog(this, "Error during saving");
-			    }
+				int value = _controller.save(path);
+				if (value != 1) {
+					if (value == 2) {
+					JOptionPane.showMessageDialog(this, "Could not create file");
+					} else if (value == 3) {
+					JOptionPane.showMessageDialog(this, "Can not find the file");
+					} else if (value == 4) {
+					JOptionPane.showMessageDialog(this, "Error during saving");
+					}
+				}
+				} else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
+					int value = _controller.save(path);
+					if (value != 1) {
+						if (value == 2) {
+						JOptionPane.showMessageDialog(this, "Could not create file");
+						} else if (value == 3) {
+						JOptionPane.showMessageDialog(this, "Can not find the file");
+						} else if (value == 4) {
+						JOptionPane.showMessageDialog(this, "Error during saving");
+						}
+					}
+				} else {
+					test = true;
+				}
+			} else {
+				test = false;
 			}
-		    } else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-			int value = _controller.save(path);
-			if (value != 1) {
-			    if (value == 2) {
-				JOptionPane.showMessageDialog(this, "Could not create file");
-			    } else if (value == 3) {
-				JOptionPane.showMessageDialog(this, "Can not find the file");
-			    } else if (value == 4) {
-				JOptionPane.showMessageDialog(this, "Error during saving");
-			    }
-			}
-		    } else {
-			test = true;
-		    }
-
-		} else {
-		    test = false;
-		}
 	    } while (test);
 	} else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Load) {
 	    JFileChooser fc = new JFileChooser();
@@ -580,189 +579,188 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	} else if (e.getSource() == _itm_Moins) {
 	    int unit = 1;
 
-	    _field.zoom(unit);
+			_field.zoom(unit);
+		}
+
+		this.updateBtnPlay();
 	}
 
-	this.updateBtnPlay();
-    }
-
-    @Override
-    public void windowClosing(WindowEvent we) {
-	if (we.getSource() == this) {
-	    _controller.stop();
+	@Override
+	public void windowClosing(WindowEvent we) {
+		if (we.getSource() == this) {
+			_controller.stop();
 //			_field.terminate();
-	}
-    }
-
-    @Override
-    public void windowOpened(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void windowClosed(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void windowIconified(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void windowActivated(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent we) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent me) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mousePressed(MouseEvent me) {
-
-	if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
-	    Point indicator = _field.getIndicator();
-
-	    if (indicator != null) {
-		_controller.toggleCell(indicator);
-	    }
-	} else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
-	    _mousePosition = me.getPoint();
-	}
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent me) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-	//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-
-	if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
-
-	    Point oldIndicator = _field.getIndicator();
-
-	    if (oldIndicator != null) {
-		oldIndicator = (Point) oldIndicator.clone();
-	    }
-
-	    mouseMoved(me);
-
-	    Point indicator = _field.getIndicator();
-
-	    if (indicator != null && !indicator.equals(oldIndicator)) {
-		_controller.toggleCell(indicator);
-	    }
-	} else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
-
-	    Point diff = me.getPoint();
-	    diff.x -= _mousePosition.x;
-	    diff.y -= _mousePosition.y;
-
-	    _mousePosition = me.getPoint();
-
-	    _field.moveField(diff);
-	}
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-
-	Point position = me.getPoint();
-
-	_field.setIndicatorPosition(position);
-    }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent mwe) {
-
-	int unit = mwe.getWheelRotation();
-	_field.zoom(unit);
-    }
-
-    @Override
-    public void componentResized(ComponentEvent ce) {
-
-	if (ce.getSource() == _field) {
-	    _field.resize();
-	    _field.repaint();
+		}
 	}
 
-    }
+	@Override
+	public void windowOpened(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 
-    @Override
-    public void componentMoved(ComponentEvent ce) {
+	@Override
+	public void windowClosed(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowIconified(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowActivated(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent we) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+
+		if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
+			Point indicator = _field.getIndicator();
+
+			if (indicator != null) {
+				_controller.toggleCell(indicator);
+			}
+		} else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
+			_mousePosition = me.getPoint();
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent me) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+
+		if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
+
+			Point oldIndicator = _field.getIndicator();
+
+			if (oldIndicator != null) {
+				oldIndicator = (Point) oldIndicator.clone();
+			}
+
+			mouseMoved(me);
+
+			Point indicator = _field.getIndicator();
+
+			if (indicator != null && !indicator.equals(oldIndicator)) {
+				_controller.toggleCell(indicator);
+			}
+		} else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
+
+			Point diff = me.getPoint();
+			diff.x -= _mousePosition.x;
+			diff.y -= _mousePosition.y;
+
+			_mousePosition = me.getPoint();
+
+			_field.moveField(diff);
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {
+
+		Point position = me.getPoint();
+
+		_field.setIndicatorPosition(position);
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent mwe) {
+		int unit = mwe.getWheelRotation();
+		_field.zoom(unit);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent ce) {
+
+		if (ce.getSource() == _field) {
+			_field.resize();
+			_field.repaint();
+		}
+
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent ce) {
 //		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void componentShown(ComponentEvent ce) {
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent ce) {
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent ce) {
-	if (ce.getSource() == _sli_Column) {
-	    _txt_Column.setText(Integer.toString(_sli_Column.getValue()));
-	    _controller.setFieldSize(
-		    new Point(
-		    _sli_Column.getValue(),
-		    _sli_Row.getValue()));
-	} else if (ce.getSource() == _sli_Row) {
-	    _txt_Row.setText(Integer.toString(_sli_Row.getValue()));
-	    _controller.setFieldSize(
-		    new Point(
-		    _sli_Column.getValue(),
-		    _sli_Row.getValue()));
 	}
-    }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-	//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
-	if (e.getKeyCode() == 40) {
-	    _field.moveField(new Point(0, -10));
-	} else if (e.getKeyCode() == 38) {
-	    _field.moveField(new Point(0, 10));
-	} else if (e.getKeyCode() == 37) {
-	    _field.moveField(new Point(10, 0));
-	} else if (e.getKeyCode() == 39) {
-	    _field.moveField(new Point(-10, 0));
+	@Override
+	public void componentShown(ComponentEvent ce) {
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-    }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
+	@Override
+	public void componentHidden(ComponentEvent ce) {
+//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent ce) {
+		if (ce.getSource() == _sli_Column) {
+			_txt_Column.setText(Integer.toString(_sli_Column.getValue()));
+			_controller.setFieldSize(
+					new Point(
+					_sli_Column.getValue(),
+					_sli_Row.getValue()));
+		} else if (ce.getSource() == _sli_Row) {
+			_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
+			_controller.setFieldSize(
+					new Point(
+					_sli_Column.getValue(),
+					_sli_Row.getValue()));
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
+		if (e.getKeyCode() == 40) {
+			_field.moveField(new Point(0, -10));
+		} else if (e.getKeyCode() == 38) {
+			_field.moveField(new Point(0, 10));
+		} else if (e.getKeyCode() == 37) {
+			_field.moveField(new Point(10, 0));
+		} else if (e.getKeyCode() == 39) {
+			_field.moveField(new Point(-10, 0));
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
 }
