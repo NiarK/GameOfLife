@@ -78,35 +78,41 @@ public final class Controller {
 		_searchName[4] = "Triangle";
 		_searchName[5] = "Large triangle";
 		
-		_rules = new RuleParameter[4];
+		_rules = new RuleParameter[5];
 		
 		StandardRule rule = StandardRule.gameOfLifeRule();
-		
 		_rules[0] = new RuleParameter();
 		_rules[0].setName("Game of life");
 		_rules[0].setBorn(rule.getBorn());
 		_rules[0].setSurvive(rule.getSurvive());
 		_rules[0].setSearch(standardSearch);
 		
-		rule = StandardRule.highLifeRule();
+		rule = StandardRule.hexagonalGameOfLifeRule();
 		_rules[1] = new RuleParameter();
-		_rules[1].setName("High life");
+		_rules[1].setName("Game of life (Hexagone)");
 		_rules[1].setBorn(rule.getBorn());
 		_rules[1].setSurvive(rule.getSurvive());
 		_rules[1].setSearch(standardSearch);
 		
-		rule = StandardRule.seedsRule();
+		rule = StandardRule.highLifeRule();
 		_rules[2] = new RuleParameter();
-		_rules[2].setName("Seeds");
+		_rules[2].setName("High life");
 		_rules[2].setBorn(rule.getBorn());
 		_rules[2].setSurvive(rule.getSurvive());
 		_rules[2].setSearch(standardSearch);
 		
-		rule = StandardRule.B1S12Rule();
+		rule = StandardRule.seedsRule();
 		_rules[3] = new RuleParameter();
+		_rules[3].setName("Seeds");
 		_rules[3].setBorn(rule.getBorn());
 		_rules[3].setSurvive(rule.getSurvive());
 		_rules[3].setSearch(standardSearch);
+		
+		rule = StandardRule.B1S12Rule();
+		_rules[4] = new RuleParameter();
+		_rules[4].setBorn(rule.getBorn());
+		_rules[4].setSurvive(rule.getSurvive());
+		_rules[4].setSearch(standardSearch);
 		
 	}
 	
