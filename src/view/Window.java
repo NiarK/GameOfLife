@@ -99,6 +99,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
     private ArrayList _patterns;
     private ButtonGroup _bg_Patterns;
     private JRadioButton[] _rb_Patterns;
+    private JPanel _pnl_patterns;
+    private JButton _btn_RefreshPatterns;
     
     public Window() {
         ImageManager manager = ImageManager.getInstance();
@@ -267,20 +269,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
         _cbb_Rule.setSelectedIndex(0);
         _cbb_Rule.addActionListener(this);*/
         
-        JPanel pnl_patterns = new JPanel();
-        pnl_patterns.setLayout(new BoxLayout(pnl_patterns, BoxLayout.Y_AXIS));
-        _patterns = _controller.patternList();
+        _pnl_patterns = new JPanel();
+        _pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
+        _btn_RefreshPatterns = new JButton("Refresh");
+        _btn_RefreshPatterns.addActionListener(this);
         _bg_Patterns = new ButtonGroup();
-        _rb_Patterns = new JRadioButton[_patterns.size() + 1];
-        _rb_Patterns[0] = new JRadioButton("None");
-        _rb_Patterns[0].setSelected(true);
-        _bg_Patterns.add(_rb_Patterns[0]);
-        pnl_patterns.add(_rb_Patterns[0]);
-        for (int i = 0 ; i < _patterns.size() ; i++) {
-            _rb_Patterns[i + 1] = new JRadioButton(_patterns.get(i).toString());
-            _bg_Patterns.add(_rb_Patterns[i + 1]);
-            pnl_patterns.add(_rb_Patterns[i + 1]);
-        }
+        this.createPatternsList();
+        
         
         this.setTitle("Conway's game of life");
         this.setSize(1000, 600);
@@ -387,7 +382,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
         _panel = new JTabbedPane();
         _panel.addTab("Option", option);
-        _panel.addTab("Patterns", pnl_patterns);
+        _panel.addTab("Patterns", _pnl_patterns);
         
         
         main = new JPanel();
@@ -415,6 +410,25 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
         }
         
         return str_Speeds;
+    }
+    
+    public void createPatternsList(){
+        _pnl_patterns.removeAll();
+        _pnl_patterns.add(_btn_RefreshPatterns);
+        _patterns = _controller.patternList();
+        _rb_Patterns = null;
+        _rb_Patterns = new JRadioButton[_patterns.size() + 1];
+        _rb_Patterns[0] = new JRadioButton("None");
+        _bg_Patterns.add(_rb_Patterns[0]);
+        _pnl_patterns.add(_rb_Patterns[0]);
+        for (int i = 0 ; i < _patterns.size() ; i++) {
+            _rb_Patterns[i + 1] = new JRadioButton(_patterns.get(i).toString());
+            _bg_Patterns.add(_rb_Patterns[i + 1]);
+            _pnl_patterns.add(_rb_Patterns[i + 1]);
+        }
+        _rb_Patterns[0].setSelected(true);
+        this.revalidate();
+        this.repaint();
     }
     
     public void updateBtnPlay() {
@@ -614,6 +628,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
             int unit = 1;
             
             _field.zoom(unit);
+        }
+        else if(e.getSource() == _btn_RefreshPatterns){
+            createPatternsList();
         }
         
         this.updateBtnPlay();
