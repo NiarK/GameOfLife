@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import model.gameoflife.Cell;
 
@@ -22,6 +24,7 @@ public class FieldDrawManager {
 	protected double _zoom;
 	protected Point _oldComponentSize;
 	protected Point _componentSize;
+	protected HashSet<Point> _pattern;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
@@ -50,6 +53,8 @@ public class FieldDrawManager {
 
 		_oldComponentSize = new Point(_componentSize.x, _componentSize.y);
 		
+		_pattern = null;
+		
 		//_exec = true;
 
 	}
@@ -64,6 +69,7 @@ public class FieldDrawManager {
 		_zoom = fdm._zoom;
 		_oldComponentSize = fdm._oldComponentSize;
 		_componentSize = fdm._componentSize;
+		_pattern = fdm._pattern;
 	}
 
 	protected synchronized void drawBorder(Graphics g) {
@@ -299,6 +305,15 @@ public class FieldDrawManager {
 
 	public void setComponentSize(Point componentSize) {
 		this._componentSize = componentSize;
+	}
+
+	public HashSet<Point> getPattern() {
+		return _pattern;
+	}
+
+	public void setPattern(HashSet<Point> _pattern) {
+		this._pattern = _pattern;
+		
 	}
 	
 	

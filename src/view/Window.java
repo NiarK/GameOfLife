@@ -107,7 +107,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	public Window() {
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
-
+		
+		
 		_field = new Field(8);
 		_field.setBackground(Color.black);
 		_field.addMouseListener(this);
@@ -421,10 +422,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_rb_Patterns = null;
 		_rb_Patterns = new JRadioButton[_patterns.size() + 1];
 		_rb_Patterns[0] = new JRadioButton("None");
+		_rb_Patterns[0].setActionCommand("None");
+		_rb_Patterns[0].addActionListener(this);
 		_bg_Patterns.add(_rb_Patterns[0]);
 		_pnl_patterns.add(_rb_Patterns[0]);
 		for (int i = 0 ; i < _patterns.size() ; i++) {
 			_rb_Patterns[i + 1] = new JRadioButton(_patterns.get(i).toString());
+			_rb_Patterns[i + 1].setActionCommand(_patterns.get(i).toString());
+			_rb_Patterns[i + 1].addActionListener(this);
 			_bg_Patterns.add(_rb_Patterns[i + 1]);
 			_pnl_patterns.add(_rb_Patterns[i + 1]);
 		}
@@ -465,8 +470,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == _btn_Pause) {
+		
+		if (e.getActionCommand().equals("None")) {
+			_field.setPattern(null);
+		}
+		else if (e.getSource() == _btn_Pause) {
 			_controller.pause();
 		}
 		else if (e.getSource() == _btn_Play || e.getSource() == _itm_Play) {
@@ -633,6 +641,30 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		else if (e.getSource() == _btn_RefreshPatterns) {
 			createPatternsList();
+		}
+		else{
+			boolean test = true;
+			int i = 0;
+			while(test && i < _patterns.size()){
+				if(e.getActionCommand().equals(_patterns.get(i).toString())){
+					test = false;
+					Pattern p = new Pattern();
+					int value = p.loadPattern(_patterns.get(i).toString());
+					if(value != 1){
+						if (value == 2) {
+							JOptionPane.showMessageDialog(this, "Configuration error DOM parser");
+						}
+						else if (value == 3) {
+							JOptionPane.showMessageDialog(this, "Error while parsing the document");
+						}
+						else if (value == 4) {
+							JOptionPane.showMessageDialog(this, "Error Input/Output");
+						}
+					}
+					_field.setPattern(p.getCellsByMiddle());
+				}
+				i++;
+			}
 		}
 
 		this.updateBtnPlay();

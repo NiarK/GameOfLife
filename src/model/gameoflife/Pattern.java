@@ -26,6 +26,15 @@ public class Pattern {
 
 	private HashSet<Point> Cells;
 	private Point Middle;
+	private HashSet<Point> CellsByMiddle;
+
+	public HashSet<Point> getCellsByMiddle() {
+		return CellsByMiddle;
+	}
+
+	private void setCellsByMiddle(HashSet<Point> CellsByMiddle) {
+		this.CellsByMiddle = CellsByMiddle;
+	}
 
 	public Point getMiddle() {
 		return Middle;
@@ -70,6 +79,7 @@ public class Pattern {
 			}
 			this.setCells(hs);
 			this.findMiddle();
+			this.makeCellsByMiddle();
 			return 1;
 		}
 		catch (ParserConfigurationException pce) {
@@ -111,5 +121,15 @@ public class Pattern {
 			}
 		}
 		this.setMiddle(new Point((xmin + xmax) / 2, (ymin + ymax) / 2));
+	}
+	
+	public void makeCellsByMiddle(){
+		HashSet<Point> hs = new HashSet();
+		Iterator<Point> it = Cells.iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			hs.add(new Point (temp.x - this.getMiddle().x, temp.y - this.getMiddle().y));
+		}
+		this.setCellsByMiddle(hs);
 	}
 }

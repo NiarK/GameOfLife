@@ -6,6 +6,7 @@ package view;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
@@ -245,4 +246,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_oldComponentSize.y = this.getHeight();*/
 	}
 	
+	public void setPattern(HashSet<Point> _pattern) {
+		_drawer.setPattern(_pattern);
+	}
 }
