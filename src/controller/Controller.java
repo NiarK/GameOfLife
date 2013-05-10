@@ -7,6 +7,7 @@ package controller;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -224,6 +225,7 @@ public final class Controller {
 			@Override
 			public void run() {
 				_game.setFieldSize(size);
+				
 			}
 		});
 
@@ -314,5 +316,9 @@ public final class Controller {
 
 	public ArrayList patternList() {
 		return _game.patternList();
+	}
+	
+	public void setPattern(HashSet<Point> _pattern) {
+		_game.setPattern(_pattern);
 	}
 }

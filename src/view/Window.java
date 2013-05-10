@@ -276,6 +276,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
 		_btn_RefreshPatterns = new JButton("Refresh");
 		_btn_RefreshPatterns.addActionListener(this);
+		_btn_RefreshPatterns.setFocusable(false);
 		_bg_Patterns = new ButtonGroup();
 		this.createPatternsList();
 
@@ -424,12 +425,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_rb_Patterns[0] = new JRadioButton("None");
 		_rb_Patterns[0].setActionCommand("None");
 		_rb_Patterns[0].addActionListener(this);
+		_rb_Patterns[0].setFocusable(false);
 		_bg_Patterns.add(_rb_Patterns[0]);
 		_pnl_patterns.add(_rb_Patterns[0]);
 		for (int i = 0 ; i < _patterns.size() ; i++) {
 			_rb_Patterns[i + 1] = new JRadioButton(_patterns.get(i).toString());
 			_rb_Patterns[i + 1].setActionCommand(_patterns.get(i).toString());
 			_rb_Patterns[i + 1].addActionListener(this);
+			_rb_Patterns[i + 1].setFocusable(false);
 			_bg_Patterns.add(_rb_Patterns[i + 1]);
 			_pnl_patterns.add(_rb_Patterns[i + 1]);
 		}
@@ -473,6 +476,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		if (e.getActionCommand().equals("None")) {
 			_field.setPattern(null);
+			_controller.setPattern(null);
+			this.repaint();
 		}
 		else if (e.getSource() == _btn_Pause) {
 			_controller.pause();
@@ -641,6 +646,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		else if (e.getSource() == _btn_RefreshPatterns) {
 			createPatternsList();
+			_field.setPattern(null);
+			_controller.setPattern(null);
 		}
 		else{
 			boolean test = true;
@@ -661,7 +668,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 							JOptionPane.showMessageDialog(this, "Error Input/Output");
 						}
 					}
-					_field.setPattern(p.getCellsByMiddle());
+					else{
+						_field.setPattern(p.getCellsByMiddle());
+						_controller.setPattern(p.getCellsByMiddle());
+						this.repaint();
+					}
 				}
 				i++;
 			}
@@ -779,6 +790,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		Point position = me.getPoint();
 
 		_field.setIndicatorPosition(position);
+		if(!_field.isInsideTheField(position)){
+			this.repaint();
+		}
 	}
 
 	@Override

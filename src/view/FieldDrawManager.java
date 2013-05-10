@@ -88,6 +88,25 @@ public class FieldDrawManager {
 			 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 			(int) (_cellSize * _zoom),
 			(int) (_cellSize * _zoom));
+		if(_pattern != null){
+			this.drawPattern(g);
+		}
+	}
+	
+	protected synchronized void drawPattern(Graphics g) {
+		Iterator<Point> it = _pattern.iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
+				g.fillOval(
+				(int) (_cellSize * _zoom) * (_indicator.x + temp.x) + _offset.x,
+				(int) (_cellSize * _zoom) * (_indicator.y + temp.y) + _offset.y,
+				/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
+				 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
+				(int) (_cellSize * _zoom),
+				(int) (_cellSize * _zoom));
+			}
+		}
 	}
 	
 	protected synchronized void drawCells(Graphics g, Point p1, Point p2) {
@@ -108,7 +127,6 @@ public class FieldDrawManager {
 						position.y,
 						(int) (_cellSize * _zoom),
 						(int) (_cellSize * _zoom));
-
 			}
 		}
 	}

@@ -152,7 +152,6 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	}
 
 	public synchronized void setNeighbors(int n) {
-		System.out.println(n);
 		if ( n == 6 ) {
 			_drawer = new HexagonalDrawManager(_drawer);
 		}
@@ -248,5 +247,9 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	
 	public void setPattern(HashSet<Point> _pattern) {
 		_drawer.setPattern(_pattern);
+	}
+	
+	public boolean isInsideTheField(Point coord) {
+		return _drawer.isInsideTheField(coord);
 	}
 }
