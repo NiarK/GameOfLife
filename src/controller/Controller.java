@@ -18,6 +18,7 @@ import model.gameoflife.search.PlusSearch;
 import model.gameoflife.search.CrossSearch;
 import model.gameoflife.search.HexagoneSearch;
 import model.gameoflife.search.LargeTriangleSearch;
+import model.gameoflife.search.RainSearch;
 import model.gameoflife.search.SquareSearch;
 import model.gameoflife.search.TriangleSearch;
 import model.simulator.Simulator;
@@ -70,13 +71,14 @@ public final class Controller {
 
 		String standardSearch = "Square";
 
-		_searchName = new String[6];
+		_searchName = new String[7];
 		_searchName[0] = standardSearch;
 		_searchName[1] = "Plus";
 		_searchName[2] = "Cross";
 		_searchName[3] = "Hexagone";
 		_searchName[4] = "Triangle";
 		_searchName[5] = "Large triangle";
+		_searchName[6] = "Rain (from a bug)";
 
 		_rules = new RuleParameter[5];
 
@@ -299,6 +301,9 @@ public final class Controller {
 		}
 		else if (rp.getSearch().equals(_searchName[5])) {
 			return new LargeTriangleSearch(rp.isTorus());
+		}
+		else if (rp.getSearch().equals(_searchName[6])) {
+			return new RainSearch(rp.isTorus());
 		}
 
 		return new SquareSearch(rp.isTorus());

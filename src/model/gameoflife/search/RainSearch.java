@@ -13,15 +13,15 @@ import java.util.Iterator;
  *
  * @author Quentin
  */
-public class Rain implements Search {
+public class RainSearch implements Search {
 
 	private boolean torus;
 
-	public Rain(boolean torus) {
+	public RainSearch(boolean torus) {
 		this.torus = torus;
 	}
 
-	public Rain() {
+	public RainSearch() {
 		this.torus = false;
 	}
 
@@ -219,7 +219,7 @@ public class Rain implements Search {
 			if (neighbor.x < width - 1) {
 				neighbor.x += 1;
 				hs.add(neighbor);
-				System.out.println("1:" + neighbor.x + " " + neighbor.y);
+				//System.out.println("1:" + neighbor.x + " " + neighbor.y);
 			}
 
 			neighbor = (Point) place.clone();
@@ -227,7 +227,7 @@ public class Rain implements Search {
 			if (neighbor.x < width - 2) {
 				neighbor.x += 2;
 				hs.add(neighbor);
-				System.out.println("2:" + neighbor.x + " " + neighbor.y);
+				//System.out.println("2:" + neighbor.x + " " + neighbor.y);
 			}
 
 			// Voisin à gauche.
@@ -235,14 +235,14 @@ public class Rain implements Search {
 			if (neighbor.x > 0) {
 				neighbor.x -= 1;
 				hs.add(neighbor);
-				System.out.println("3:" + neighbor.x + " " + neighbor.y);
+				//System.out.println("3:" + neighbor.x + " " + neighbor.y);
 
 
 				// Voisin deux à gauche
 				if (neighbor.x > 0) {
 					neighbor.x -= 1;
 					hs.add(neighbor);
-					System.out.println("4:" + neighbor.x + " " + neighbor.y);
+					//System.out.println("4:" + neighbor.x + " " + neighbor.y);
 				}
 			}
 			// Voisin au dessus
@@ -250,21 +250,21 @@ public class Rain implements Search {
 			if (neighbor.y > 0) {
 				neighbor.y -= 1;
 				hs.add(neighbor);
-				System.out.println("5:" + neighbor.x + " " + neighbor.y);
+				//System.out.println("5:" + neighbor.x + " " + neighbor.y);
 
 
 				// Voisin au dessus à gauche
 				if (neighbor.x > 0) {
 					neighbor.x -= 1;
 					hs.add(neighbor);
-					System.out.println("6:" + neighbor.x + " " + neighbor.y);
+					//System.out.println("6:" + neighbor.x + " " + neighbor.y);
 				}
 
 				// Voisin au dessus à droite
 				if (neighbor.x < width - 2) {
 					neighbor.x += 2;
 					hs.add(neighbor);
-					System.out.println("7:" + neighbor.x + " " + neighbor.y);
+					//System.out.println("7:" + neighbor.x + " " + neighbor.y);
 				}
 			}
 			// Voisin au dessous
@@ -272,20 +272,20 @@ public class Rain implements Search {
 			if (neighbor.y < height - 1) {
 				neighbor.y += 1;
 				hs.add(neighbor);
-				System.out.println("8:" + neighbor.x + " " + neighbor.y);
+				//System.out.println("8:" + neighbor.x + " " + neighbor.y);
 
 				// Voisin au dessous à gauche
 				if (neighbor.x > 0) {
 					neighbor.x -= 1;
 					hs.add(neighbor);
-					System.out.println("9:" + neighbor.x + " " + neighbor.y);
+					//System.out.println("9:" + neighbor.x + " " + neighbor.y);
 
 
 					// Voisin au dessous à droite
 					if (neighbor.x < width - 2) {
 						neighbor.x += 2;
 						hs.add(neighbor);
-						System.out.println("10:" + neighbor.x + " " + neighbor.y);
+						//System.out.println("10:" + neighbor.x + " " + neighbor.y);
 					}
 				}
 			}
@@ -329,13 +329,13 @@ public class Rain implements Search {
 					}
 				}
 			}
-			System.out.println("Point de base : " + neighbor.x + ";" + neighbor.y);
+			//System.out.println("Point de base : " + neighbor.x + ";" + neighbor.y);
 		}
 
-		Iterator it = hs.iterator();
+		/*Iterator it = hs.iterator();
 		while (it.hasNext()) {
-			System.out.println(it.next()); // tu peux typer plus finement ici
-		}
+			System.out.println(it.next()); // tu peux typer plus finement ici // <- Pardon ?
+		}*/
 
 		return hs;
 	}
