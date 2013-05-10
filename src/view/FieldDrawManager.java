@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import model.gameoflife.Cell;
+import model.gameoflife.Pattern;
 
 /**
  *
@@ -24,7 +25,7 @@ public class FieldDrawManager {
 	protected double _zoom;
 	protected Point _oldComponentSize;
 	protected Point _componentSize;
-	protected HashSet<Point> _pattern;
+	protected Pattern _pattern;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
@@ -94,7 +95,7 @@ public class FieldDrawManager {
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {
-		Iterator<Point> it = _pattern.iterator();
+		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
 		while (it.hasNext()) {
 			Point temp = it.next();
 			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
@@ -325,14 +326,24 @@ public class FieldDrawManager {
 		this._componentSize = componentSize;
 	}
 
-	public HashSet<Point> getPattern() {
+	public Pattern getPattern() {
 		return _pattern;
 	}
 
-	public void setPattern(HashSet<Point> _pattern) {
+	public void setPattern(Pattern _pattern) {
 		this._pattern = _pattern;
 		
 	}
 	
+	public void verticalSymmetry(){
+		if(_pattern != null){
+			_pattern.verticalSymmetry();
+		}
+	}
 	
+	public void horizontalSymmetry(){
+		if(_pattern != null){
+			_pattern.horizontalSymmetry();
+		}
+	}
 }

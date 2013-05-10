@@ -6,11 +6,11 @@ package view;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 import model.gameoflife.GameExecution;
+import model.gameoflife.Pattern;
 
 /**
  *
@@ -245,11 +245,19 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_oldComponentSize.y = this.getHeight();*/
 	}
 	
-	public void setPattern(HashSet<Point> _pattern) {
+	public void setPattern(Pattern _pattern) {
 		_drawer.setPattern(_pattern);
 	}
 	
 	public boolean isInsideTheField(Point coord) {
 		return _drawer.isInsideTheField(coord);
+	}
+	
+	public void verticalSymmetry(){
+		_drawer.verticalSymmetry();
+	}
+	
+	public void horizontalSymmetry(){
+		_drawer.horizontalSymmetry();
 	}
 }

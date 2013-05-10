@@ -21,7 +21,7 @@ public class GameExecution extends Observable implements Runnable {
 
 	private Field _field;
 	private Rule _rule;
-	private HashSet<Point> _pattern;
+	private Pattern _pattern;
 
 	public GameExecution(Point size, Rule rule) {
 		this._field = new Field(size);
@@ -102,7 +102,7 @@ public class GameExecution extends Observable implements Runnable {
 				}
 			}
 			else{
-				Iterator<Point> it = _pattern.iterator();
+				Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
 				while (it.hasNext()) {
 					Point temp = it.next();
 					Point p = new Point(position.x + temp.x, position.y + temp.y);
@@ -189,11 +189,11 @@ public class GameExecution extends Observable implements Runnable {
 		}
 	}
 
-	public HashSet<Point> getPattern() {
+	public Pattern getPattern() {
 		return _pattern;
 	}
 
-	public void setPattern(HashSet<Point> _pattern) {
+	public void setPattern(Pattern _pattern) {
 		this._pattern = _pattern;
 		
 	}

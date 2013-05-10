@@ -53,7 +53,7 @@ public class HexagonalDrawManager extends FieldDrawManager {
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {
-		Iterator<Point> it = _pattern.iterator();
+		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
 		while (it.hasNext()) {
 			Point temp = it.next();
 			int space = 0;
