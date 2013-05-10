@@ -25,7 +25,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -35,7 +34,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -102,7 +100,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private ButtonGroup _bg_Patterns;
 	private JRadioButton[] _rb_Patterns;
 	private JPanel _pnl_patterns;
-	private JButton _btn_RefreshPatterns;
+	private JPanel _pnl_BtnPatterns;
+	private JButton _btn_RotatePatterns;
+	private JButton _btn_ChangeXAxisPatterns;
+	private JButton _btn_ChangeYAxisPatterns;
 
 	public Window() {
 		ImageManager manager = ImageManager.getInstance();
@@ -274,9 +275,20 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		_pnl_patterns = new JPanel();
 		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
-		_btn_RefreshPatterns = new JButton("Refresh");
-		_btn_RefreshPatterns.addActionListener(this);
-		_btn_RefreshPatterns.setFocusable(false);
+		_pnl_BtnPatterns = new JPanel();
+		_pnl_BtnPatterns.setLayout(new BoxLayout(_pnl_BtnPatterns, BoxLayout.X_AXIS));
+		_btn_RotatePatterns = new JButton("Rotate");
+		_btn_RotatePatterns.addActionListener(this);
+		_btn_RotatePatterns.setFocusable(false);
+		_pnl_BtnPatterns.add(_btn_RotatePatterns);
+		_btn_ChangeXAxisPatterns = new JButton("Horizontal");
+		_btn_ChangeXAxisPatterns.addActionListener(this);
+		_btn_ChangeXAxisPatterns.setFocusable(false);
+		_pnl_BtnPatterns.add(_btn_ChangeXAxisPatterns);
+		_btn_ChangeYAxisPatterns = new JButton("Vertical");
+		_btn_ChangeYAxisPatterns.addActionListener(this);
+		_btn_ChangeYAxisPatterns.setFocusable(false);
+		_pnl_BtnPatterns.add(_btn_ChangeYAxisPatterns);
 		_bg_Patterns = new ButtonGroup();
 		this.createPatternsList();
 
@@ -418,7 +430,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	public void createPatternsList() {
 		_pnl_patterns.removeAll();
-		_pnl_patterns.add(_btn_RefreshPatterns);
+		_pnl_patterns.add(_pnl_BtnPatterns);
 		_patterns = _controller.patternList();
 		_rb_Patterns = null;
 		_rb_Patterns = new JRadioButton[_patterns.size() + 1];
@@ -553,6 +565,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				}
 			}
 			while (test);
+			createPatternsList();
+			_field.setPattern(null);
+			_controller.setPattern(null);
 		}
 		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Load) {
 			JFileChooser fc = new JFileChooser();
@@ -644,10 +659,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 			_field.zoom(unit);
 		}
-		else if (e.getSource() == _btn_RefreshPatterns) {
-			createPatternsList();
-			_field.setPattern(null);
-			_controller.setPattern(null);
+		else if (e.getSource() == _btn_ChangeYAxisPatterns){
+			_field.verticalSymmetry();
+		}
+		else if (e.getSource() == _btn_ChangeXAxisPatterns){
+			_field.horizontalSymmetry();
 		}
 		else{
 			boolean test = true;
@@ -669,8 +685,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 						}
 					}
 					else{
-						_field.setPattern(p.getCellsByMiddle());
-						_controller.setPattern(p.getCellsByMiddle());
+						_field.setPattern(p);
+						_controller.setPattern(p);
 						this.repaint();
 					}
 				}

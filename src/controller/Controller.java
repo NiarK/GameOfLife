@@ -12,6 +12,7 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.gameoflife.GameExecution;
+import model.gameoflife.Pattern;
 import model.gameoflife.Search;
 import model.gameoflife.StandardRule;
 import model.gameoflife.search.PlusSearch;
@@ -323,7 +324,7 @@ public final class Controller {
 		return _game.patternList();
 	}
 	
-	public void setPattern(HashSet<Point> _pattern) {
+	public void setPattern(Pattern _pattern) {
 		_game.setPattern(_pattern);
 	}
 }

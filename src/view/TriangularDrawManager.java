@@ -47,7 +47,7 @@ public class TriangularDrawManager extends FieldDrawManager {
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {
-		Iterator<Point> it = _pattern.iterator();
+		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
 		while (it.hasNext()) {
 			Point temp = it.next();
 			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){

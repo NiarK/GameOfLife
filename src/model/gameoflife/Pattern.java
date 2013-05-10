@@ -7,7 +7,6 @@ package model.gameoflife;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
@@ -129,6 +128,26 @@ public class Pattern {
 		while (it.hasNext()) {
 			Point temp = it.next();
 			hs.add(new Point (temp.x - this.getMiddle().x, temp.y - this.getMiddle().y));
+		}
+		this.setCellsByMiddle(hs);
+	}
+	
+	public void horizontalSymmetry(){
+		HashSet<Point> hs = new HashSet();
+		Iterator<Point> it = this.getCellsByMiddle().iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			hs.add(new Point (temp.x, -temp.y));
+		}
+		this.setCellsByMiddle(hs);
+	}
+	
+	public void verticalSymmetry(){
+		HashSet<Point> hs = new HashSet();
+		Iterator<Point> it = this.getCellsByMiddle().iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			hs.add(new Point (-temp.x, temp.y));
 		}
 		this.setCellsByMiddle(hs);
 	}
