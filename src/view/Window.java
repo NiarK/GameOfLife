@@ -25,6 +25,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -106,6 +107,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_ChangeYAxisPatterns;
 
 	public Window() {
+		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
 		
