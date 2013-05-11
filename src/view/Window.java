@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -54,7 +56,7 @@ import javax.swing.event.ChangeListener;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
 
-public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener {
+public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener {
 
 	private RuleParameter _currentRuleParameter;
 	private JButton _btn_Pause;
@@ -298,11 +300,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_txt_Column = new JTextField(3);
 		_txt_Column.setText(Integer.toString(_sli_Row.getValue()));
 		_txt_Column.addActionListener(this);
-		//_txt_Column.setInputVerifier(new InputVerifier);
+		_txt_Column.addFocusListener(this);
 
 		_txt_Row = new JTextField(3);
 		_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
 		_txt_Row.addActionListener(this);
+		_txt_Row.addFocusListener(this);
 
 		_cbb_Speed = new JComboBox(this.getSpeeds());
 		_cbb_Speed.setSelectedIndex(1);
@@ -935,6 +938,38 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {}
+
+	@Override
+	public void focusGained(FocusEvent e) {}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == _txt_Column) {
+
+			try {
+				int val = Integer.parseInt(_txt_Column.getText());
+				_sli_Column.setValue(val);
+			}
+			catch (NumberFormatException ex) {
+				Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
+				_txt_Column.setText(Integer.toString(_sli_Column.getValue()));
+			}
+
+		}
+		else if (e.getSource() == _txt_Row) {
+
+			try {
+				int val = Integer.parseInt(_txt_Row.getText());
+				_sli_Row.setValue(val);
+			}
+			catch (NumberFormatException ex) {
+				Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
+				_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
+			}
+
+		}
 	}
+	
+	
 }
