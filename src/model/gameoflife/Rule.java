@@ -29,7 +29,7 @@ public interface Rule {
 	 * Mets à jour l'état de toutes les cellules.
 	 * @param cells Cellules a mettre à jour.
 	 */
-	public abstract void updateCellsState(HashMap<Point, Cell> cells);
+	public abstract void updateCellsState(HashMap<Point, Cell> cells, Field field);
 	
 	/**
 	 * Vide le terrain

@@ -94,14 +94,17 @@ public class GameExecution extends Observable implements Runnable {
 			&& position.y < _field.getSize().y) {
 			if(_pattern == null){
 				if (_field.getCells().containsKey(position)) {
-					_field.getCells().remove(position);
+					//_field.getCells().remove(position);
+					_field.removeCell(position);
 				}
 				else {
-					_field.getCells().put(position, new Cell(position));
+					//_field.getCells().put(position, new Cell(position));
+					_field.addCell(position);
 				}
 			}
 			else{
 				displayPattern(position);
+
 			}
 
 			//_rule.updateEmergingPlace(position, _field);
@@ -119,7 +122,7 @@ public class GameExecution extends Observable implements Runnable {
 			Point temp = it.next();
 			Point p = new Point(position.x + temp.x, position.y + temp.y);
 			if(p.x >= 0 && p.x < _field.getSize().x && p.y >= 0 && p.y < _field.getSize().y)
-			_field.getCells().put(p, new Cell(p));
+				_field.addCell(p);
 		}
 	}
 	
@@ -189,7 +192,7 @@ public class GameExecution extends Observable implements Runnable {
 
 		@Override
 		public void run() {
-			_rule.updateCellsState(_field.getCells());
+			_rule.updateCellsState(_field.getCells(), _field);
 		}
 	}
 

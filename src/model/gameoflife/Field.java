@@ -26,6 +26,9 @@ public class Field {
 	private ArrayList<HashMap<Point, Cell>> _cellsFragments;
 	private ArrayList<HashMap<Point, Integer>> _emergingPlacesFragments;
 	private Point _size;
+	private int _threadNumber;
+	private int _currentThreadNumber;
+	
 	public static final int NB_FRAGMENT = 10;
 	//private Rule _rule;
 
@@ -43,9 +46,11 @@ public class Field {
 
 		_cellsFragments = new ArrayList<>();
 		_emergingPlacesFragments = new ArrayList<>();
+		
+		_threadNumber = 5;
+		_currentThreadNumber = -1;
 
-		int fragment = (int) Math.ceil((_size.x / (double) Field.NB_FRAGMENT) * (_size.y / (double) Field.NB_FRAGMENT));
-		for (int i = 0 ; i < fragment ; ++i) {
+		for (int i = 0 ; i < _threadNumber ; ++i) {
 			_cellsFragments.add(new HashMap<Point, Cell>());
 			_emergingPlacesFragments.add(new HashMap<Point, Integer>());
 		}
@@ -55,7 +60,7 @@ public class Field {
 		//this._rule.randomlyFill(this._size, this._cells, this._nighCases);
 	}
 
-	public void addCell(Point place, Cell cell) {
+	/*public void addCell(Point place, Cell cell) {
 		_cells.put(place, cell);
 
 		int index = this.getFragmentIndex(place);
@@ -82,7 +87,7 @@ public class Field {
 	public int getFragmentIndex(Point place) {
 		return place.y / Field.NB_FRAGMENT * (int) Math.ceil(_size.x / (double) Field.NB_FRAGMENT)
 			   + place.x / Field.NB_FRAGMENT;
-	}
+	}*/
 
 	public HashMap<Point, Cell> getCells() {
 		return _cells;
@@ -261,9 +266,10 @@ public class Field {
 				int x = Integer.parseInt(coordXElement.item(0).getTextContent());
 				int y = Integer.parseInt(coordYElement.item(0).getTextContent());
 				Point coord = new Point(x, y);
-				hm.put(coord, new Cell(coord));
+				this.addCell(coord);
+				//hm.put(coord, new Cell(coord));
 			}
-			this.setCells(hm);
+			//this.setCells(hm);
 			return 1;
 		}
 		catch (ParserConfigurationException pce) {
@@ -298,6 +304,7 @@ public class Field {
 		return result;
 	}
 
+	@Override
 	public String toString() {
 
 		String str = new String();
@@ -333,26 +340,6 @@ public class Field {
 			emergingPlaces[ep.y][ep.x] = Integer.toString(entry.getValue());
 		}
 
-		/*for(String[] row : cells) {
-		str += "[ ";
-		for(String place : row) {
-		
-		str += place + " ";
-		}
-		str += "]\n";
-		}
-		
-		str += "\n";
-		
-		for(String[] row : emergingPlaces) {
-		str += "[ ";
-		for(String place : row) {
-		
-		str += place + " ";
-		}
-		str += "]\n";
-		}*/
-
 		for (int y = 0 ; y < this._size.y ; ++y) {
 			str += "[ ";
 			for (int x = 0 ; x < this._size.x ; ++x) {
@@ -370,5 +357,78 @@ public class Field {
 
 		return str;
 
+	}
+	
+	private int getCurrentThreadNumber() {
+		
+		_currentThreadNumber++;
+		if(_currentThreadNumber >= _cellsFragments.size()) {
+			_currentThreadNumber = 0;
+		}
+		
+		return _currentThreadNumber;
+	}
+	
+	
+	
+	public void addCell(Point coord){
+		
+		coord = new Point(coord);
+		
+		int thread = this.getCurrentThreadNumber();
+		
+		Cell c =  new Cell(coord, thread);
+		
+		this.add(c);
+	}
+	
+	public void addEmergingCell(Point coord){
+		coord = new Point(coord);
+		
+		int thread = this.getCurrentThreadNumber();
+		
+		Cell c =  Cell.getEmergingCell(coord, thread);
+		
+		this.add(c);
+	}
+	
+	private void add(Cell c) {
+		
+		_cells.put(c.getCoordinate(), c);
+		_cellsFragments.get(c.getCurrentThreadNumber()).put(c.getCoordinate(), c);
+	}
+	
+	public void removeCell(Point coord) {
+		
+		//Cell c = _cells.get(coord);
+		
+		//_cellsFragments.get(c.getCurrentThreadNumber()).remove(coord);
+		_cells.remove(coord);
+	}
+	
+	public void clearCells() {
+		_cells.clear();
+		int fragmentNumber = _cellsFragments.size();
+		for(int i = 0; i < fragmentNumber; ++i) {
+			_cellsFragments.get(i).clear();
+		}
+	}
+	
+	public void clearEmergingPlaces() {
+		_emergingPlaces.clear();
+		int fragmentNumber = _emergingPlacesFragments.size();
+		for(int i = 0; i < fragmentNumber; ++i) {
+			_emergingPlacesFragments.get(i).clear();
+		}
+	}
+	
+	public void addEmergingPlace(Point coord, Integer neighborNumber){
+		coord = new Point(coord);
+		
+		_emergingPlaces.put(coord, neighborNumber);
+		
+		int thread = (coord.x + coord.y) % _threadNumber;
+		
+		_emergingPlacesFragments.get(thread).put(coord, neighborNumber);
 	}
 }
