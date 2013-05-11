@@ -260,4 +260,12 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	public void horizontalSymmetry(){
 		_drawer.horizontalSymmetry();
 	}
+	
+	public void rotateRight(){
+		_drawer.rotateRight();
+	}
+	
+	public void rotateLeft(){
+		_drawer.rotateLeft();
+	}
 }

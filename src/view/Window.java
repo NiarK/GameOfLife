@@ -16,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -110,8 +111,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private ButtonGroup _bg_Patterns;
 	private JRadioButton[] _rb_Patterns;
 	private JPanel _pnl_patterns;
-	private JPanel _pnl_BtnPatterns;
-	private JButton _btn_RotatePatterns;
+	private JPanel _pnl_BtnPatternsRotate;
+	private JPanel _pnl_BtnPatternsSymetric;
+	private JButton _btn_RotateLeftPatterns;
+	private JButton _btn_RotateRightPatterns;
 	private JButton _btn_ChangeXAxisPatterns;
 	private JButton _btn_ChangeYAxisPatterns;
 
@@ -319,20 +322,26 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		_pnl_patterns = new JPanel();
 		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
-		_pnl_BtnPatterns = new JPanel();
-		_pnl_BtnPatterns.setLayout(new BoxLayout(_pnl_BtnPatterns, BoxLayout.X_AXIS));
-		_btn_RotatePatterns = new JButton("Rotate");
-		_btn_RotatePatterns.addActionListener(this);
-		_btn_RotatePatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_RotatePatterns);
+		_pnl_BtnPatternsRotate = new JPanel();
+		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.X_AXIS));
+		_pnl_BtnPatternsSymetric = new JPanel();
+		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.X_AXIS));
+		_btn_RotateLeftPatterns = new JButton("Rotate Left");
+		_btn_RotateLeftPatterns.addActionListener(this);
+		_btn_RotateLeftPatterns.setFocusable(false);
+		_pnl_BtnPatternsRotate.add(_btn_RotateLeftPatterns);
+		_btn_RotateRightPatterns = new JButton("Rotate Right");
+		_btn_RotateRightPatterns.addActionListener(this);
+		_btn_RotateRightPatterns.setFocusable(false);
+		_pnl_BtnPatternsRotate.add(_btn_RotateRightPatterns);
 		_btn_ChangeXAxisPatterns = new JButton("Horizontal");
 		_btn_ChangeXAxisPatterns.addActionListener(this);
 		_btn_ChangeXAxisPatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_ChangeXAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(_btn_ChangeXAxisPatterns);
 		_btn_ChangeYAxisPatterns = new JButton("Vertical");
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_ChangeYAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
 		_bg_Patterns = new ButtonGroup();
 		this.createPatternsList();
 
@@ -474,7 +483,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	public void createPatternsList() {
 		_pnl_patterns.removeAll();
-		_pnl_patterns.add(_pnl_BtnPatterns);
+		_pnl_patterns.add(_pnl_BtnPatternsRotate);
+		_pnl_patterns.add(_pnl_BtnPatternsSymetric);
 		_patterns = _controller.patternList();
 		_rb_Patterns = null;
 		_rb_Patterns = new JRadioButton[_patterns.size() + 1];
@@ -539,16 +549,16 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_controller.pause();
 		}
 		else if (e.getSource() == _itm_MoveUp) {
-			_field.moveField(new Point(0, 10));
-		}
-		else if (e.getSource() == _itm_MoveDown) {
 			_field.moveField(new Point(0, -10));
 		}
+		else if (e.getSource() == _itm_MoveDown) {
+			_field.moveField(new Point(0, 10));
+		}
 		else if (e.getSource() == _itm_MoveRight) {
-			_field.moveField(new Point(-10, 0));
+			_field.moveField(new Point(10, 0));
 		}
 		else if (e.getSource() == _itm_MoveLeft) {
-			_field.moveField(new Point(10, 0));
+			_field.moveField(new Point(-10, 0));
 		}
 		else if (e.getSource() == _btn_Play || e.getSource() == _itm_Play) {
 			if (_controller.isPlayed()) {
@@ -715,11 +725,17 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 			_field.zoom(unit);
 		}
-		else if (e.getSource() == _btn_ChangeYAxisPatterns){
+		else if (e.getSource() == _btn_ChangeYAxisPatterns || e.getSource() == _itm_InvYAxis){
 			_field.verticalSymmetry();
 		}
-		else if (e.getSource() == _btn_ChangeXAxisPatterns){
+		else if (e.getSource() == _btn_ChangeXAxisPatterns || e.getSource() == _itm_InvXAxis){
 			_field.horizontalSymmetry();
+		}
+		else if (e.getSource() == _btn_RotateLeftPatterns || e.getSource() == _itm_RotateLeft){
+			_field.rotateLeft();
+		}
+		else if (e.getSource() == _btn_RotateRightPatterns || e.getSource() == _itm_RotateRight){
+			_field.rotateRight();
 		}
 		else{
 			boolean test = true;

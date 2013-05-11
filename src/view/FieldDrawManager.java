@@ -347,4 +347,16 @@ public class FieldDrawManager {
 			_pattern.horizontalSymmetry();
 		}
 	}
+	
+	public void rotateRight(){
+		if(_pattern != null){
+			_pattern.rotateRight();
+		}
+	}
+	
+	public void rotateLeft(){
+		if(_pattern != null){
+			_pattern.rotateLeft();
+		}
+	}
 }

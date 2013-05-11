@@ -151,4 +151,24 @@ public class Pattern {
 		}
 		this.setCellsByMiddle(hs);
 	}
+	
+	public void rotateLeft(){
+		HashSet<Point> hs = new HashSet();
+		Iterator<Point> it = this.getCellsByMiddle().iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			hs.add(new Point (temp.y, -temp.x));
+		}
+		this.setCellsByMiddle(hs);
+	}
+	
+	public void rotateRight(){
+		HashSet<Point> hs = new HashSet();
+		Iterator<Point> it = this.getCellsByMiddle().iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			hs.add(new Point (-temp.y, temp.x));
+		}
+		this.setCellsByMiddle(hs);
+	}
 }
