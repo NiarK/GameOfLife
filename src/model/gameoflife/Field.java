@@ -406,6 +406,14 @@ public class Field {
 		_cells.remove(coord);
 	}
 	
+	public void clearCells() {
+		_cells.clear();
+		int fragmentNumber = _cellsFragments.size();
+		for(int i = 0; i < fragmentNumber; ++i) {
+			_cellsFragments.get(i).clear();
+		}
+	}
+	
 	public void clearEmergingPlaces() {
 		_emergingPlaces.clear();
 		int fragmentNumber = _emergingPlacesFragments.size();

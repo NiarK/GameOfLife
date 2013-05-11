@@ -144,8 +144,9 @@ public class StandardRule implements Rule {
 	public void randomlyFill(Field field) {
 
 		Point size = field.getSize();
-		HashMap<Point, Cell> cells = new HashMap();//field.getCells();
-
+		//HashMap<Point, Cell> cells = new HashMap();//field.getCells();
+		field.clearCells();
+		
 		Random random = new Random();
 
 		for(int y = 0; y < size.y; ++y) {
@@ -165,7 +166,7 @@ public class StandardRule implements Rule {
 			}
 		}
 
-		field.setCells(cells);
+		//field.setCells(cells);
 
 
 //		updateEmergingPlaces(field);
