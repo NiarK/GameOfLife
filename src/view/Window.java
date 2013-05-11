@@ -189,12 +189,16 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_MoveLeft.setAccelerator(KeyStroke.getKeyStroke("LEFT"));
 		_itm_MoveLeft.addActionListener(this);
 		_itm_RotateRight = new JMenuItem("Rotate right");
+		_itm_RotateRight.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, ActionEvent.CTRL_MASK));
 		_itm_RotateRight.addActionListener(this);
 		_itm_RotateLeft = new JMenuItem("Rotate left");
+		_itm_RotateLeft.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, ActionEvent.CTRL_MASK));
 		_itm_RotateLeft.addActionListener(this);
 		_itm_InvXAxis = new JMenuItem("Inversion X-axis");
+		_itm_InvXAxis.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, ActionEvent.CTRL_MASK));
 		_itm_InvXAxis.addActionListener(this);
 		_itm_InvYAxis = new JMenuItem("Inversion Y-axis");
+		_itm_InvYAxis.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, ActionEvent.CTRL_MASK));
 		_itm_InvYAxis.addActionListener(this);
 		_itm_OptionsVisible = new JCheckBoxMenuItem("Panel", true);
 		_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("P"));
@@ -727,15 +731,19 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		else if (e.getSource() == _btn_ChangeYAxisPatterns || e.getSource() == _itm_InvYAxis){
 			_field.verticalSymmetry();
+			this.repaint();
 		}
 		else if (e.getSource() == _btn_ChangeXAxisPatterns || e.getSource() == _itm_InvXAxis){
 			_field.horizontalSymmetry();
+			this.repaint();
 		}
 		else if (e.getSource() == _btn_RotateLeftPatterns || e.getSource() == _itm_RotateLeft){
 			_field.rotateLeft();
+			this.repaint();
 		}
 		else if (e.getSource() == _btn_RotateRightPatterns || e.getSource() == _itm_RotateRight){
 			_field.rotateRight();
+			this.repaint();
 		}
 		else{
 			boolean test = true;
