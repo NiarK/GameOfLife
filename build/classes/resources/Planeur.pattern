@@ -1,0 +1,22 @@
+<cells>
+	<cell>
+		<x>2</x>
+		<y>2</y>
+	</cell>
+	<cell>
+		<x>1</x>
+		<y>2</y>
+	</cell>
+	<cell>
+		<x>2</x>
+		<y>1</y>
+	</cell>
+	<cell>
+		<x>0</x>
+		<y>2</y>
+	</cell>
+	<cell>
+		<x>1</x>
+		<y>0</y>
+	</cell>
+</cells>
