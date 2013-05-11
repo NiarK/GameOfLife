@@ -89,9 +89,6 @@ public class FieldDrawManager {
 			 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 			(int) (_cellSize * _zoom),
 			(int) (_cellSize * _zoom));
-		if(_pattern != null){
-			this.drawPattern(g);
-		}
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {
@@ -158,11 +155,15 @@ public class FieldDrawManager {
 		this.drawCells(g, p1, p2);
 		
 		
-		if (_indicator != null) {
+		if (_indicator != null && _pattern == null) {
 			g.setColor(Color.LIGHT_GRAY);
 			this.drawIndicator(g);
 		}
 		
+		if(_indicator != null && _pattern != null){
+			g.setColor(new Color(.3f, .4f, .5f, .6f));
+			this.drawPattern(g);
+		}
 	}
 
 	/*public synchronized void update(Observable o, Object o1) {

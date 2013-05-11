@@ -46,10 +46,6 @@ public class HexagonalDrawManager extends FieldDrawManager {
 			(int) (_cellSize * _zoom) * _indicator.y + _offset.y,
 			(int) (_cellSize * _zoom),
 			(int) (_cellSize * _zoom));
-		
-		if(_pattern != null){
-			this.drawPattern(g);
-		}
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {

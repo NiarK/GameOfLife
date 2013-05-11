@@ -41,9 +41,6 @@ public class TriangularDrawManager extends FieldDrawManager {
 				(int) (_cellSize * _zoom) * _indicator.y + _offset.y
 			);
 		g.drawPolygon(this.getTriangle(position, ((_indicator.x + _indicator.y) % 2) == 0 ));
-		if(_pattern != null){
-			this.drawPattern(g);
-		}
 	}
 	
 	protected synchronized void drawPattern(Graphics g) {
