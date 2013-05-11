@@ -155,10 +155,11 @@ public class StandardRule implements Rule {
 
 				if( random.nextBoolean() && random.nextBoolean() ){
 
-					Cell c = new Cell(coord);
+					//Cell c = new Cell(coord);
 
-					cells.put(coord, c);
+					//cells.put(coord, c);
 
+					field.addCell(coord);
 				}
 
 			}
@@ -197,9 +198,11 @@ public class StandardRule implements Rule {
 
 			if(this._born.contains(neighborNumber)) {
 				Point coord = entry.getKey();
-				Cell c = Cell.getEmergingCell(coord);
-				synchronized(cells) {
-				cells.put(coord, c);
+				//Cell c = Cell.getEmergingCell(coord);
+				
+				synchronized(field) {
+					//cells.put(coord, c);
+					field.addEmergingCell(coord);
 				}
 			}
 		}
@@ -224,7 +227,7 @@ public class StandardRule implements Rule {
 	}
 	
 	@Override
-	public void updateCellsState(HashMap<Point, Cell> cells) {
+	public void updateCellsState(HashMap<Point, Cell> cells, Field field) {
 
 		Iterator<Map.Entry<Point, Cell>> it = cells.entrySet().iterator();
 
@@ -237,6 +240,7 @@ public class StandardRule implements Rule {
 			if( ! cell.getState().isAlive() ) {
 
 				it.remove();
+				field.removeCell(cell.getCoordinate());
 			}
 		}
 	}
