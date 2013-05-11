@@ -232,14 +232,15 @@ public class LargeTriangleSearch implements Search {
 			if (neighbor.x > 0) {
 				neighbor.x -= 1;
 				hs.add(neighbor);
-
-
-				// Voisin deux à gauche
-				if (neighbor.x > 0) {
-					neighbor.x -= 1;
-					hs.add(neighbor);
-				}
 			}
+
+			// Voisin deux à gauche
+			neighbor = (Point) place.clone();
+			if (neighbor.x > 1) {
+				neighbor.x -= 2;
+				hs.add(neighbor);
+			}
+			
 			// Voisin au dessus
 			neighbor = (Point) place.clone();
 			if (neighbor.y > 0) {
@@ -248,11 +249,12 @@ public class LargeTriangleSearch implements Search {
 
 				Point neighbor2 = (Point) neighbor.clone();
 				// Voisin au dessus à gauche
-				if (neighbor.x > 0) {
-					neighbor.x -= 1;
-					hs.add(neighbor);
+				if (neighbor2.x > 0) {
+					neighbor2.x -= 1;
+					hs.add(neighbor2);
 				}
 
+				neighbor2 = (Point) neighbor.clone();
 				// Voisin au dessus à droite
 				if (neighbor2.x < width - 1) {
 					neighbor2.x += 1;
@@ -267,16 +269,16 @@ public class LargeTriangleSearch implements Search {
 
 				Point neighbor2 = (Point) neighbor.clone();
 				// Voisin au dessous à gauche
-				if (neighbor.x > 0) {
-					neighbor.x -= 1;
-					hs.add(neighbor);
+				if (neighbor2.x > 0) {
+					neighbor2.x -= 1;
+					hs.add(neighbor2);
+				}
 
-
-					// Voisin au dessous à droite
-					if (neighbor2.x < width - 1) {
-						neighbor2.x += 1;
-						hs.add(neighbor2);
-					}
+				neighbor2 = (Point) neighbor.clone();
+				// Voisin au dessous à droite
+				if (neighbor2.x < width - 1) {
+					neighbor2.x += 1;
+					hs.add(neighbor2);
 				}
 			}
 
