@@ -75,10 +75,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JLabel _lbl_Search;
 	private JMenuBar _mnu_Bar;
 	private JMenu _mnu_File;
-	private JMenu _mnu_Action;
-	private JMenu _mnu_Parameters;
-	private JMenu _mnu_Zoom;
-	private JMenu _mnu_Window;
+	private JMenu _mnu_Edit;
+	private JMenu _mnu_Simulators;
+	private JMenu _mnu_View;
 	private JMenuItem _itm_Save;
 	private JMenuItem _itm_Load;
 	private JMenuItem _itm_Play;
@@ -91,6 +90,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem _itm_Parameters;
 	private JMenuItem _itm_Plus;
 	private JMenuItem _itm_Moins;
+	private JMenuItem _itm_MoveUp;
+	private JMenuItem _itm_MoveDown;
+	private JMenuItem _itm_MoveRight;
+	private JMenuItem _itm_MoveLeft;
+	private JMenuItem _itm_RotateLeft;
+	private JMenuItem _itm_RotateRight;
+	private JMenuItem _itm_InvXAxis;
+	private JMenuItem _itm_InvYAxis;
 	private JCheckBoxMenuItem _itm_OptionsVisible;
 	Point _mousePosition;
 	private Field _field;
@@ -122,14 +129,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_mnu_Bar = new JMenuBar();
 		_mnu_File = new JMenu("File");
 		_mnu_File.setMnemonic(KeyEvent.VK_F);
-		_mnu_Action = new JMenu("Action");
-		_mnu_Action.setMnemonic(KeyEvent.VK_A);
-		_mnu_Parameters = new JMenu("Parameters");
-		_mnu_Parameters.setMnemonic(KeyEvent.VK_P);
-		_mnu_Zoom = new JMenu("Zoom");
-		_mnu_Zoom.setMnemonic(KeyEvent.VK_Z);
-		_mnu_Window = new JMenu("Window");
-		_mnu_Window.setMnemonic(KeyEvent.VK_W);
+		_mnu_Edit = new JMenu("Edit");
+		_mnu_Edit.setMnemonic(KeyEvent.VK_E);
+		_mnu_Simulators = new JMenu("Simulator");
+		_mnu_Simulators.setMnemonic(KeyEvent.VK_S);
+		_mnu_View = new JMenu("View");
+		_mnu_View.setMnemonic(KeyEvent.VK_V);
 		_itm_Save = new JMenuItem("Save");
 		_itm_Save.addActionListener(this);
 		_itm_Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
@@ -157,35 +162,69 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		/*_itm_size = new JMenuItem("Size");
 		_itm_size.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
 		_itm_size.addActionListener(this);*/
-		_itm_Parameters = new JMenuItem("Parameters");
-		_itm_Parameters.setAccelerator(KeyStroke.getKeyStroke("ESCAPE"));
+		_itm_Parameters = new JMenuItem("Settings");
+		_itm_Parameters.setAccelerator(KeyStroke.getKeyStroke("S"));
 		_itm_Parameters.addActionListener(this);
 		_itm_Plus = new JMenuItem("Zoom +");
+		_itm_Plus.setAccelerator(KeyStroke.getKeyStroke("PLUS"));
 		_itm_Plus.addActionListener(this);
 		_itm_Moins = new JMenuItem("Zoom -");
+		_itm_Moins.setAccelerator(KeyStroke.getKeyStroke("MINUS"));
 		_itm_Moins.addActionListener(this);
-		_itm_OptionsVisible = new JCheckBoxMenuItem("Parameter display", true);
-		_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("H"));
+		_itm_MoveUp = new JMenuItem("Move up");
+		_itm_MoveUp.setAccelerator(KeyStroke.getKeyStroke("UP"));
+		_itm_MoveUp.addActionListener(this);
+		_itm_MoveDown = new JMenuItem("Move down");
+		_itm_MoveDown.setAccelerator(KeyStroke.getKeyStroke("DOWN"));
+		_itm_MoveDown.addActionListener(this);
+		_itm_MoveRight = new JMenuItem("Move right");
+		_itm_MoveRight.setAccelerator(KeyStroke.getKeyStroke("RIGHT"));
+		_itm_MoveRight.addActionListener(this);
+		_itm_MoveLeft = new JMenuItem("Move left");
+		_itm_MoveLeft.setAccelerator(KeyStroke.getKeyStroke("LEFT"));
+		_itm_MoveLeft.addActionListener(this);
+		_itm_RotateRight = new JMenuItem("Rotate right");
+		_itm_RotateRight.addActionListener(this);
+		_itm_RotateLeft = new JMenuItem("Rotate left");
+		_itm_RotateLeft.addActionListener(this);
+		_itm_InvXAxis = new JMenuItem("Inversion X-axis");
+		_itm_InvXAxis.addActionListener(this);
+		_itm_InvYAxis = new JMenuItem("Inversion Y-axis");
+		_itm_InvYAxis.addActionListener(this);
+		_itm_OptionsVisible = new JCheckBoxMenuItem("Panel", true);
+		_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("P"));
 		_itm_OptionsVisible.addActionListener(this);
 
 		_mnu_Bar.add(_mnu_File);
-		_mnu_Bar.add(_mnu_Action);
-		_mnu_Bar.add(_mnu_Parameters);
-		_mnu_Bar.add(_mnu_Zoom);
-		_mnu_Bar.add(_mnu_Window);
+		_mnu_Bar.add(_mnu_Edit);
+		_mnu_Bar.add(_mnu_Simulators);
+		_mnu_Bar.add(_mnu_View);
 		_mnu_File.add(_itm_Save);
 		_mnu_File.add(_itm_Load);
-		_mnu_Action.add(_itm_Play);
-		_mnu_Action.add(_itm_Next);
-		_mnu_Action.add(_itm_Random);
-		_mnu_Action.add(_itm_Empty);
-		_mnu_Parameters.add(_itm_Speed_p);
-		_mnu_Parameters.add(_itm_Speed_m);
+		_mnu_Edit.add(_itm_Random);
+		_mnu_Edit.add(_itm_Empty);
+		_mnu_Edit.add(new JSeparator());
+		_mnu_Edit.add(_itm_RotateRight);
+		_mnu_Edit.add(_itm_RotateLeft);
+		_mnu_Edit.add(_itm_InvXAxis);
+		_mnu_Edit.add(_itm_InvYAxis);
+		_mnu_Edit.add(new JSeparator());
+		_mnu_Edit.add(_itm_Parameters);
+		_mnu_Simulators.add(_itm_Play);
+		_mnu_Simulators.add(_itm_Next);
+		_mnu_Simulators.add(new JSeparator());
+		_mnu_Simulators.add(_itm_Speed_p);
+		_mnu_Simulators.add(_itm_Speed_m);
 		//_menu_parameters.add(_itm_size);
-		_mnu_Parameters.add(_itm_Parameters);
-		_mnu_Zoom.add(_itm_Plus);
-		_mnu_Zoom.add(_itm_Moins);
-		_mnu_Window.add(_itm_OptionsVisible);
+		_mnu_View.add(_itm_Plus);
+		_mnu_View.add(_itm_Moins);
+		_mnu_View.add(new JSeparator());
+		_mnu_View.add(_itm_MoveUp);
+		_mnu_View.add(_itm_MoveDown);
+		_mnu_View.add(_itm_MoveRight);
+		_mnu_View.add(_itm_MoveLeft);
+		_mnu_View.add(new JSeparator());
+		_mnu_View.add(_itm_OptionsVisible);
 
 		setJMenuBar(_mnu_Bar);
 
@@ -495,6 +534,18 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		else if (e.getSource() == _btn_Pause) {
 			_controller.pause();
+		}
+		else if (e.getSource() == _itm_MoveUp) {
+			_field.moveField(new Point(0, 10));
+		}
+		else if (e.getSource() == _itm_MoveDown) {
+			_field.moveField(new Point(0, -10));
+		}
+		else if (e.getSource() == _itm_MoveRight) {
+			_field.moveField(new Point(-10, 0));
+		}
+		else if (e.getSource() == _itm_MoveLeft) {
+			_field.moveField(new Point(10, 0));
 		}
 		else if (e.getSource() == _btn_Play || e.getSource() == _itm_Play) {
 			if (_controller.isPlayed()) {
@@ -868,7 +919,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
+		/*//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
 		if (e.getKeyCode() == 40) {
 			_field.moveField(new Point(0, -10));
 		}
@@ -880,7 +931,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		else if (e.getKeyCode() == 39) {
 			_field.moveField(new Point(-10, 0));
-		}
+		}*/
 	}
 
 	@Override
