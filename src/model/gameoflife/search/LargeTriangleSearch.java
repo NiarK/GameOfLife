@@ -47,11 +47,15 @@ public class LargeTriangleSearch implements Search {
 			hs.add(neighbor);
 
 			// Voisin deux à droite
-			if (neighbor.x == width - 1) {
+			neighbor = (Point) place.clone();
+			if (neighbor.x == width - 2) {
 				neighbor.x = 0;
 			}
+			else if(neighbor.x == width - 1){
+				neighbor.x = 1;
+			}
 			else {
-				neighbor.x += 1;
+				neighbor.x += 2;
 			}
 			hs.add(neighbor);
 
@@ -66,11 +70,15 @@ public class LargeTriangleSearch implements Search {
 			hs.add(neighbor);
 
 			// Voisin deux à gauche
-			if (neighbor.x == 0) {
+			neighbor = (Point) place.clone();
+			if (neighbor.x == 1) {
 				neighbor.x = width - 1;
 			}
+			else if (neighbor.x == 0) {
+				neighbor.x = width - 2;
+			}
 			else {
-				neighbor.x -= 1;
+				neighbor.x -= 2;
 			}
 			hs.add(neighbor);
 
@@ -85,25 +93,24 @@ public class LargeTriangleSearch implements Search {
 			hs.add(neighbor);
 
 			// Voisin au dessus à gauche
-			if (neighbor.x == 0) {
-				neighbor.x = width - 1;
+			Point neighbor2 = (Point) neighbor.clone();
+			if (neighbor2.x == 0) {
+				neighbor2.x = width - 1;
 			}
 			else {
-				neighbor.x -= 1;
+				neighbor2.x -= 1;
 			}
-			hs.add(neighbor);
+			hs.add(neighbor2);
 
 			// Voisin au dessus à droite
-			if (neighbor.x == width - 1) {
-				neighbor.x = 1;
-			}
-			else if (neighbor.x == width - 2) {
-				neighbor.x = 0;
+			neighbor2 = (Point) neighbor.clone();
+			if (neighbor2.x == width - 1) {
+				neighbor2.x = 0;
 			}
 			else {
-				neighbor.x += 2;
+				neighbor2.x += 1;
 			}
-			hs.add(neighbor);
+			hs.add(neighbor2);
 
 			// Voisin au dessous
 			neighbor = (Point) place.clone();
@@ -116,25 +123,24 @@ public class LargeTriangleSearch implements Search {
 			hs.add(neighbor);
 
 			// Voisin au dessous à gauche
-			if (neighbor.x == 0) {
-				neighbor.x = width - 1;
+			neighbor2 = (Point) neighbor.clone();
+			if (neighbor2.x == 0) {
+				neighbor2.x = width - 1;
 			}
 			else {
-				neighbor.x -= 1;
+				neighbor2.x -= 1;
 			}
-			hs.add(neighbor);
+			hs.add(neighbor2);
 
 			// Voisin au dessous à droite
-			if (neighbor.x == width - 1) {
-				neighbor.x = 1;
-			}
-			else if (neighbor.x == width - 2) {
-				neighbor.x = 0;
+			neighbor2 = (Point) neighbor.clone();
+			if (neighbor2.x == width - 1) {
+				neighbor2.x = 0;
 			}
 			else {
-				neighbor.x += 2;
+				neighbor2.x += 1;
 			}
-			hs.add(neighbor);
+			hs.add(neighbor2);
 
 			neighbor = (Point) place.clone();
 			if (neighbor.x % 2 == neighbor.y % 2) {
