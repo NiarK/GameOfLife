@@ -26,6 +26,7 @@ public class FieldDrawManager {
 	protected Point _oldComponentSize;
 	protected Point _componentSize;
 	protected Pattern _pattern;
+	protected boolean _torus;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
@@ -56,6 +57,8 @@ public class FieldDrawManager {
 		
 		_pattern = null;
 		
+		_torus = false;
+		
 		//_exec = true;
 
 	}
@@ -71,6 +74,7 @@ public class FieldDrawManager {
 		_oldComponentSize = fdm._oldComponentSize;
 		_componentSize = fdm._componentSize;
 		_pattern = fdm._pattern;
+		_torus = fdm._torus;
 	}
 
 	protected synchronized void drawBorder(Graphics g) {
@@ -103,6 +107,35 @@ public class FieldDrawManager {
 				 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 				(int) (_cellSize * _zoom),
 				(int) (_cellSize * _zoom));
+			}
+			else{
+				if(this.isTorus()){
+					if(!isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
+						if((_indicator.x + temp.x) >= _fieldSize.x){
+							temp.x = (_indicator.x + temp.x) % _fieldSize.x - _indicator.x;
+						}
+						else{
+							while((_indicator.x + temp.x) < 0){
+								temp.x = temp.x + _fieldSize.x;
+							}
+						}
+						if((_indicator.y + temp.y) >= _fieldSize.y){
+							temp.y = (_indicator.y + temp.y) % _fieldSize.y - _indicator.y;					
+						}
+						else{
+							while((_indicator.y + temp.y) < 0){
+								temp.y = temp.y + _fieldSize.y;
+							}
+						}
+						g.fillOval(
+							(int) (_cellSize * _zoom) * (_indicator.x + temp.x) + _offset.x,
+							(int) (_cellSize * _zoom) * (_indicator.y + temp.y) + _offset.y,
+							/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
+							 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
+							(int) (_cellSize * _zoom),
+							(int) (_cellSize * _zoom));
+					}
+				}
 			}
 		}
 	}
@@ -359,4 +392,13 @@ public class FieldDrawManager {
 			_pattern.rotateLeft();
 		}
 	}
+
+	public boolean isTorus() {
+		return _torus;
+	}
+
+	public void setTorus(boolean _torus) {
+		this._torus = _torus;
+	}
+	
 }

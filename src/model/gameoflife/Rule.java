@@ -36,4 +36,6 @@ public interface Rule {
 	 * @param field Le terrain en question
 	 */
 	public void empty(Field field);
+	
+	public Search getSearch();
 }

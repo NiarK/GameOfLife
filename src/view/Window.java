@@ -708,7 +708,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		} catch (BadRuleNameException ex) {
 		Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
 		}
-		}*/ else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_Parameters) {
+		}*/ 
+		else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_Parameters) {
 			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 			RuleParameter rp = dialog.showDialog();
 
@@ -716,7 +717,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_currentRuleParameter = rp;
 				_controller.setRule(_currentRuleParameter);
 				this.updateRuleLabel();
-				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()));
+				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()),_currentRuleParameter.isTorus());
 			}
 		}
 		else if (e.getSource() == _itm_Plus) {

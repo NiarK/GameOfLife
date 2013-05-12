@@ -121,8 +121,29 @@ public class GameExecution extends Observable implements Runnable {
 		while (it.hasNext()) {
 			Point temp = it.next();
 			Point p = new Point(position.x + temp.x, position.y + temp.y);
-			if(p.x >= 0 && p.x < _field.getSize().x && p.y >= 0 && p.y < _field.getSize().y)
+			if(_rule.getSearch().isTorus()){
+				if(p.x >= _field.getSize().x){
+					p.x = p.x % _field.getSize().x;
+				}
+				else{
+					while(p.x < 0){
+						p.x = p.x + _field.getSize().x;
+					}
+				}
+				if(p.y >= _field.getSize().y){
+					p.y = p.y % _field.getSize().y;					
+				}
+				else{
+					while(p.y < 0){
+						p.y = p.y + _field.getSize().y;
+					}
+				}
 				_field.addCell(p);
+			}
+			else{
+				if(p.x >= 0 && p.x < _field.getSize().x && p.y >= 0 && p.y < _field.getSize().y)
+					_field.addCell(p);
+			}
 		}
 	}
 	
