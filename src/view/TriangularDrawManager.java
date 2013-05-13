@@ -43,18 +43,12 @@ public class TriangularDrawManager extends FieldDrawManager {
 		g.drawPolygon(this.getTriangle(position, ((_indicator.x + _indicator.y) % 2) == 0 ));
 	}
 	
-	protected synchronized void drawPattern(Graphics g) {
-		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
-		while (it.hasNext()) {
-			Point temp = it.next();
-			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
-				Point position = new Point(
-					(int) (_cellSize * _zoom) * (_indicator.x + temp.x) + _offset.x,
-					(int) (_cellSize * _zoom) * (_indicator.y + temp.y) + _offset.y
-				);
-				g.fillPolygon(this.getTriangle(position, ((_indicator.x + temp.x + _indicator.y + temp.y) % 2) == 0 ));
-			}
-		}
+	protected synchronized void drawPoint(Graphics g, Point p){
+		Point position = new Point(
+			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x,
+			(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y
+		);
+		g.fillPolygon(this.getTriangle(position, ((_indicator.x + p.x + _indicator.y + p.y) % 2) == 0 ));
 	}
 
 	@Override

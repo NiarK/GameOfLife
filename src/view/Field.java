@@ -151,7 +151,8 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		}
 	}
 
-	public synchronized void setNeighbors(int n) {
+	public synchronized void setNeighbors(int n, boolean torus) {
+		_drawer.setTorus(torus);
 		if ( n == 6 ) {
 			_drawer = new HexagonalDrawManager(_drawer);
 		}
@@ -259,5 +260,13 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	
 	public void horizontalSymmetry(){
 		_drawer.horizontalSymmetry();
+	}
+	
+	public void rotateRight(){
+		_drawer.rotateRight();
+	}
+	
+	public void rotateLeft(){
+		_drawer.rotateLeft();
 	}
 }

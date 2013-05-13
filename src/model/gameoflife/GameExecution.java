@@ -7,7 +7,6 @@ package model.gameoflife;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Observable;
@@ -74,6 +73,10 @@ public class GameExecution extends Observable implements Runnable {
 		}
 	}
 
+	public Field getField() {
+		return _field;
+	}
+	
 	public synchronized void empty() {
 
 		_rule.empty(_field);
@@ -115,15 +118,8 @@ public class GameExecution extends Observable implements Runnable {
 				}
 			}
 			else{
-				Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
-				while (it.hasNext()) {
-					Point temp = it.next();
-					Point p = new Point(position.x + temp.x, position.y + temp.y);
-					if(p.x >= 0 && p.x < _field.getSize().x && p.y >= 0 && p.y < _field.getSize().y) {
-						//_field.getCells().put(p, new Cell(p));
-						_field.addCell(p);
-					}
-				}
+				displayPattern(position);
+
 			}
 
 			//_rule.updateEmergingPlace(position, _field);
@@ -133,7 +129,39 @@ public class GameExecution extends Observable implements Runnable {
 		}
 
 	}
+	
+	public synchronized void displayPattern(Point position){
 
+		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
+		while (it.hasNext()) {
+			Point temp = it.next();
+			Point p = new Point(position.x + temp.x, position.y + temp.y);
+			if(_rule.getSearch().isTorus()){
+				if(p.x >= _field.getSize().x){
+					p.x = p.x % _field.getSize().x;
+				}
+				else{
+					while(p.x < 0){
+						p.x = p.x + _field.getSize().x;
+					}
+				}
+				if(p.y >= _field.getSize().y){
+					p.y = p.y % _field.getSize().y;					
+				}
+				else{
+					while(p.y < 0){
+						p.y = p.y + _field.getSize().y;
+					}
+				}
+				_field.addCell(p);
+			}
+			else{
+				if(p.x >= 0 && p.x < _field.getSize().x && p.y >= 0 && p.y < _field.getSize().y)
+					_field.addCell(p);
+			}
+		}
+	}
+	
 	public synchronized void setFieldSize(Point size) {
 		_field.setSize(size);
 
@@ -145,15 +173,14 @@ public class GameExecution extends Observable implements Runnable {
 		_rule = rule;
 	}
 
-	public int save(String name) {
-		return _field.save(name);
+	public void save(String name) {
+		_field.save(name);
 	}
 
-	public int load(String name) {
-		int value = _field.load(name);
+	public void load(String name) {
+		_field.load(name);
 		this.setChanged();
 		this.notifyObservers();
-		return value;
 	}
 
 	public ArrayList patternList() {

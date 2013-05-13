@@ -16,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -28,6 +29,8 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -56,7 +59,7 @@ import javax.swing.event.ChangeListener;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
 
-public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener {
+public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener, Observer {
 
 	private RuleParameter _currentRuleParameter;
 	private JButton _btn_Pause;
@@ -81,7 +84,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JMenu _mnu_Simulators;
 	private JMenu _mnu_View;
 	private JMenuItem _itm_Save;
-	private JMenuItem _itm_Load;
+	private JMenuItem _itm_Open;
 	private JMenuItem _itm_Play;
 	private JMenuItem _itm_Next;
 	private JMenuItem _itm_Random;
@@ -110,8 +113,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private ButtonGroup _bg_Patterns;
 	private JRadioButton[] _rb_Patterns;
 	private JPanel _pnl_patterns;
-	private JPanel _pnl_BtnPatterns;
-	private JButton _btn_RotatePatterns;
+	private JPanel _pnl_BtnPatternsRotate;
+	private JPanel _pnl_BtnPatternsSymetric;
+	private JButton _btn_RotateLeftPatterns;
+	private JButton _btn_RotateRightPatterns;
 	private JButton _btn_ChangeXAxisPatterns;
 	private JButton _btn_ChangeYAxisPatterns;
 
@@ -119,6 +124,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
+		_controller.addObserverToField(this);
 		
 		
 		_field = new Field(8);
@@ -140,9 +146,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_Save = new JMenuItem("Save");
 		_itm_Save.addActionListener(this);
 		_itm_Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
-		_itm_Load = new JMenuItem("Load");
-		_itm_Load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
-		_itm_Load.addActionListener(this);
+		_itm_Open = new JMenuItem("Open");
+		_itm_Open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
+		_itm_Open.addActionListener(this);
 		_itm_Play = new JMenuItem("Play/Pause");
 		_itm_Play.setAccelerator(KeyStroke.getKeyStroke("SPACE"));
 		_itm_Play.addActionListener(this);
@@ -186,12 +192,16 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_MoveLeft.setAccelerator(KeyStroke.getKeyStroke("LEFT"));
 		_itm_MoveLeft.addActionListener(this);
 		_itm_RotateRight = new JMenuItem("Rotate right");
+		_itm_RotateRight.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, ActionEvent.CTRL_MASK));
 		_itm_RotateRight.addActionListener(this);
 		_itm_RotateLeft = new JMenuItem("Rotate left");
+		_itm_RotateLeft.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, ActionEvent.CTRL_MASK));
 		_itm_RotateLeft.addActionListener(this);
 		_itm_InvXAxis = new JMenuItem("Inversion X-axis");
+		_itm_InvXAxis.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, ActionEvent.CTRL_MASK));
 		_itm_InvXAxis.addActionListener(this);
 		_itm_InvYAxis = new JMenuItem("Inversion Y-axis");
+		_itm_InvYAxis.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, ActionEvent.CTRL_MASK));
 		_itm_InvYAxis.addActionListener(this);
 		_itm_OptionsVisible = new JCheckBoxMenuItem("Panel", true);
 		_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("P"));
@@ -202,7 +212,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_mnu_Bar.add(_mnu_Simulators);
 		_mnu_Bar.add(_mnu_View);
 		_mnu_File.add(_itm_Save);
-		_mnu_File.add(_itm_Load);
+		_mnu_File.add(_itm_Open);
 		_mnu_Edit.add(_itm_Random);
 		_mnu_Edit.add(_itm_Empty);
 		_mnu_Edit.add(new JSeparator());
@@ -319,20 +329,26 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		_pnl_patterns = new JPanel();
 		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
-		_pnl_BtnPatterns = new JPanel();
-		_pnl_BtnPatterns.setLayout(new BoxLayout(_pnl_BtnPatterns, BoxLayout.X_AXIS));
-		_btn_RotatePatterns = new JButton("Rotate");
-		_btn_RotatePatterns.addActionListener(this);
-		_btn_RotatePatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_RotatePatterns);
+		_pnl_BtnPatternsRotate = new JPanel();
+		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.X_AXIS));
+		_pnl_BtnPatternsSymetric = new JPanel();
+		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.X_AXIS));
+		_btn_RotateLeftPatterns = new JButton("Rotate Left");
+		_btn_RotateLeftPatterns.addActionListener(this);
+		_btn_RotateLeftPatterns.setFocusable(false);
+		_pnl_BtnPatternsRotate.add(_btn_RotateLeftPatterns);
+		_btn_RotateRightPatterns = new JButton("Rotate Right");
+		_btn_RotateRightPatterns.addActionListener(this);
+		_btn_RotateRightPatterns.setFocusable(false);
+		_pnl_BtnPatternsRotate.add(_btn_RotateRightPatterns);
 		_btn_ChangeXAxisPatterns = new JButton("Horizontal");
 		_btn_ChangeXAxisPatterns.addActionListener(this);
 		_btn_ChangeXAxisPatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_ChangeXAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(_btn_ChangeXAxisPatterns);
 		_btn_ChangeYAxisPatterns = new JButton("Vertical");
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
-		_pnl_BtnPatterns.add(_btn_ChangeYAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
 		_bg_Patterns = new ButtonGroup();
 		this.createPatternsList();
 
@@ -474,7 +490,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	public void createPatternsList() {
 		_pnl_patterns.removeAll();
-		_pnl_patterns.add(_pnl_BtnPatterns);
+		_pnl_patterns.add(_pnl_BtnPatternsRotate);
+		_pnl_patterns.add(_pnl_BtnPatternsSymetric);
 		_patterns = _controller.patternList();
 		_rb_Patterns = null;
 		_rb_Patterns = new JRadioButton[_patterns.size() + 1];
@@ -539,16 +556,16 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_controller.pause();
 		}
 		else if (e.getSource() == _itm_MoveUp) {
-			_field.moveField(new Point(0, 10));
-		}
-		else if (e.getSource() == _itm_MoveDown) {
 			_field.moveField(new Point(0, -10));
 		}
+		else if (e.getSource() == _itm_MoveDown) {
+			_field.moveField(new Point(0, 10));
+		}
 		else if (e.getSource() == _itm_MoveRight) {
-			_field.moveField(new Point(-10, 0));
+			_field.moveField(new Point(10, 0));
 		}
 		else if (e.getSource() == _itm_MoveLeft) {
-			_field.moveField(new Point(10, 0));
+			_field.moveField(new Point(-10, 0));
 		}
 		else if (e.getSource() == _btn_Play || e.getSource() == _itm_Play) {
 			if (_controller.isPlayed()) {
@@ -585,32 +602,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					String path = fc.getSelectedFile().getPath();
 					File f = new File(path);
 					if (!f.exists()) {
-						int value = _controller.save(path);
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Could not create file");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Can not find the file");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error during saving");
-							}
-						}
+						_controller.save(path);
 					}
 					else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-						int value = _controller.save(path);
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Could not create file");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Can not find the file");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error during saving");
-							}
-						}
+						_controller.save(path);
 					}
 					else {
 						test = true;
@@ -625,25 +620,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_field.setPattern(null);
 			_controller.setPattern(null);
 		}
-		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Load) {
+		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Open) {
 			JFileChooser fc = new JFileChooser();
 			boolean test;
 			do {
 				test = false;
 				if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 					if (fc.getSelectedFile().getAbsolutePath().endsWith(".cells")) {
-						int value = _controller.load(fc.getSelectedFile().getAbsolutePath());
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Configuration error DOM parser");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Error while parsing the document");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error Input/Output");
-							}
-						}
+						_controller.load(fc.getSelectedFile().getAbsolutePath());
 					}
 					else {
 						JOptionPane.showMessageDialog(this, "You must select a file .cells");
@@ -694,7 +678,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		} catch (BadRuleNameException ex) {
 		Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
 		}
-		}*/ else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_Parameters) {
+		}*/ 
+		else if (e.getSource() == _btn_RuleParameter || e.getSource() == _itm_Parameters) {
 			RuleParameterDialog dialog = new RuleParameterDialog(this, _controller, _currentRuleParameter);
 			RuleParameter rp = dialog.showDialog();
 
@@ -702,7 +687,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_currentRuleParameter = rp;
 				_controller.setRule(_currentRuleParameter);
 				this.updateRuleLabel();
-				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()));
+				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()),_currentRuleParameter.isTorus());
 			}
 		}
 		else if (e.getSource() == _itm_Plus) {
@@ -715,11 +700,21 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 			_field.zoom(unit);
 		}
-		else if (e.getSource() == _btn_ChangeYAxisPatterns){
+		else if (e.getSource() == _btn_ChangeYAxisPatterns || e.getSource() == _itm_InvYAxis){
 			_field.verticalSymmetry();
+			this.repaint();
 		}
-		else if (e.getSource() == _btn_ChangeXAxisPatterns){
+		else if (e.getSource() == _btn_ChangeXAxisPatterns || e.getSource() == _itm_InvXAxis){
 			_field.horizontalSymmetry();
+			this.repaint();
+		}
+		else if (e.getSource() == _btn_RotateLeftPatterns || e.getSource() == _itm_RotateLeft){
+			_field.rotateLeft();
+			this.repaint();
+		}
+		else if (e.getSource() == _btn_RotateRightPatterns || e.getSource() == _itm_RotateRight){
+			_field.rotateRight();
+			this.repaint();
 		}
 		else{
 			boolean test = true;
@@ -969,6 +964,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o.getClass() == _controller.getGame().getField().getClass())
+			JOptionPane.showMessageDialog(this, arg);
 	}
 	
 	

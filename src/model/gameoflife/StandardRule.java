@@ -337,4 +337,12 @@ public class StandardRule implements Rule {
 	public void setSurvive(HashSet<Integer> survive) {
 		this._survive = survive;
 	}
+
+	public Search getSearch() {
+		return _search;
+	}
+
+	public void setSearch(Search _search) {
+		this._search = _search;
+	}
 }

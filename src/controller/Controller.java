@@ -5,9 +5,8 @@
 package controller;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +28,7 @@ import view.Window;
  *
  * @author pierre
  */
-public final class Controller {
+public final class Controller{
 
 	public static final int SPEED_VERY_FAST = 10;
 	public static final int SPEED_FAST = 50;
@@ -68,6 +67,10 @@ public final class Controller {
 		}
 	}
 
+	public GameExecution getGame() {
+		return _game;
+	}
+	
 	public void initRuleParameter() {
 
 		String standardSearch = "Square";
@@ -127,6 +130,14 @@ public final class Controller {
 		_game.addObserver(o);
 	}
 
+	/**
+	 * Ajoute un observateur au field (model).
+	 * @param o L'observateur en question.
+	 */
+	public void addObserverToField(Observer o) {
+		_game.getField().addObserver(o);
+	}
+
 	public void pause() {
 		_simulator.pause();
 	}
@@ -135,28 +146,28 @@ public final class Controller {
 		_simulator.play();
 	}
 
-	public int save(final String name) {
-		/*Thread t = new Thread(new Runnable() {
-		
-		@Override
-		public void run() {*/
-		return _game.save(name);
-		/*}
+	public void save(final String name) {
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				 _game.save(name);
+			}
 		});
-		
-		t.start();*/
+
+		t.start();
 	}
 
-	public int load(final String name) {
-		/*Thread t = new Thread(new Runnable() {
-		
-		@Override
-		public void run() {*/
-		return _game.load(name);
-		/*}
+	public void load(final String name) {
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.load(name);
+			}
 		});
-		
-		t.start();*/
+
+		t.start();
 	}
 
 	public void next() {

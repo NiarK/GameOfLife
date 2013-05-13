@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import model.gameoflife.Cell;
@@ -26,6 +25,7 @@ public class FieldDrawManager {
 	protected Point _oldComponentSize;
 	protected Point _componentSize;
 	protected Pattern _pattern;
+	protected boolean _torus;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
@@ -56,6 +56,8 @@ public class FieldDrawManager {
 		
 		_pattern = null;
 		
+		_torus = false;
+		
 		//_exec = true;
 
 	}
@@ -71,6 +73,7 @@ public class FieldDrawManager {
 		_oldComponentSize = fdm._oldComponentSize;
 		_componentSize = fdm._componentSize;
 		_pattern = fdm._pattern;
+		_torus = fdm._torus;
 	}
 
 	protected synchronized void drawBorder(Graphics g) {
@@ -96,15 +99,45 @@ public class FieldDrawManager {
 		while (it.hasNext()) {
 			Point temp = it.next();
 			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
-				g.fillOval(
-				(int) (_cellSize * _zoom) * (_indicator.x + temp.x) + _offset.x,
-				(int) (_cellSize * _zoom) * (_indicator.y + temp.y) + _offset.y,
+					this.drawPoint(g, temp);
+			}
+			else{
+				if(this.isTorus()){
+					temp = calculateTorus(temp);
+					this.drawPoint(g, temp);
+				}
+			}
+		}
+	}
+	
+	protected synchronized void drawPoint(Graphics g, Point p){
+		g.fillOval(
+				(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x,
+				(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y,
 				/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
 				 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 				(int) (_cellSize * _zoom),
 				(int) (_cellSize * _zoom));
+	}
+	
+	protected synchronized Point calculateTorus(Point p){
+		if((_indicator.x + p.x) >= _fieldSize.x){
+			p.x = (_indicator.x + p.x) % _fieldSize.x - _indicator.x;
+		}
+		else{
+			while((_indicator.x + p.x) < 0){
+				p.x = p.x + _fieldSize.x;
 			}
 		}
+		if((_indicator.y + p.y) >= _fieldSize.y){
+			p.y = (_indicator.y + p.y) % _fieldSize.y - _indicator.y;					
+		}
+		else{
+			while((_indicator.y + p.y) < 0){
+				p.y = p.y + _fieldSize.y;
+			}
+		}
+		return p;
 	}
 	
 	protected synchronized void drawCells(Graphics g, Point p1, Point p2) {
@@ -347,4 +380,25 @@ public class FieldDrawManager {
 			_pattern.horizontalSymmetry();
 		}
 	}
+	
+	public void rotateRight(){
+		if(_pattern != null){
+			_pattern.rotateRight();
+		}
+	}
+	
+	public void rotateLeft(){
+		if(_pattern != null){
+			_pattern.rotateLeft();
+		}
+	}
+
+	public boolean isTorus() {
+		return _torus;
+	}
+
+	public void setTorus(boolean _torus) {
+		this._torus = _torus;
+	}
+	
 }

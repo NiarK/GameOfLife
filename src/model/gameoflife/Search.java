@@ -21,4 +21,5 @@ public interface Search {
 	
 	public int getNeighborMaximumNumber();
     
+	public boolean isTorus();
 }
