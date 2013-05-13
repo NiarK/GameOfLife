@@ -48,24 +48,18 @@ public class HexagonalDrawManager extends FieldDrawManager {
 			(int) (_cellSize * _zoom));
 	}
 	
-	protected synchronized void drawPattern(Graphics g) {
-		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
-		while (it.hasNext()) {
-			Point temp = it.next();
-			int space = 0;
-			if((_indicator.y + temp.y) % 2 == 1) {
-				space = (int) (_cellSize * _zoom)/2;
-			}
-			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
-				g.fillOval(
-				(int) (_cellSize * _zoom) * (_indicator.x + temp.x) + _offset.x + space,
-				(int) (_cellSize * _zoom) * (_indicator.y + temp.y) + _offset.y,
-				/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
-				 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
-				(int) (_cellSize * _zoom),
-				(int) (_cellSize * _zoom));
-			}
+	protected synchronized void drawPoint(Graphics g, Point p){
+		int space = 0;
+		if((_indicator.y + p.y) % 2 == 1) {
+			space = (int) (_cellSize * _zoom)/2;
 		}
+		g.fillOval(
+			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x + space,
+			(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y,
+			/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
+			 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
+			(int) (_cellSize * _zoom),
+			(int) (_cellSize * _zoom));
 	}
 
 	@Override
