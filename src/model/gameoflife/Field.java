@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Observable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,7 +20,7 @@ import org.xml.sax.SAXException;
  *
  * @author pierre
  */
-public class Field {
+public class Field extends Observable{
 
 	private HashMap<Point, Cell> _cells;
 	private HashMap<Point, Integer> _emergingPlaces; // coord d'une case vide -> nb voisin
@@ -195,14 +196,16 @@ public class Field {
 	
 	return str;
 	}*/
-	public int save(String name) {
+	public void save(String name) {
 		File f = new java.io.File(name);
 		try {
 			f.createNewFile();
 		}
 		catch (IOException e) {
 			System.err.println("Could not create file");
-			return 2;
+			e.printStackTrace();
+			this.setChanged();
+			this.notifyObservers("Could not create file");
 		}
 		try {
 			FileOutputStream FOS = new java.io.FileOutputStream(f);
@@ -230,19 +233,22 @@ public class Field {
 				FOS.write(bend);
 			}
 			FOS.write(titleend.getBytes());
-			return 1;
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("Can not find the file");
-			return 3;
+			e.printStackTrace();
+			this.setChanged();
+			this.notifyObservers("Can not find the file");
 		}
 		catch (IOException ex) {
+			System.err.println("INPUT/OUTPUT exception");
 			ex.printStackTrace();
-			return 4;
+			this.setChanged();
+			this.notifyObservers("INPUT/OUTPUT Error");
 		}
 	}
 
-	public int load(String name) {
+	public void load(String name) {
 		try {
 			// création d'une fabrique de documents
 			DocumentBuilderFactory DBF = DocumentBuilderFactory.newInstance();
@@ -258,7 +264,7 @@ public class Field {
 			Element root = document.getDocumentElement();
 			String tag = "cell";
 			NodeList liste = root.getElementsByTagName(tag);
-			HashMap<Point, Cell> hm = new HashMap();
+			this.clearCells();
 			for (int i = 0 ; i < liste.getLength() ; i++) {
 				Element e = (Element) liste.item(i);
 				NodeList coordXElement = e.getElementsByTagName("x");
@@ -267,25 +273,28 @@ public class Field {
 				int y = Integer.parseInt(coordYElement.item(0).getTextContent());
 				Point coord = new Point(x, y);
 				this.addCell(coord);
-				//hm.put(coord, new Cell(coord));
 			}
-			//this.setCells(hm);
-			return 1;
 		}
 		catch (ParserConfigurationException pce) {
 			System.err.println("Configuration error DOM parser");
 			System.err.println("when calling to DBF.newDocumentBuilder();");
-			return 2;
+			pce.printStackTrace();
+			this.setChanged();
+			this.notifyObservers("Configuration error DOM parser");
 		}
 		catch (SAXException se) {
 			System.err.println("Error while parsing the document");
 			System.err.println("when calling to DB.parse(xml)");
-			return 3;
+			se.printStackTrace();
+			this.setChanged();
+			this.notifyObservers("Error while parsing the document");
 		}
 		catch (IOException ioe) {
 			System.err.println("Error I/O");
 			System.err.println("when calling to DB.parse(xml)");
-			return 4;
+			ioe.printStackTrace();
+			this.setChanged();
+			this.notifyObservers("INPUT/OUTPUT Error");
 		}
 	}
 

@@ -29,6 +29,8 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -57,7 +59,7 @@ import javax.swing.event.ChangeListener;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
 
-public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener {
+public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener, Observer {
 
 	private RuleParameter _currentRuleParameter;
 	private JButton _btn_Pause;
@@ -122,6 +124,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
+		_controller.addObserverToField(this);
 		
 		
 		_field = new Field(8);
@@ -599,32 +602,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					String path = fc.getSelectedFile().getPath();
 					File f = new File(path);
 					if (!f.exists()) {
-						int value = _controller.save(path);
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Could not create file");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Can not find the file");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error during saving");
-							}
-						}
+						_controller.save(path);
 					}
 					else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-						int value = _controller.save(path);
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Could not create file");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Can not find the file");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error during saving");
-							}
-						}
+						_controller.save(path);
 					}
 					else {
 						test = true;
@@ -646,18 +627,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				test = false;
 				if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 					if (fc.getSelectedFile().getAbsolutePath().endsWith(".cells")) {
-						int value = _controller.load(fc.getSelectedFile().getAbsolutePath());
-						if (value != 1) {
-							if (value == 2) {
-								JOptionPane.showMessageDialog(this, "Configuration error DOM parser");
-							}
-							else if (value == 3) {
-								JOptionPane.showMessageDialog(this, "Error while parsing the document");
-							}
-							else if (value == 4) {
-								JOptionPane.showMessageDialog(this, "Error Input/Output");
-							}
-						}
+						_controller.load(fc.getSelectedFile().getAbsolutePath());
 					}
 					else {
 						JOptionPane.showMessageDialog(this, "You must select a file .cells");
@@ -994,6 +964,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o.getClass() == _controller.getGame().getField().getClass())
+			JOptionPane.showMessageDialog(this, arg);
 	}
 	
 	

@@ -62,6 +62,10 @@ public class GameExecution extends Observable implements Runnable {
 		}
 	}
 
+	public Field getField() {
+		return _field;
+	}
+	
 	public synchronized void empty() {
 
 		_rule.empty(_field);
@@ -158,15 +162,14 @@ public class GameExecution extends Observable implements Runnable {
 		_rule = rule;
 	}
 
-	public int save(String name) {
-		return _field.save(name);
+	public void save(String name) {
+		_field.save(name);
 	}
 
-	public int load(String name) {
-		int value = _field.load(name);
+	public void load(String name) {
+		_field.load(name);
 		this.setChanged();
 		this.notifyObservers();
-		return value;
 	}
 
 	public ArrayList patternList() {
