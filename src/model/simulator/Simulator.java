@@ -36,14 +36,28 @@ public class Simulator extends Thread {
 	public void run() {
 		
 		while(_run) {
+			
+			Thread sleep = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(_period);
+					} catch (InterruptedException ex) {
+						Logger.getLogger(Simulator.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			});
+			
+			sleep.start();
 			if(_exec){
 				this._task.run();
 			}
 			try {
-				Thread.sleep(_period);
+				sleep.join();
 			} catch (InterruptedException ex) {
 				Logger.getLogger(Simulator.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			
 		}
 	}
 	

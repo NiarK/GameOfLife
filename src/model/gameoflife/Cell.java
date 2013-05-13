@@ -8,7 +8,7 @@ import java.awt.Point;
  */
 public class Cell {
 	
-	private int _threadNumber;
+	private int _fragmentNumber;
 	private Point _coordinate;
 	private CellState _state;
 	private CellState _nextState;
@@ -19,7 +19,7 @@ public class Cell {
 	 */
 	public Cell(Point coord, int threadNumber){
 		this._coordinate = coord;
-		this._threadNumber = threadNumber;
+		this._fragmentNumber = threadNumber;
 		
 		this._state = new CellState(true);
 		this._nextState = new CellState(true);
@@ -59,12 +59,12 @@ public class Cell {
 		this._nextState = state;
 	}
 
-	public int getCurrentThreadNumber() {
-		return _threadNumber;
+	public int getFragmentNumber() {
+		return _fragmentNumber;
 	}
 
-	public void setThreadNumber(int threadNumber) {
-		this._threadNumber = threadNumber;
+	public void setFragmentNumber(int threadNumber) {
+		this._fragmentNumber = threadNumber;
 	}
 	
 	

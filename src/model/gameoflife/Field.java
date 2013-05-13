@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,11 +27,10 @@ public class Field {
 	private ArrayList<HashMap<Point, Cell>> _cellsFragments;
 	private ArrayList<HashMap<Point, Integer>> _emergingPlacesFragments;
 	private Point _size;
-	private int _threadNumber;
-	private int _currentThreadNumber;
+	private int _fragmentNumber;
+	private int _currentFragmentNumber;
 	
-	public static final int NB_FRAGMENT = 10;
-	//private Rule _rule;
+	//public static final int NB_FRAGMENT = 50;
 
 	/**
 	 * Constructeur par défaut
@@ -41,16 +41,16 @@ public class Field {
 	public Field(Point size) {
 		this._size = size;
 
+		_fragmentNumber = 50;
+		_currentFragmentNumber = -1;
+		
 		this._cells = new HashMap<>();
 		this._emergingPlaces = new HashMap<>();
-
+		
 		_cellsFragments = new ArrayList<>();
 		_emergingPlacesFragments = new ArrayList<>();
 		
-		_threadNumber = 5;
-		_currentThreadNumber = -1;
-
-		for (int i = 0 ; i < _threadNumber ; ++i) {
+		for (int i = 0 ; i < _fragmentNumber ; ++i) {
 			_cellsFragments.add(new HashMap<Point, Cell>());
 			_emergingPlacesFragments.add(new HashMap<Point, Integer>());
 		}
@@ -110,7 +110,7 @@ public class Field {
 		return _size;
 	}
 
-	public void setSize(Point size) {
+	public synchronized void setSize(Point size) {
 		_size = size;
 
 		Iterator<Map.Entry<Point, Cell>> it = _cells.entrySet().iterator();
@@ -122,8 +122,9 @@ public class Field {
 			Point pos = cell.getCoordinate();
 
 			if (pos.x < 0 || pos.y < 0 || pos.x >= _size.x || pos.y >= _size.y) {
+				Cell c = _cells.get(pos);
 				it.remove();
-				this.removeCell(pos);
+				this.removeCell(c);
 			}
 		}
 	}
@@ -359,33 +360,32 @@ public class Field {
 
 	}
 	
-	private int getCurrentThreadNumber() {
+	private synchronized int getNextFragmentNumber() {
 		
-		_currentThreadNumber++;
-		if(_currentThreadNumber >= _cellsFragments.size()) {
-			_currentThreadNumber = 0;
+		_currentFragmentNumber++;
+		if(_currentFragmentNumber >= _cellsFragments.size()) {
+			_currentFragmentNumber = 0;
 		}
 		
-		return _currentThreadNumber;
+		return _currentFragmentNumber;
 	}
 	
 	
-	
-	public void addCell(Point coord){
+	public synchronized void addCell(Point coord){
 		
 		coord = new Point(coord);
 		
-		int thread = this.getCurrentThreadNumber();
+		int thread = this.getNextFragmentNumber();
 		
 		Cell c =  new Cell(coord, thread);
 		
 		this.add(c);
 	}
 	
-	public void addEmergingCell(Point coord){
+	public synchronized void addEmergingCell(Point coord){
 		coord = new Point(coord);
 		
-		int thread = this.getCurrentThreadNumber();
+		int thread = this.getNextFragmentNumber();
 		
 		Cell c =  Cell.getEmergingCell(coord, thread);
 		
@@ -394,19 +394,26 @@ public class Field {
 	
 	private void add(Cell c) {
 		
+		if( _cells.containsKey(c.getCoordinate())) {
+			c.setFragmentNumber(_cells.get(c.getCoordinate()).getFragmentNumber());
+		}
+		
 		_cells.put(c.getCoordinate(), c);
-		_cellsFragments.get(c.getCurrentThreadNumber()).put(c.getCoordinate(), c);
+		_cellsFragments.get(c.getFragmentNumber()).put(c.getCoordinate(), c);
 	}
 	
-	public void removeCell(Point coord) {
+	public synchronized void removeCell(Cell c) {
 		
-		//Cell c = _cells.get(coord);
+		if(_cellsFragments.get(c.getFragmentNumber()).get(c.getCoordinate()) != null) {
+			_cellsFragments.get(c.getFragmentNumber()).remove(c.getCoordinate());
+		}
 		
-		//_cellsFragments.get(c.getCurrentThreadNumber()).remove(coord);
-		_cells.remove(coord);
+		if(_cells.get(c.getCoordinate()) != null) {
+			_cells.remove(c.getCoordinate());
+		}
 	}
 	
-	public void clearCells() {
+	public synchronized void clearCells() {
 		_cells.clear();
 		int fragmentNumber = _cellsFragments.size();
 		for(int i = 0; i < fragmentNumber; ++i) {
@@ -414,7 +421,7 @@ public class Field {
 		}
 	}
 	
-	public void clearEmergingPlaces() {
+	public synchronized void clearEmergingPlaces() {
 		_emergingPlaces.clear();
 		int fragmentNumber = _emergingPlacesFragments.size();
 		for(int i = 0; i < fragmentNumber; ++i) {
@@ -422,13 +429,56 @@ public class Field {
 		}
 	}
 	
-	public void addEmergingPlace(Point coord, Integer neighborNumber){
+	public synchronized void addEmergingPlace(Point coord, Integer neighborNumber){
 		coord = new Point(coord);
 		
 		_emergingPlaces.put(coord, neighborNumber);
 		
-		int thread = (coord.x + coord.y) % _threadNumber;
+		int thread = (coord.x + coord.y) % _fragmentNumber;
 		
 		_emergingPlacesFragments.get(thread).put(coord, neighborNumber);
 	}
+
+	public HashMap<Point, Cell> getCellsFragments(int threadNumber) {
+		return _cellsFragments.get(threadNumber);
+	}
+
+	public HashMap<Point, Integer> getEmergingPlacesFragments(int threadNumber) {
+		return _emergingPlacesFragments.get(threadNumber);
+	}
+
+	public int getFragmentNumber() {
+		return _fragmentNumber;
+	}
+
+	public synchronized void empty() {
+		
+		this._cells = new HashMap<>();
+		this._emergingPlaces = new HashMap<>();
+		
+		_cellsFragments = new ArrayList<>();
+		_emergingPlacesFragments = new ArrayList<>();
+		
+		for (int i = 0 ; i < _fragmentNumber ; ++i) {
+			_cellsFragments.add(new HashMap<Point, Cell>());
+			_emergingPlacesFragments.add(new HashMap<Point, Integer>());
+		}
+	}
+
+	public synchronized void setFragmentNumber(int n) {
+		if(n > 0) {
+			
+			if (n < _fragmentNumber) {
+			_fragmentNumber = n;
+			
+				for (Cell cell : _cells.values()) {
+					if(cell.getFragmentNumber() >= _fragmentNumber) {
+						cell.setFragmentNumber(this.getNextFragmentNumber());
+					}
+				}
+			}
+		}
+	}
+	
+	
 }

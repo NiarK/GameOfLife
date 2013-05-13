@@ -176,12 +176,13 @@ public class StandardRule implements Rule {
 	public void updateEmergingPlaces(HashMap<Point, Cell> clusterCells, Field field){
 
 		//HashMap<Point, Cell>	cells			= field.getCells();
-		HashMap<Point, Integer> emergingPlaces	= field.getEmergingPlaces(); //new HashMap<>();//
-		emergingPlaces.clear();
+		/*HashMap<Point, Integer> emergingPlaces	= *///field.getEmergingPlaces().clear(); //new HashMap<>();//
+		//emergingPlaces.clear();
 
 		for(Map.Entry<Point, Cell> entry : clusterCells.entrySet()) {
 
 			if(entry.getValue().getState().isAlive()) {
+				
 				updateEmergingPlace(entry.getKey(), field);
 			}
 		}
@@ -190,8 +191,8 @@ public class StandardRule implements Rule {
 	@Override
 	public void calculEmergingCells(HashMap<Point, Integer> clusterPlaces, Field field) {
 		
-		HashMap<Point, Cell> cells = field.getCells();
-		HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
+		//HashMap<Point, Cell> cells = field.getCells();
+		//HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
 		
 		for(Map.Entry<Point, Integer> entry : clusterPlaces.entrySet()) {
 
@@ -201,10 +202,10 @@ public class StandardRule implements Rule {
 				Point coord = entry.getKey();
 				//Cell c = Cell.getEmergingCell(coord);
 				
-				synchronized(field) {
+				//synchronized(field) {
 					//cells.put(coord, c);
 					field.addEmergingCell(coord);
-				}
+				//}
 			}
 		}
 	}
@@ -214,7 +215,7 @@ public class StandardRule implements Rule {
 
 
 		HashMap<Point, Cell> cells = field.getCells();
-
+		
 		// Mets à jour l'états suivant de chaque cellules
 		for(Map.Entry<Point, Cell> entry : clusterCells.entrySet()) {
 			
@@ -239,17 +240,18 @@ public class StandardRule implements Rule {
 			cell.update();
 
 			if( ! cell.getState().isAlive() ) {
-
+				
 				it.remove();
-				field.removeCell(cell.getCoordinate());
+				field.removeCell(cell);
 			}
 		}
 	}
 	
 	@Override
 	public void empty(Field _field) {
-		_field.setCells(new HashMap<Point, Cell>());
-		_field.setEmergingPlaces(new HashMap<Point, Integer>());
+		_field.empty();
+		/*_field.setCells(new HashMap<Point, Cell>());
+		_field.setEmergingPlaces(new HashMap<Point, Integer>());*/
 		
 	}
 
@@ -287,17 +289,18 @@ public class StandardRule implements Rule {
 	 */
 	public void updateEmergingPlace(Point place, Field field) {
 		
-		Point size = field.getSize();
-		place = (Point)place.clone();
+		//Point size = field.getSize();
+		//place = (Point)place.clone();
 
 		HashSet<Point> neighbors = _search.getNeighbor(field.getSize().x, field.getSize().y, place);
 		
 		for(Point n : neighbors) {
 			this.incrementEmergingNeighbor(n, field);
 		}
+		
 	}
 
-	private void incrementEmergingNeighbor(Point neighbor, Field field) {
+	private synchronized void incrementEmergingNeighbor(Point neighbor, Field field) {
 
 		if( ! field.getCells().containsKey(neighbor) || ! field.getCells().get(neighbor).getState().isAlive() ){
 
@@ -310,9 +313,11 @@ public class StandardRule implements Rule {
 			}
 
 			n += 1;
-
-			emergingPlaces.put((Point)neighbor.clone(), n);
-		
+			
+			//synchronized(emergingPlaces){
+			//emergingPlaces.put((Point)neighbor.clone(), n);
+			field.addEmergingPlace(neighbor, n);
+			//}
 		}
 		//System.out.println(field);
 	}
