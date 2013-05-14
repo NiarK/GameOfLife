@@ -323,8 +323,8 @@ public final class Controller{
 		return this.getSearch(rp).getNeighborMaximumNumber();
 	}
 
-	public ArrayList patternList() {
-		return _game.patternList();
+	public ArrayList patternList(String repertory) {
+		return _game.patternList(repertory);
 	}
 	
 	public void setPattern(Pattern _pattern) {

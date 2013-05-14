@@ -184,8 +184,8 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers();
 	}
 
-	public ArrayList patternList() {
-		return _field.patternList();
+	public ArrayList patternList(String repertory) {
+		return _field.patternList(repertory);
 	}
 
 	public Pattern getPattern() {

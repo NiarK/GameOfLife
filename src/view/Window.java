@@ -53,9 +53,13 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import model.gameoflife.ErrorIO;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
@@ -110,9 +114,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private Controller _controller;
 	private JTabbedPane _panel;
 	private JPanel main;
-	private ArrayList _patterns;
+	private ArrayList _patternsHexa;
+	private ArrayList _patternsTriangle;
+	private ArrayList _patternsNormal;
 	private ButtonGroup _bg_Patterns;
-	private JRadioButton[] _rb_Patterns;
 	private JPanel _pnl_patterns;
 	private JPanel _pnl_BtnPatternsRotate;
 	private JPanel _pnl_BtnPatternsSymetric;
@@ -120,6 +125,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_RotateRightPatterns;
 	private JButton _btn_ChangeXAxisPatterns;
 	private JButton _btn_ChangeYAxisPatterns;
+	private JTree _tree_Pattern;
 
 	public Window() {
 		
@@ -329,24 +335,28 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_cbb_Rule.addActionListener(this);*/
 
 		_pnl_patterns = new JPanel();
-		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.Y_AXIS));
+		_pnl_patterns.setLayout(new BorderLayout());
 		_pnl_BtnPatternsRotate = new JPanel();
 		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.X_AXIS));
 		_pnl_BtnPatternsSymetric = new JPanel();
 		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.X_AXIS));
-		_btn_RotateLeftPatterns = new JButton("Rotate Left");
+		_btn_RotateLeftPatterns = new JButton();
+		_btn_RotateLeftPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateLeft.png")));
 		_btn_RotateLeftPatterns.addActionListener(this);
 		_btn_RotateLeftPatterns.setFocusable(false);
 		_pnl_BtnPatternsRotate.add(_btn_RotateLeftPatterns);
-		_btn_RotateRightPatterns = new JButton("Rotate Right");
+		_btn_RotateRightPatterns = new JButton();
+		_btn_RotateRightPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateRight.png")));
 		_btn_RotateRightPatterns.addActionListener(this);
 		_btn_RotateRightPatterns.setFocusable(false);
 		_pnl_BtnPatternsRotate.add(_btn_RotateRightPatterns);
-		_btn_ChangeXAxisPatterns = new JButton("Horizontal");
+		_btn_ChangeXAxisPatterns = new JButton();
+		_btn_ChangeXAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryY.png")));
 		_btn_ChangeXAxisPatterns.addActionListener(this);
 		_btn_ChangeXAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeXAxisPatterns);
-		_btn_ChangeYAxisPatterns = new JButton("Vertical");
+		_btn_ChangeYAxisPatterns = new JButton();
+		_btn_ChangeYAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryX.png")));
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
@@ -491,26 +501,40 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	public void createPatternsList() {
 		_pnl_patterns.removeAll();
-		_pnl_patterns.add(_pnl_BtnPatternsRotate);
-		_pnl_patterns.add(_pnl_BtnPatternsSymetric);
-		_patterns = _controller.patternList();
-		_rb_Patterns = null;
-		_rb_Patterns = new JRadioButton[_patterns.size() + 1];
-		_rb_Patterns[0] = new JRadioButton("None");
-		_rb_Patterns[0].setActionCommand("None");
-		_rb_Patterns[0].addActionListener(this);
-		_rb_Patterns[0].setFocusable(false);
-		_bg_Patterns.add(_rb_Patterns[0]);
-		_pnl_patterns.add(_rb_Patterns[0]);
-		for (int i = 0 ; i < _patterns.size() ; i++) {
-			_rb_Patterns[i + 1] = new JRadioButton(_patterns.get(i).toString());
-			_rb_Patterns[i + 1].setActionCommand(_patterns.get(i).toString());
-			_rb_Patterns[i + 1].addActionListener(this);
-			_rb_Patterns[i + 1].setFocusable(false);
-			_bg_Patterns.add(_rb_Patterns[i + 1]);
-			_pnl_patterns.add(_rb_Patterns[i + 1]);
+		_patternsHexa = _controller.patternList("Hexagone");
+		_patternsTriangle = _controller.patternList("Triangle");
+		_patternsNormal = _controller.patternList("Normal");
+		JPanel _pnl_BtnPattern = new JPanel();
+		_pnl_BtnPattern.setLayout(new BoxLayout(_pnl_BtnPattern, BoxLayout.Y_AXIS));
+		_pnl_BtnPattern.add(_pnl_BtnPatternsRotate);
+		_pnl_BtnPattern.add(_pnl_BtnPatternsSymetric);
+		_pnl_patterns.add(_pnl_BtnPattern, BorderLayout.NORTH);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Patterns");
+		DefaultTreeModel treeModel = new DefaultTreeModel(root);
+		_tree_Pattern = new JTree(treeModel);
+		_tree_Pattern.setFocusable(false);
+		DefaultMutableTreeNode base = new DefaultMutableTreeNode("None");
+		DefaultMutableTreeNode normal = new DefaultMutableTreeNode("Normal mode");
+		DefaultMutableTreeNode hexa = new DefaultMutableTreeNode("Hexagone mode");
+		DefaultMutableTreeNode triangle = new DefaultMutableTreeNode("Triangle mode");
+		for (int i = 0 ; i < _patternsHexa.size() ; i++) {
+			hexa.add(new DefaultMutableTreeNode(_patternsHexa.get(i).toString()));
 		}
-		_rb_Patterns[0].setSelected(true);
+		for (int i = 0 ; i < _patternsTriangle.size() ; i++) {
+			triangle.add(new DefaultMutableTreeNode(_patternsTriangle.get(i).toString()));
+		}
+		for (int i = 0 ; i < _patternsNormal.size() ; i++) {
+			normal.add(new DefaultMutableTreeNode(_patternsNormal.get(i).toString()));
+		}
+		root.add(base);
+		root.add(normal);
+		root.add(hexa);
+		root.add(triangle);
+		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
+			 _tree_Pattern.expandRow(i);
+		}
+		_pnl_patterns.add(_tree_Pattern, BorderLayout.CENTER);
+		_tree_Pattern.addMouseListener(this);
 		this.revalidate();
 		this.repaint();
 	}
@@ -547,13 +571,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if (e.getActionCommand().equals("None")) {
-			_field.setPattern(null);
-			_controller.setPattern(null);
-			this.repaint();
-		}
-		else if (e.getSource() == _btn_Pause) {
+		if (e.getSource() == _btn_Pause) {
 			_controller.pause();
 		}
 		else if (e.getSource() == _itm_MoveUp) {
@@ -717,34 +735,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			_field.rotateRight();
 			this.repaint();
 		}
-		else{
-			boolean test = true;
-			int i = 0;
-			while(test && i < _patterns.size()){
-				if(e.getActionCommand().equals(_patterns.get(i).toString())){
-					test = false;
-					Pattern p = new Pattern();
-					int value = p.loadPattern(_patterns.get(i).toString());
-					if(value != 1){
-						if (value == 2) {
-							JOptionPane.showMessageDialog(this, "Configuration error DOM parser");
-						}
-						else if (value == 3) {
-							JOptionPane.showMessageDialog(this, "Error while parsing the document");
-						}
-						else if (value == 4) {
-							JOptionPane.showMessageDialog(this, "Error Input/Output");
-						}
-					}
-					else{
-						_field.setPattern(p);
-						_controller.setPattern(p);
-						this.repaint();
-					}
-				}
-				i++;
-			}
-		}
 
 		this.updateBtnPlay();
 	}
@@ -789,7 +779,44 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
-		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		TreePath tp = _tree_Pattern.getPathForLocation(me.getX(), me.getY());
+		Pattern p = null;
+		if (tp != null){
+			boolean test = true;
+			int i = 0;
+			while(test && i < _patternsNormal.size()){
+				if(tp.getLastPathComponent().toString().equals(_patternsNormal.get(i).toString())){
+					test = false;
+					p = new Pattern();
+					p.addObserver(this);
+					p.loadPattern("Normal/"+_patternsNormal.get(i).toString());
+				}
+				i++;
+			}
+			i = 0;
+			while(test && i < _patternsTriangle.size()){
+				if(tp.getLastPathComponent().toString().equals(_patternsTriangle.get(i).toString())){
+					test = false;
+					p = new Pattern();
+					p.addObserver(this);
+					p.loadPattern("Triangle/"+_patternsTriangle.get(i).toString());
+				}
+				i++;
+			}
+			i = 0;
+			while(test && i < _patternsHexa.size()){
+				if(tp.getLastPathComponent().toString().equals(_patternsHexa.get(i).toString())){
+					test = false;
+					p = new Pattern();
+					p.addObserver(this);
+					p.loadPattern("Hexagone/"+_patternsHexa.get(i).toString());
+				}
+				i++;
+			}
+			_field.setPattern(p);
+			_controller.setPattern(p);
+			this.repaint();
+		}
 	}
 
 	@Override
@@ -918,19 +945,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		/*//System.out.println("Code touche pressée : " + e.getKeyCode() + " - caractère touche pressée : " + e.getKeyChar());
-		if (e.getKeyCode() == 40) {
-			_field.moveField(new Point(0, -10));
-		}
-		else if (e.getKeyCode() == 38) {
-			_field.moveField(new Point(0, 10));
-		}
-		else if (e.getKeyCode() == 37) {
-			_field.moveField(new Point(10, 0));
-		}
-		else if (e.getKeyCode() == 39) {
-			_field.moveField(new Point(-10, 0));
-		}*/
 	}
 
 	@Override

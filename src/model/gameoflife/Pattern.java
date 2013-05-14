@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Observable;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +23,7 @@ import org.xml.sax.SAXException;
  *
  * @author Quentin
  */
-public class Pattern {
+public class Pattern extends Observable{
 
 	private HashSet<Point> Cells;
 	private Point Middle;
@@ -51,7 +53,7 @@ public class Pattern {
 		this.Cells = hs;
 	}
 
-	public int loadPattern(String name) {
+	public void loadPattern(String name) {
 		try {
 			// création d'une fabrique de documents
 			DocumentBuilderFactory DBF = DocumentBuilderFactory.newInstance();
@@ -79,22 +81,27 @@ public class Pattern {
 			this.setCells(hs);
 			this.findMiddle();
 			this.makeCellsByMiddle();
-			return 1;
 		}
 		catch (ParserConfigurationException pce) {
 			System.err.println("Configuration error DOM parser");
 			System.err.println("when calling to DBF.newDocumentBuilder();");
-			return 2;
+			ErrorIO err = new ErrorIO("Configuration error DOM parser");
+			this.setChanged();
+			this.notifyObservers(err);
 		}
 		catch (SAXException se) {
 			System.err.println("Error while parsing the document");
 			System.err.println("when calling to DB.parse(xml)");
-			return 3;
+			ErrorIO err = new ErrorIO("Error while parsing the document");
+			this.setChanged();
+			this.notifyObservers(err);
 		}
 		catch (IOException ioe) {
 			System.err.println("Error I/O");
 			System.err.println("when calling to DB.parse(xml)");
-			return 4;
+			ErrorIO err = new ErrorIO("Error I/O");
+			this.setChanged();
+			this.notifyObservers(err);
 		}
 	}
 

@@ -304,11 +304,11 @@ public class Field extends Observable{
 		}
 	}
 
-	public ArrayList patternList() {
+	public ArrayList patternList(String repertory) {
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("src/resources/");
+		File f = new File("src/resources/"+repertory+"/");
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
