@@ -56,6 +56,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import model.gameoflife.ErrorIO;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
 
@@ -124,7 +125,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
-		_controller.addObserverToField(this);
 		
 		
 		_field = new Field(8);
@@ -241,6 +241,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		setJMenuBar(_mnu_Bar);
 
 		_controller.addObserverToGame(_field);
+		_controller.addObserverToGame(this);
 		_controller.empty();
 
 		_currentRuleParameter = _controller.getRules()[0];
@@ -968,8 +969,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(o.getClass() == _controller.getGame().getField().getClass())
-			JOptionPane.showMessageDialog(this, arg);
+		if(arg instanceof ErrorIO){
+			ErrorIO err = (ErrorIO) arg;
+			JOptionPane.showMessageDialog(this, err.getErrorText());
+		}
 	}
 	
 	

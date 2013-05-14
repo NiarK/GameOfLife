@@ -8,8 +8,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author pierre
  */
-public class GameExecution extends Observable implements Runnable {
+public class GameExecution extends Observable implements Runnable, Observer {
 
 	private Field _field;
 	private Rule _rule;
@@ -25,6 +25,7 @@ public class GameExecution extends Observable implements Runnable {
 
 	public GameExecution(Point size, Rule rule) {
 		this._field = new Field(size);
+		this._field.addObserver(this);
 		this._rule = rule;
 	}
 
@@ -200,6 +201,13 @@ public class GameExecution extends Observable implements Runnable {
 		
 		_field.setFragmentNumber(n);
 		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		System.out.println("game");
+		this.setChanged();
+		this.notifyObservers(arg);
 	}
 	
 	private abstract class Process implements Runnable {

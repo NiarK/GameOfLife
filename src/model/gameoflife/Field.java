@@ -204,8 +204,9 @@ public class Field extends Observable{
 		catch (IOException e) {
 			System.err.println("Could not create file");
 			e.printStackTrace();
+			ErrorIO err = new ErrorIO("Could not create file");
 			this.setChanged();
-			this.notifyObservers("Could not create file");
+			this.notifyObservers(err);
 		}
 		try {
 			FileOutputStream FOS = new java.io.FileOutputStream(f);
@@ -237,14 +238,16 @@ public class Field extends Observable{
 		catch (FileNotFoundException e) {
 			System.err.println("Can not find the file");
 			e.printStackTrace();
+			ErrorIO err = new ErrorIO("Can not find the file");
 			this.setChanged();
-			this.notifyObservers("Can not find the file");
+			this.notifyObservers(err);
 		}
 		catch (IOException ex) {
 			System.err.println("INPUT/OUTPUT exception");
 			ex.printStackTrace();
+			ErrorIO err = new ErrorIO("Error during the save\nMaybe you don't have the right for writing");
 			this.setChanged();
-			this.notifyObservers("INPUT/OUTPUT Error");
+			this.notifyObservers(err);
 		}
 	}
 
@@ -279,22 +282,25 @@ public class Field extends Observable{
 			System.err.println("Configuration error DOM parser");
 			System.err.println("when calling to DBF.newDocumentBuilder();");
 			pce.printStackTrace();
+			ErrorIO err = new ErrorIO("Configuration error DOM parser");
 			this.setChanged();
-			this.notifyObservers("Configuration error DOM parser");
+			this.notifyObservers(err);
 		}
 		catch (SAXException se) {
 			System.err.println("Error while parsing the document");
 			System.err.println("when calling to DB.parse(xml)");
 			se.printStackTrace();
+			ErrorIO err = new ErrorIO("Error while parsing the document");
 			this.setChanged();
-			this.notifyObservers("Error while parsing the document");
+			this.notifyObservers(err);
 		}
 		catch (IOException ioe) {
 			System.err.println("Error I/O");
 			System.err.println("when calling to DB.parse(xml)");
 			ioe.printStackTrace();
+			ErrorIO err = new ErrorIO("Can not found the file \nor the file is not in a good format");
 			this.setChanged();
-			this.notifyObservers("INPUT/OUTPUT Error");
+			this.notifyObservers(err);
 		}
 	}
 

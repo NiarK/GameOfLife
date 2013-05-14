@@ -130,14 +130,6 @@ public final class Controller{
 		_game.addObserver(o);
 	}
 
-	/**
-	 * Ajoute un observateur au field (model).
-	 * @param o L'observateur en question.
-	 */
-	public void addObserverToField(Observer o) {
-		_game.getField().addObserver(o);
-	}
-
 	public void pause() {
 		_simulator.pause();
 	}
