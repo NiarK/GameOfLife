@@ -53,6 +53,7 @@ public class Simulator extends Thread {
 				this._task.run();
 			}
 			try {
+				//Thread.sleep(_period);
 				sleep.join();
 			} catch (InterruptedException ex) {
 				Logger.getLogger(Simulator.class.getName()).log(Level.SEVERE, null, ex);

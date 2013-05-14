@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.HashMap;
@@ -188,14 +189,20 @@ public class FieldDrawManager {
 		this.drawCells(g, p1, p2);
 		
 		
-		if (_indicator != null && _pattern == null) {
-			g.setColor(Color.LIGHT_GRAY);
-			this.drawIndicator(g);
-		}
-		
-		if(_indicator != null && _pattern != null){
-			g.setColor(new Color(.3f, .4f, .5f, .6f));
-			this.drawPattern(g);
+		if (_indicator != null) {
+			if(_pattern == null) {
+				g.setColor(Color.LIGHT_GRAY);
+				this.drawIndicator(g);
+			}
+			else {
+				g.setColor(new Color(.3f, .4f, .5f, .6f));
+				this.drawPattern(g);
+			}
+			
+			g.setColor(new Color(200, 200, 200, 200));
+			g.setFont(new Font("Tahoma",Font.PLAIN,11));
+			String info = "x:" + _indicator.x + " \t y:" + _indicator.y;
+			g.drawString(info, _componentSize.x - info.length() * 6, _componentSize.y - 10);
 		}
 	}
 

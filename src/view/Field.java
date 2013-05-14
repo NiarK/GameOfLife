@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Observable;
@@ -75,6 +76,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	public synchronized void paintComponent(Graphics g) {
 
 		_drawer.draw(g);
+		
 		
 		/*g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
