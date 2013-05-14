@@ -10,6 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 import model.gameoflife.GameExecution;
+import model.gameoflife.Pattern;
 
 /**
  *
@@ -150,8 +151,8 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		}
 	}
 
-	public synchronized void setNeighbors(int n) {
-		System.out.println(n);
+	public synchronized void setNeighbors(int n, boolean torus) {
+		_drawer.setTorus(torus);
 		if ( n == 6 ) {
 			_drawer = new HexagonalDrawManager(_drawer);
 		}
@@ -245,4 +246,27 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_oldComponentSize.y = this.getHeight();*/
 	}
 	
+	public void setPattern(Pattern _pattern) {
+		_drawer.setPattern(_pattern);
+	}
+	
+	public boolean isInsideTheField(Point coord) {
+		return _drawer.isInsideTheField(coord);
+	}
+	
+	public void verticalSymmetry(){
+		_drawer.verticalSymmetry();
+	}
+	
+	public void horizontalSymmetry(){
+		_drawer.horizontalSymmetry();
+	}
+	
+	public void rotateRight(){
+		_drawer.rotateRight();
+	}
+	
+	public void rotateLeft(){
+		_drawer.rotateLeft();
+	}
 }

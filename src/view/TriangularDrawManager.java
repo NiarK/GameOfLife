@@ -7,6 +7,7 @@ package view;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.Iterator;
 import java.util.Map;
 import model.gameoflife.Cell;
 
@@ -40,7 +41,14 @@ public class TriangularDrawManager extends FieldDrawManager {
 				(int) (_cellSize * _zoom) * _indicator.y + _offset.y
 			);
 		g.drawPolygon(this.getTriangle(position, ((_indicator.x + _indicator.y) % 2) == 0 ));
-		
+	}
+	
+	protected synchronized void drawPoint(Graphics g, Point p){
+		Point position = new Point(
+			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x,
+			(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y
+		);
+		g.fillPolygon(this.getTriangle(position, ((_indicator.x + p.x + _indicator.y + p.y) % 2) == 0 ));
 	}
 
 	@Override

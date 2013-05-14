@@ -6,6 +6,7 @@ package view;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.Iterator;
 import java.util.Map;
 import model.gameoflife.Cell;
 
@@ -43,6 +44,20 @@ public class HexagonalDrawManager extends FieldDrawManager {
 		g.drawRect(
 			(int) (_cellSize * _zoom) * _indicator.x + _offset.x + space,
 			(int) (_cellSize * _zoom) * _indicator.y + _offset.y,
+			(int) (_cellSize * _zoom),
+			(int) (_cellSize * _zoom));
+	}
+	
+	protected synchronized void drawPoint(Graphics g, Point p){
+		int space = 0;
+		if((_indicator.y + p.y) % 2 == 1) {
+			space = (int) (_cellSize * _zoom)/2;
+		}
+		g.fillOval(
+			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x + space,
+			(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y,
+			/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
+			 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 			(int) (_cellSize * _zoom),
 			(int) (_cellSize * _zoom));
 	}
