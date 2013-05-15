@@ -41,7 +41,7 @@ public class Field extends Observable{
 	public Field(Point size) {
 		this._size = size;
 
-		_fragmentNumber = 50;
+		_fragmentNumber = 1;
 		_currentFragmentNumber = -1;
 		
 		this._cells = new HashMap<>();
@@ -377,7 +377,7 @@ public class Field extends Observable{
 	private synchronized int getNextFragmentNumber() {
 		
 		_currentFragmentNumber++;
-		if(_currentFragmentNumber >= _cellsFragments.size()) {
+		if(_currentFragmentNumber >= _fragmentNumber) {
 			_currentFragmentNumber = 0;
 		}
 		
@@ -482,12 +482,32 @@ public class Field extends Observable{
 	public synchronized void setFragmentNumber(int n) {
 		if(n > 0) {
 			
-			if (n < _fragmentNumber) {
+			int oldFragmentNumber = _fragmentNumber;
 			_fragmentNumber = n;
 			
+			ArrayList<HashMap<Point,Cell>> temp = _cellsFragments;
+			
+			_cellsFragments = new ArrayList<>();
+			_emergingPlacesFragments = new ArrayList<>();
+			
+			for (int i = 0 ; i < n ; ++i) {
+				if( i < temp.size() ) {
+					_cellsFragments.add(temp.get(i));
+				}
+				else {
+					_cellsFragments.add(new HashMap<Point, Cell>());
+				}
+				_emergingPlacesFragments.add(new HashMap<Point, Integer>());
+			}
+			
+			if (n < oldFragmentNumber) {
+			
 				for (Cell cell : _cells.values()) {
-					if(cell.getFragmentNumber() >= _fragmentNumber) {
-						cell.setFragmentNumber(this.getNextFragmentNumber());
+					if(cell.getFragmentNumber() >= n) {
+						int number = this.getNextFragmentNumber();
+						cell.setFragmentNumber(number);
+						this.add(cell);
+						System.out.println(number);
 					}
 				}
 			}

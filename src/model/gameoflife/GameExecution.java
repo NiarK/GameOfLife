@@ -209,6 +209,10 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.setChanged();
 		this.notifyObservers(arg);
 	}
+
+	public int getThreadNumber() {
+		return _field.getFragmentNumber();
+	}
 	
 	private abstract class Process implements Runnable {
 

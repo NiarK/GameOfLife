@@ -330,4 +330,12 @@ public final class Controller{
 	public void setPattern(Pattern _pattern) {
 		_game.setPattern(_pattern);
 	}
+
+	public void setThreadNumber(int n) {
+		_game.setThreadNumber(n);
+	}
+
+	public int getThreadNumber() {
+		return _game.getThreadNumber();
+	}
 }

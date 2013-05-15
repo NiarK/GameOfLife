@@ -56,6 +56,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
@@ -92,6 +93,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JMenu _mnu_Simulators;
 	private JMenu _mnu_View;
 	private JMenuItem _itm_Save;
+	private JMenuItem _itm_SavePattern;
 	private JMenuItem _itm_Open;
 	private JMenuItem _itm_Play;
 	private JMenuItem _itm_Next;
@@ -99,6 +101,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem _itm_Empty;
 	private JMenuItem _itm_Speed_p;
 	private JMenuItem _itm_Speed_m;
+	private JMenuItem _itm_ThreadNumber;
 	//private JMenuItem _itm_size;
 	private JMenuItem _itm_Parameters;
 	private JMenuItem _itm_Plus;
@@ -155,6 +158,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_Save = new JMenuItem("Save");
 		_itm_Save.addActionListener(this);
 		_itm_Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
+		_itm_SavePattern = new JMenuItem("Save pattern");
+		_itm_SavePattern.addActionListener(this);
+		_itm_SavePattern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
 		_itm_Open = new JMenuItem("Open");
 		_itm_Open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
 		_itm_Open.addActionListener(this);
@@ -176,6 +182,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_Speed_m = new JMenuItem("Speed -");
 		_itm_Speed_m.setAccelerator(KeyStroke.getKeyStroke("PAGE_DOWN"));
 		_itm_Speed_m.addActionListener(this);
+		_itm_ThreadNumber = new JMenuItem("Set thread number");
+		_itm_ThreadNumber.setAccelerator(KeyStroke.getKeyStroke("T"));
+		_itm_ThreadNumber.addActionListener(this);
 		/*_itm_size = new JMenuItem("Size");
 		_itm_size.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
 		_itm_size.addActionListener(this);*/
@@ -220,8 +229,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_mnu_Bar.add(_mnu_Edit);
 		_mnu_Bar.add(_mnu_Simulators);
 		_mnu_Bar.add(_mnu_View);
-		_mnu_File.add(_itm_Save);
 		_mnu_File.add(_itm_Open);
+		_mnu_File.add(_itm_Save);
+		_mnu_File.add(_itm_SavePattern);
 		_mnu_Edit.add(_itm_Random);
 		_mnu_Edit.add(_itm_Empty);
 		_mnu_Edit.add(new JSeparator());
@@ -236,6 +246,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_mnu_Simulators.add(new JSeparator());
 		_mnu_Simulators.add(_itm_Speed_p);
 		_mnu_Simulators.add(_itm_Speed_m);
+		_mnu_Simulators.add(new JSeparator());
+		_mnu_Simulators.add(_itm_ThreadNumber);
 		//_menu_parameters.add(_itm_size);
 		_mnu_View.add(_itm_Plus);
 		_mnu_View.add(_itm_Moins);
@@ -539,6 +551,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		_pnl_patterns.add(_tree_Pattern, BorderLayout.CENTER);
 		_tree_Pattern.addMouseListener(this);
+		
 		this.revalidate();
 		this.repaint();
 	}
@@ -616,6 +629,31 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_controller.setSpeed(Controller.getSpeeds()[_cbb_Speed.getSelectedIndex()]);
 			}
 		}
+		else if (e.getSource() == _itm_ThreadNumber) {
+			
+			String number = (String)JOptionPane.showInputDialog(
+											this,
+											"Set thread number:",
+											"Thread number",
+											JOptionPane.QUESTION_MESSAGE,
+											null,
+											null,
+											_controller.getThreadNumber()
+					);
+
+			
+			try {
+				if(number != null) {
+					int n = Integer.parseInt(number);
+
+					_controller.setThreadNumber(n);
+				}
+			}
+			catch(NumberFormatException exc) {
+				JOptionPane.showMessageDialog(this, "'" + number + "' is not a number", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+		}
 		else if (/*e.getSource() == _btn_Save || */e.getSource() == _itm_Save) {
 			boolean test = false;
 			JFileChooser fc = new JFileChooser();
@@ -639,9 +677,33 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				}
 			}
 			while (test);
+			
 			createPatternsList();
 			_field.setPattern(null);
 			_controller.setPattern(null);
+		}
+		else if (e.getSource() == _itm_SavePattern) {
+			String name = (String)JOptionPane.showInputDialog(
+											this,
+											"Pattern name:",
+											"Save pattern",
+											JOptionPane.QUESTION_MESSAGE,
+											null,
+											null,
+											"Custom"
+					);
+			
+			String path = "src/resources/Normal/" + name + ".cells";
+			File f = new File(path);
+			System.out.println(f.getAbsoluteFile());
+			if (!f.exists()) {
+				_controller.save(path);
+			}
+			else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
+				_controller.save(path);
+			}
+			
+			this.createPatternsList();
 		}
 		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Open) {
 			JFileChooser fc = new JFileChooser();
@@ -978,7 +1040,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_sli_Row.setValue(val);
 			}
 			catch (NumberFormatException ex) {
-				Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
+				//Logger.getLogger(Window.class.getName()).log(Level.INFO, null, ex);
 				_txt_Row.setText(Integer.toString(_sli_Row.getValue()));
 			}
 
