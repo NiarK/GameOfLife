@@ -850,6 +850,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		if (tp != null){
 			boolean test = true;
 			int i = 0;
+			if(tp.getLastPathComponent().toString().equals("None")){
+				test = false;
+			}
 			while(test && i < _patternsNormal.size()){
 				if(tp.getLastPathComponent().toString().equals(_patternsNormal.get(i).toString())){
 					test = false;
@@ -879,9 +882,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				}
 				i++;
 			}
-			_field.setPattern(p);
-			_controller.setPattern(p);
-			this.repaint();
+			if(!test){
+				_field.setPattern(p);
+				_controller.setPattern(p);
+				this.repaint();
+			}
 		}
 	}
 
