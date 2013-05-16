@@ -252,6 +252,10 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_drawer.setPattern(_pattern);
 	}
 	
+	public boolean isPatternDefine() {
+		return _drawer.isPatternDefine();
+	}
+	
 	public boolean isInsideTheField(Point coord) {
 		return _drawer.isInsideTheField(coord);
 	}

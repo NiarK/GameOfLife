@@ -421,5 +421,9 @@ public class FieldDrawManager {
 	public void setTorus(boolean _torus) {
 		this._torus = _torus;
 	}
+
+	boolean isPatternDefine() {
+		return (_pattern != null)?true:false;
+	}
 	
 }

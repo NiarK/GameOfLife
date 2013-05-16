@@ -123,7 +123,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private ArrayList _patternsHexa;
 	private ArrayList _patternsTriangle;
 	private ArrayList _patternsNormal;
-	private ButtonGroup _bg_Patterns;
+	//private ButtonGroup _bg_Patterns;
 	private JPanel _pnl_patterns;
 	private JPanel _pnl_BtnPatternsRotate;
 	private JPanel _pnl_BtnPatternsSymetric;
@@ -375,7 +375,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
-		_bg_Patterns = new ButtonGroup();
+		//_bg_Patterns = new ButtonGroup();
 		this.createPatternsList();
 
 
@@ -695,7 +695,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			
 			String path = "src/resources/Normal/" + name + ".cells";
 			File f = new File(path);
-			System.out.println(f.getAbsoluteFile());
+			
 			if (!f.exists()) {
 				_controller.save(path);
 			}
@@ -898,8 +898,14 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
 				Point indicator = _field.getIndicator();
 
+				
 				if (indicator != null) {
-					_controller.toggleCell(indicator);
+					if ( ! _field.isPatternDefine()) {
+						_controller.toggleCell(indicator);
+					}
+					else  {
+						_controller.putPattern(indicator);
+					}
 				}
 			}
 			else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
@@ -940,7 +946,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			Point indicator = _field.getIndicator();
 
 			if (indicator != null && !indicator.equals(oldIndicator)) {
-				_controller.toggleCell(indicator);
+				if ( ! _field.isPatternDefine()) {
+					_controller.toggleCell(indicator);
+				}
+				else  {
+					_controller.putPattern(indicator);
+				}
 			}
 		}
 		else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
