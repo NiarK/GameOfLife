@@ -18,18 +18,16 @@ public class Simulator extends Thread {
 	private int _period;
 	private boolean _exec;
 	private boolean _run;
+	
+	public static final int STAND_BY_PERIOD = 5;
 
 	public Simulator(Runnable task, int period) throws InterruptedException {
 		super(task);
 		
-		//this._timer = new Timer();
 		this._task = task;
 		this._period = period;
 		_exec = false;
 		_run = true;
-		
-		//this._timer.schedule(_task, _period, _period);
-		//_timer.wait();
 	}
 
 	@Override
@@ -41,7 +39,7 @@ public class Simulator extends Thread {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(_period);
+						Thread.sleep(_period - Simulator.STAND_BY_PERIOD);
 					} catch (InterruptedException ex) {
 						Logger.getLogger(Simulator.class.getName()).log(Level.SEVERE, null, ex);
 					}
@@ -53,7 +51,7 @@ public class Simulator extends Thread {
 				this._task.run();
 			}
 			try {
-				//Thread.sleep(_period);
+				Thread.sleep(Simulator.STAND_BY_PERIOD);
 				sleep.join();
 			} catch (InterruptedException ex) {
 				Logger.getLogger(Simulator.class.getName()).log(Level.SEVERE, null, ex);
