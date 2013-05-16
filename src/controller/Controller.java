@@ -40,14 +40,17 @@ public final class Controller{
 	private Simulator _simulator;
 	private RuleParameter[] _rules;
 	private String[] _searchName;
-	private String[] _typeName;
-
+	//private String[] _typeName;
+	
+	/*
+	 * Construit le controleur de l'objet Window.
+	 */
 	public Controller() {
 
-		_typeName = new String[3];
+		/*_typeName = new String[3];
 		_typeName[0] = "Square";
 		_typeName[1] = "Hexagone";
-		_typeName[2] = "Triangle";
+		_typeName[2] = "Triangle";*/
 
 		this.initRuleParameter();
 
@@ -71,6 +74,9 @@ public final class Controller{
 		return _game;
 	}
 	
+	/*
+	 * Initialise des objets RuleParameter pour le jeu.
+	 */
 	public void initRuleParameter() {
 
 		String standardSearch = "Square";
@@ -129,15 +135,25 @@ public final class Controller{
 	public void addObserverToGame(Observer o) {
 		_game.addObserver(o);
 	}
-
+	
+	/*
+	 * Met le jeu en pause.
+	 */
 	public void pause() {
 		_simulator.pause();
 	}
 
+	/*
+	 * Lance le jeu.
+	 */
 	public void play() {
 		_simulator.play();
 	}
 
+	/**
+	 * Sauvegarde un terrain.
+	 * @param name Chemin du fichier sous lequel enregistré.
+	 */
 	public void save(final String name) {
 		Thread t = new Thread(new Runnable() {
 
@@ -150,18 +166,25 @@ public final class Controller{
 		t.start();
 	}
 
-	public void load(final String name) {
+	/**
+	 * Chargement d'un terrain.
+	 * @param filepath Chemin du fichier a charger
+	 */
+	public void load(final String filepath) {
 		Thread t = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				_game.load(name);
+				_game.load(filepath);
 			}
 		});
 
 		t.start();
 	}
 
+	/**
+	 * Lance le calcule de la prochaine génération de cellule.
+	 */
 	public void next() {
 
 		Thread t = new Thread(new Runnable() {
@@ -175,10 +198,16 @@ public final class Controller{
 		t.start();
 	}
 
+	/**
+	 * Termine le jeu.
+	 */
 	public void stop() {
 		_simulator.terminate();
 	}
 
+	/**
+	 * Remplie aléatoirement le terrain.
+	 */
 	public void randomlyFill() {
 		_simulator.pause();
 
@@ -193,6 +222,9 @@ public final class Controller{
 		t.start();
 	}
 
+	/**
+	 * Vide le terrain.
+	 */
 	public void empty() {
 		_simulator.pause();
 
@@ -207,6 +239,10 @@ public final class Controller{
 		t.start();
 	}
 
+	/**
+	 * Change l'état d'une cellule. Elle passe de morte à vivante ou de vivante à morte.
+	 * @param position Position de la cellule à changé.
+	 */
 	public void toggleCell(final Point position) {
 
 		Thread t = new Thread(new Runnable() {
@@ -220,10 +256,18 @@ public final class Controller{
 		t.start();
 	}
 
+	/**
+	 * Test si le jeu est lancé.
+	 * @return Vrai i le jeu est lancé, faux sinon.
+	 */
 	public boolean isPlayed() {
 		return _simulator.isPlayed();
 	}
 
+	/**
+	 * Définie la taille du terrain.
+	 * @param size Nouvelle taille du terrain.
+	 */
 	public void setFieldSize(final Point size) {
 
 		Thread t = new Thread(new Runnable() {
@@ -238,10 +282,18 @@ public final class Controller{
 		t.start();
 	}
 
+	/**
+	 * Définie la vitesse du jeu. Cela correspond au temps entre chaque génération de cellule.
+	 * @param speed Vitesse de jeu en millisecond.
+	 */
 	public void setSpeed(int speed) {
 		_simulator.setPeriod(speed);
 	}
 
+	/**
+	 * Récupère un tableau contenant les diférentes vitesses.
+	 * @return un tableau contenant les diférentes vitesses.
+	 */
 	public static Integer[] getSpeeds() {
 
 		Integer[] speeds = new Integer[5];
@@ -255,6 +307,10 @@ public final class Controller{
 		return speeds;
 	}
 
+	/**
+	 * Définie la règle du jeu.
+	 * @param rp Les paramètres de la règle du jeu à définir.
+	 */
 	public void setRule(RuleParameter rp) {
 
 		Search s = this.getSearch(rp);
@@ -277,15 +333,28 @@ public final class Controller{
 		t.start();
 	}
 
-	public String[] getFieldTypes() {
+	/**
+	 * Récupère les différents type de terrain possible ("Square", "Hexagone"...).
+	 * @return Un tableau de String contenant le nom des type de terrain possible.
+	 */
+	/*public String[] getFieldTypes() {
 		return _typeName;
-	}
+	}*/
 
+	/**
+	 * Récupère les types de recherche ("Hexagonal", "square"...).
+	 * @return Un tableau de String contenant le nom des type de recherche possible.
+	 */
 	public String[] getSearchType() {
 		return _searchName;
 		//return _search.keySet().toArray(new String[_search.keySet().size()]);
 	}
 
+	/**
+	 * 
+	 * @param rp Récupère un objet Search en fonction de paramètres.
+	 * @return Les paramètres qui définisse la recherche.
+	 */
 	private Search getSearch(RuleParameter rp) {
 
 		if (rp.getSearch().equals(_searchName[0])) {
@@ -313,28 +382,66 @@ public final class Controller{
 		return new SquareSearch(rp.isTorus());
 	}
 
+	/**
+	 * Récupère les différents paramètres de règles définit.
+	 * @return Un tableau de RuleParameter.
+	 */
 	public RuleParameter[] getRules() {
 		return _rules;
 	}
 
+	/**
+	 * Récupère le nombre de voisin maximum que renverra une recherche.
+	 * @param searchName Nom de la recherche.
+	 * @return Nombre de voisin maximum.
+	 */
 	public int getNeighborMaximumNumber(String searchName) {
 		RuleParameter rp = new RuleParameter();
 		rp.setSearch(searchName);
 		return this.getSearch(rp).getNeighborMaximumNumber();
 	}
 
+	/**
+	 * Retourne la liste des patterns d'un répertoire.
+	 * @param repertory Le répertoire a lister.
+	 * @return Un ArrayList contenant les différent pattern.
+	 */
 	public ArrayList patternList(String repertory) {
 		return _game.patternList(repertory);
 	}
 	
+	/**
+	 * Définie le pattern.
+	 * @param _pattern Le pattern à définir.
+	 */
 	public void setPattern(Pattern _pattern) {
 		_game.setPattern(_pattern);
 	}
 
+	public void putPattern(final Point position){
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				_game.putPattern(position);
+			}
+		});
+
+		t.start();
+	}
+	
+	/**
+	 * Définit le numéro de thread pour le calcul des générations.
+	 * @param n Nombre de thread.
+	 */
 	public void setThreadNumber(int n) {
 		_game.setThreadNumber(n);
 	}
 
+	/**
+	 * Récupère le numéro de thread pour le calcul des générations.
+	 * @return le nombre de thread.
+	 */
 	public int getThreadNumber() {
 		return _game.getThreadNumber();
 	}
