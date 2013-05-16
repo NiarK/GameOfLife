@@ -507,7 +507,6 @@ public class Field extends Observable{
 						int number = this.getNextFragmentNumber();
 						cell.setFragmentNumber(number);
 						this.add(cell);
-						System.out.println(number);
 					}
 				}
 			}

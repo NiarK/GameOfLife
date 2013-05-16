@@ -892,16 +892,17 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void mousePressed(MouseEvent me) {
+		if(me.getSource() == _field){
+			if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
+				Point indicator = _field.getIndicator();
 
-		if (me.getModifiers() == MouseEvent.BUTTON1_MASK) {
-			Point indicator = _field.getIndicator();
-
-			if (indicator != null) {
-				_controller.toggleCell(indicator);
+				if (indicator != null) {
+					_controller.toggleCell(indicator);
+				}
 			}
-		}
-		else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
-			_mousePosition = me.getPoint();
+			else if (me.getModifiers() == MouseEvent.BUTTON3_MASK) {
+				_mousePosition = me.getPoint();
+			}
 		}
 	}
 
@@ -916,7 +917,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void mouseExited(MouseEvent me) {
-		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if(me.getSource() == _field){
+			_field.setIndicatorPosition(null);
+		}
 	}
 
 	@Override
@@ -952,7 +955,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void mouseMoved(MouseEvent me) {
-
+		
 		Point position = me.getPoint();
 
 		_field.setIndicatorPosition(position);

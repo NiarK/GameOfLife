@@ -229,8 +229,18 @@ public class FieldDrawManager {
 	 */
 	public Point cellCoordinate(Point coord) {
 		Point cell = new Point();
-		cell.x = (coord.x - _offset.x - 1) / (int) (_cellSize * _zoom);
-		cell.y = (coord.y - _offset.y - 1) / (int) (_cellSize * _zoom);
+		if(coord.x < _offset.x){
+			cell.x = -1;
+		}
+		else{
+			cell.x = (coord.x - _offset.x) / (int) (_cellSize * _zoom);
+		}
+		if(coord.y < _offset.y){
+			cell.y = -1;
+		}
+		else{
+			cell.y = (coord.y - _offset.y) / (int) (_cellSize * _zoom);
+		}
 		return cell;
 	}
 
@@ -241,18 +251,22 @@ public class FieldDrawManager {
 	 */
 	public boolean setIndicatorPosition(Point coord) {
 		boolean repaint = false;
-		
-		coord = this.cellCoordinate(coord);
-		if (isInsideTheField(coord)) {
-			if (!coord.equals(_indicator)) {
-				_indicator = coord;
-
-				repaint = true;
-			}
-		} else {
+		if(coord == null){
 			_indicator = null;
+			repaint = true;
 		}
-		
+		else{
+			coord = this.cellCoordinate(coord);
+			if (isInsideTheField(coord)) {
+				if (!coord.equals(_indicator)) {
+					_indicator = coord;
+
+					repaint = true;
+				}
+			} else {
+				_indicator = null;
+			}
+		}
 		return repaint;
 	}
 
