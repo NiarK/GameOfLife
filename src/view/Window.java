@@ -845,47 +845,49 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
-		TreePath tp = _tree_Pattern.getPathForLocation(me.getX(), me.getY());
-		Pattern p = null;
-		if (tp != null){
-			boolean test = true;
-			int i = 0;
-			if(tp.getLastPathComponent().toString().equals("None")){
-				test = false;
-			}
-			while(test && i < _patternsNormal.size()){
-				if(tp.getLastPathComponent().toString().equals(_patternsNormal.get(i).toString())){
+		if(me.getSource() == _tree_Pattern) {
+			TreePath tp = _tree_Pattern.getPathForLocation(me.getX(), me.getY());
+			Pattern p = null;
+			if (tp != null){
+				boolean test = true;
+				int i = 0;
+				if(tp.getLastPathComponent().toString().equals("None")){
 					test = false;
-					p = new Pattern();
-					p.addObserver(this);
-					p.loadPattern("Normal/"+_patternsNormal.get(i).toString());
 				}
-				i++;
-			}
-			i = 0;
-			while(test && i < _patternsTriangle.size()){
-				if(tp.getLastPathComponent().toString().equals(_patternsTriangle.get(i).toString())){
-					test = false;
-					p = new Pattern();
-					p.addObserver(this);
-					p.loadPattern("Triangle/"+_patternsTriangle.get(i).toString());
+				while(test && i < _patternsNormal.size()){
+					if(tp.getLastPathComponent().toString().equals(_patternsNormal.get(i).toString())){
+						test = false;
+						p = new Pattern();
+						p.addObserver(this);
+						p.loadPattern("Normal/"+_patternsNormal.get(i).toString());
+					}
+					i++;
 				}
-				i++;
-			}
-			i = 0;
-			while(test && i < _patternsHexa.size()){
-				if(tp.getLastPathComponent().toString().equals(_patternsHexa.get(i).toString())){
-					test = false;
-					p = new Pattern();
-					p.addObserver(this);
-					p.loadPattern("Hexagone/"+_patternsHexa.get(i).toString());
+				i = 0;
+				while(test && i < _patternsTriangle.size()){
+					if(tp.getLastPathComponent().toString().equals(_patternsTriangle.get(i).toString())){
+						test = false;
+						p = new Pattern();
+						p.addObserver(this);
+						p.loadPattern("Triangle/"+_patternsTriangle.get(i).toString());
+					}
+					i++;
 				}
-				i++;
-			}
-			if(!test){
-				_field.setPattern(p);
-				_controller.setPattern(p);
-				this.repaint();
+				i = 0;
+				while(test && i < _patternsHexa.size()){
+					if(tp.getLastPathComponent().toString().equals(_patternsHexa.get(i).toString())){
+						test = false;
+						p = new Pattern();
+						p.addObserver(this);
+						p.loadPattern("Hexagone/"+_patternsHexa.get(i).toString());
+					}
+					i++;
+				}
+				if(!test){
+					_field.setPattern(p);
+					_controller.setPattern(p);
+					this.repaint();
+				}
 			}
 		}
 	}
