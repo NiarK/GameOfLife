@@ -139,6 +139,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
 		
+		this.setIconImage(new ImageIcon(manager.get("src/resources/random.png")).getImage());
 		
 		_field = new Field(8);
 		_field.setBackground(Color.black);
