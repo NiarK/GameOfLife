@@ -410,6 +410,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_tree_Pattern.addMouseListener(this);
 		
 		this.createPatternsList();
+		_pnl_patterns.add(Box.createVerticalGlue());
+		_pnl_patterns.add(Box.createVerticalGlue());
 		_pnl_patterns.add(new JScrollPane(_tree_Pattern));
 
 
@@ -517,8 +519,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		//option.add(Box.createVerticalGlue());
 
 		_panel = new JTabbedPane();
-		_panel.addTab("Patterns", _pnl_patterns);
 		_panel.addTab("Option", option);
+		_panel.addTab("Patterns", _pnl_patterns);
 
 
 		main = new JPanel();
@@ -564,10 +566,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			root.add(repertory[i]);
 		}
 		
-		DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) _tree_Pattern.getCellRenderer();
+		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		renderer.setLeafIcon(img);
 		renderer.setOpenIcon(imgOpen);
 		renderer.setClosedIcon(imgClose);
+		_tree_Pattern.setCellRenderer(renderer);
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
 		}

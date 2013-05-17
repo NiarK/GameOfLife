@@ -98,7 +98,8 @@ public class FieldDrawManager {
 	protected synchronized void drawPattern(Graphics g) {
 		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
 		while (it.hasNext()) {
-			Point temp = it.next();
+			Point t = it.next();
+			Point temp = (Point) t.clone();
 			if(isInsideTheField(new Point(_indicator.x + temp.x, _indicator.y + temp.y))){
 					this.drawPoint(g, temp);
 			}
