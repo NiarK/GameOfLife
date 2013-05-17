@@ -50,6 +50,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
@@ -549,7 +550,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
 		}
-		_pnl_patterns.add(_tree_Pattern, BorderLayout.CENTER);
+		_pnl_patterns.add(new JScrollPane(_tree_Pattern), BorderLayout.CENTER);
 		_tree_Pattern.addMouseListener(this);
 		
 		this.revalidate();
