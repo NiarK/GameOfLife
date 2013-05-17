@@ -25,6 +25,12 @@ public class Cell {
 		this._nextState = new CellState(true);
 	}
 	
+	/**
+	 * Construit et renvoie une cellule qui va naitre (état courant : morte, état suivant : vivante).
+	 * @param coord La coordonnée de la cellule dans le terrain.
+	 * @param threadNumber Le numéro du thread auquel la cellule est rattaché.
+	 * @return Une cellule qui va naitre.
+	 */
 	public static Cell getEmergingCell(Point coord, int threadNumber) {
 		Cell c = new Cell(coord, threadNumber);
 		c._state = new CellState(false);

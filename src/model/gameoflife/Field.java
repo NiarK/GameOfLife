@@ -17,7 +17,8 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Classe contenant les cellules vivante du jeu de la vie.
+ * Elle gère aussi l'appartenance des cellules au différents threads.
  * @author pierre
  */
 public class Field extends Observable{
@@ -33,10 +34,8 @@ public class Field extends Observable{
 	//public static final int NB_FRAGMENT = 50;
 
 	/**
-	 * Constructeur par défaut
-	 *
+	 * Constructeur par défaut.
 	 * @param size La taille du terrain.
-	 * @param r Les règle du jeu.
 	 */
 	public Field(Point size) {
 		this._size = size;
@@ -54,10 +53,6 @@ public class Field extends Observable{
 			_cellsFragments.add(new HashMap<Point, Cell>());
 			_emergingPlacesFragments.add(new HashMap<Point, Integer>());
 		}
-
-		//this._rule = r;
-
-		//this._rule.randomlyFill(this._size, this._cells, this._nighCases);
 	}
 
 	/*public void addCell(Point place, Cell cell) {
