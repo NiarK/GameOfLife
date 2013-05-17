@@ -144,10 +144,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
-		
 		img = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIcon.png"));
 		imgOpen = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconOpen.png"));
 		imgClose = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconClose.png"));
+		this.setIconImage(new ImageIcon(manager.get("src/resources/random.png")).getImage());
 		
 		_field = new Field(8);
 		_field.setBackground(Color.black);
