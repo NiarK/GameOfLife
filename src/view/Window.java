@@ -37,6 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -63,6 +64,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import model.gameoflife.ErrorIO;
@@ -121,9 +123,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private Controller _controller;
 	private JTabbedPane _panel;
 	private JPanel main;
-	private ArrayList _patternsHexa;
-	private ArrayList _patternsTriangle;
-	private ArrayList _patternsNormal;
+	private ArrayList<String> repertories;
+	private ArrayList<String>[] _patterns;
 	//private ButtonGroup _bg_Patterns;
 	private JPanel _pnl_patterns;
 	private JPanel _pnl_BtnPatternsRotate;
@@ -133,12 +134,20 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_ChangeXAxisPatterns;
 	private JButton _btn_ChangeYAxisPatterns;
 	private JTree _tree_Pattern;
+	private Icon img;
+	private Icon imgOpen;
+	private Icon imgClose;
+	private JPanel _pnl_BtnPattern;
+	private DefaultMutableTreeNode root;
 
 	public Window() {
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
 		
+		img = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIcon.png"));
+		imgOpen = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconOpen.png"));
+		imgClose = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconClose.png"));
 		
 		_field = new Field(8);
 		_field.setBackground(Color.black);
@@ -351,33 +360,57 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_cbb_Rule.addActionListener(this);*/
 
 		_pnl_patterns = new JPanel();
-		_pnl_patterns.setLayout(new BorderLayout());
+		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.PAGE_AXIS));
 		_pnl_BtnPatternsRotate = new JPanel();
-		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.X_AXIS));
+		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.LINE_AXIS));
 		_pnl_BtnPatternsSymetric = new JPanel();
-		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.X_AXIS));
+		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.LINE_AXIS));
 		_btn_RotateLeftPatterns = new JButton();
 		_btn_RotateLeftPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateLeft.png")));
 		_btn_RotateLeftPatterns.addActionListener(this);
 		_btn_RotateLeftPatterns.setFocusable(false);
+		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());
 		_pnl_BtnPatternsRotate.add(_btn_RotateLeftPatterns);
+		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());		
+		_pnl_BtnPatternsRotate.add(Box.createVerticalGlue());
 		_btn_RotateRightPatterns = new JButton();
 		_btn_RotateRightPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateRight.png")));
 		_btn_RotateRightPatterns.addActionListener(this);
 		_btn_RotateRightPatterns.setFocusable(false);
 		_pnl_BtnPatternsRotate.add(_btn_RotateRightPatterns);
+		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());
 		_btn_ChangeXAxisPatterns = new JButton();
 		_btn_ChangeXAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryY.png")));
 		_btn_ChangeXAxisPatterns.addActionListener(this);
 		_btn_ChangeXAxisPatterns.setFocusable(false);
+		_pnl_BtnPatternsSymetric.add(Box.createHorizontalGlue());
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeXAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(Box.createHorizontalGlue());
 		_btn_ChangeYAxisPatterns = new JButton();
 		_btn_ChangeYAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryX.png")));
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
+		_pnl_BtnPatternsSymetric.add(Box.createHorizontalGlue());
 		//_bg_Patterns = new ButtonGroup();
+		
+		_pnl_BtnPattern = new JPanel();
+		_pnl_BtnPattern.setLayout(new BoxLayout(_pnl_BtnPattern, BoxLayout.PAGE_AXIS));
+		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_BtnPattern.add(_pnl_BtnPatternsRotate);
+		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_BtnPattern.add(_pnl_BtnPatternsSymetric);
+		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_patterns.add(_pnl_BtnPattern);
+		root = new DefaultMutableTreeNode("Patterns");
+		DefaultTreeModel treeModel = new DefaultTreeModel(root);
+		_tree_Pattern = new JTree(treeModel);
+		_tree_Pattern.setFocusable(false);
+		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		_tree_Pattern.addMouseListener(this);
+		
 		this.createPatternsList();
+		_pnl_patterns.add(new JScrollPane(_tree_Pattern));
 
 
 		this.setTitle("Conway's game of life");
@@ -484,8 +517,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		//option.add(Box.createVerticalGlue());
 
 		_panel = new JTabbedPane();
-		_panel.addTab("Option", option);
 		_panel.addTab("Patterns", _pnl_patterns);
+		_panel.addTab("Option", option);
 
 
 		main = new JPanel();
@@ -516,43 +549,28 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	public void createPatternsList() {
-		_pnl_patterns.removeAll();
-		_patternsHexa = _controller.patternList("Hexagone");
-		_patternsTriangle = _controller.patternList("Triangle");
-		_patternsNormal = _controller.patternList("Normal");
-		JPanel _pnl_BtnPattern = new JPanel();
-		_pnl_BtnPattern.setLayout(new BoxLayout(_pnl_BtnPattern, BoxLayout.Y_AXIS));
-		_pnl_BtnPattern.add(_pnl_BtnPatternsRotate);
-		_pnl_BtnPattern.add(_pnl_BtnPatternsSymetric);
-		_pnl_patterns.add(_pnl_BtnPattern, BorderLayout.NORTH);
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Patterns");
-		DefaultTreeModel treeModel = new DefaultTreeModel(root);
-		_tree_Pattern = new JTree(treeModel);
-		_tree_Pattern.setFocusable(false);
-		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		repertories = _controller.patternRepertoryList();
+		_patterns = new ArrayList[repertories.size()];
+		DefaultMutableTreeNode[] repertory = new DefaultMutableTreeNode[repertories.size()];
+		_tree_Pattern.removeAll();
 		DefaultMutableTreeNode base = new DefaultMutableTreeNode("None");
-		DefaultMutableTreeNode normal = new DefaultMutableTreeNode("Normal mode");
-		DefaultMutableTreeNode hexa = new DefaultMutableTreeNode("Hexagone mode");
-		DefaultMutableTreeNode triangle = new DefaultMutableTreeNode("Triangle mode");
-		for (int i = 0 ; i < _patternsHexa.size() ; i++) {
-			hexa.add(new DefaultMutableTreeNode(_patternsHexa.get(i).toString()));
-		}
-		for (int i = 0 ; i < _patternsTriangle.size() ; i++) {
-			triangle.add(new DefaultMutableTreeNode(_patternsTriangle.get(i).toString()));
-		}
-		for (int i = 0 ; i < _patternsNormal.size() ; i++) {
-			normal.add(new DefaultMutableTreeNode(_patternsNormal.get(i).toString()));
-		}
 		root.add(base);
-		root.add(normal);
-		root.add(hexa);
-		root.add(triangle);
+		for(int i = 0; i < repertories.size(); i++){
+			repertory[i] = new DefaultMutableTreeNode(repertories.get(i));
+			_patterns[i] = _controller.patternList(repertories.get(i));
+			for (int j = 0 ; j < _patterns[i].size() ; j++) {
+				repertory[i].add(new DefaultMutableTreeNode(_patterns[i].get(j).toString()));
+			}
+			root.add(repertory[i]);
+		}
+		
+		DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) _tree_Pattern.getCellRenderer();
+		renderer.setLeafIcon(img);
+		renderer.setOpenIcon(imgOpen);
+		renderer.setClosedIcon(imgClose);
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
 		}
-		_pnl_patterns.add(new JScrollPane(_tree_Pattern), BorderLayout.CENTER);
-		_tree_Pattern.addMouseListener(this);
-		
 		this.revalidate();
 		this.repaint();
 	}
@@ -585,6 +603,35 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 
 		_lbl_Search.setText(textSearch);
+	}
+	
+	public void save(){
+		boolean test = false;
+		JFileChooser fc = new JFileChooser();
+		fc.setSelectedFile(new File("Cellule.cells"));
+		do {
+			if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				String path = fc.getSelectedFile().getPath();
+				File f = new File(path);
+				if (!f.exists()) {
+					_controller.save(path);
+				}
+				else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
+					_controller.save(path);
+				}
+				else {
+					test = true;
+				}
+			}
+			else {
+				test = false;
+			}
+		}
+		while (test);
+	}
+	
+	public void load(){
+		
 	}
 
 	@Override
@@ -656,32 +703,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			
 		}
 		else if (/*e.getSource() == _btn_Save || */e.getSource() == _itm_Save) {
-			boolean test = false;
-			JFileChooser fc = new JFileChooser();
-			fc.setSelectedFile(new File("Cellule.cells"));
-			do {
-				if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-					String path = fc.getSelectedFile().getPath();
-					File f = new File(path);
-					if (!f.exists()) {
-						_controller.save(path);
-					}
-					else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-						_controller.save(path);
-					}
-					else {
-						test = true;
-					}
-				}
-				else {
-					test = false;
-				}
-			}
-			while (test);
-			
-			createPatternsList();
-			_field.setPattern(null);
-			_controller.setPattern(null);
+			this.save();
 		}
 		else if (e.getSource() == _itm_SavePattern) {
 			String name = (String)JOptionPane.showInputDialog(
@@ -851,38 +873,19 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			Pattern p = null;
 			if (tp != null){
 				boolean test = true;
-				int i = 0;
+				int j = 0;
 				if(tp.getLastPathComponent().toString().equals("None")){
 					test = false;
 				}
-				while(test && i < _patternsNormal.size()){
-					if(tp.getLastPathComponent().toString().equals(_patternsNormal.get(i).toString())){
-						test = false;
-						p = new Pattern();
-						p.addObserver(this);
-						p.loadPattern("Normal/"+_patternsNormal.get(i).toString());
+				for(int i = 0; i < this.repertories.size() && test;i++){
+					while(test && j < _patterns[i].size()){
+						if(tp.getLastPathComponent().toString().equals(_patterns[i].get(j).toString())){
+							test = false;
+							p = _controller.loadPattern(this.repertories.get(i) +"/"+_patterns[i].get(j).toString(), this);
+						}
+						j++;
 					}
-					i++;
-				}
-				i = 0;
-				while(test && i < _patternsTriangle.size()){
-					if(tp.getLastPathComponent().toString().equals(_patternsTriangle.get(i).toString())){
-						test = false;
-						p = new Pattern();
-						p.addObserver(this);
-						p.loadPattern("Triangle/"+_patternsTriangle.get(i).toString());
-					}
-					i++;
-				}
-				i = 0;
-				while(test && i < _patternsHexa.size()){
-					if(tp.getLastPathComponent().toString().equals(_patternsHexa.get(i).toString())){
-						test = false;
-						p = new Pattern();
-						p.addObserver(this);
-						p.loadPattern("Hexagone/"+_patternsHexa.get(i).toString());
-					}
-					i++;
+					j = 0;
 				}
 				if(!test){
 					_field.setPattern(p);

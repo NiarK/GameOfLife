@@ -53,6 +53,9 @@ public class Pattern extends Observable{
 		this.Cells = hs;
 	}
 
+	public Pattern() {
+	}
+
 	public void loadPattern(String name) {
 		try {
 			// création d'une fabrique de documents

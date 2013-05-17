@@ -314,6 +314,21 @@ public class Field extends Observable{
 		return result;
 	}
 
+	public ArrayList patternRepertoryList() {
+		String[] list;
+		ArrayList result = new ArrayList();
+		int i;
+		File f = new File("src/resources/");
+
+		list = f.list();
+		for (i = 0 ; i < list.length ; i++) {
+			if (!list[i].endsWith(".png")) {
+				result.add(list[i]);
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public String toString() {
 

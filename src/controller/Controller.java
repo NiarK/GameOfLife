@@ -404,10 +404,19 @@ public final class Controller{
 	/**
 	 * Retourne la liste des patterns d'un répertoire.
 	 * @param repertory Le répertoire a lister.
-	 * @return Un ArrayList contenant les différent pattern.
+	 * @return Un ArrayList contenant les différents pattern.
 	 */
 	public ArrayList patternList(String repertory) {
 		return _game.patternList(repertory);
+	}
+
+	/**
+	 * Retourne la liste des dossiers d'un répertoire.
+	 * @param repertory Le répertoire a lister.
+	 * @return Un ArrayList contenant les différents dossiers.
+	 */
+	public ArrayList patternRepertoryList() {
+		return _game.patternRepertoryList();
 	}
 	
 	/**
@@ -444,5 +453,17 @@ public final class Controller{
 	 */
 	public int getThreadNumber() {
 		return _game.getThreadNumber();
+	}
+	
+	/**
+	 * Crée un objet pattern à partir du chemin passé en paramètre
+	 * @param s chemin où aller chercher le pattern
+	 * @return Objet Pattern
+	 */
+	public Pattern loadPattern(String s, Observer o){
+		Pattern p = new Pattern();
+		p.addObserver(o);
+		p.loadPattern(s);
+		return p;
 	}
 }
