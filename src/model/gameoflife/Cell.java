@@ -3,7 +3,7 @@ package model.gameoflife;
 import java.awt.Point;
 
 /**
- * Cellule du jeu de la vie. Cette classe gère les différents états d'une cellule.
+ * Cellule du jeu de la vie. Cette classe gère les différents états d'une cellule ainsi les méta-données lié au fonctionnement technique de l'application (Appartenance à un certains thread).
  * @author pierre
  */
 public class Cell {

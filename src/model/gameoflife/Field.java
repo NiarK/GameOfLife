@@ -31,7 +31,6 @@ public class Field extends Observable{
 	private int _fragmentNumber;
 	private int _currentFragmentNumber;
 	
-	//public static final int NB_FRAGMENT = 50;
 
 	/**
 	 * Constructeur par défaut.
@@ -55,56 +54,51 @@ public class Field extends Observable{
 		}
 	}
 
-	/*public void addCell(Point place, Cell cell) {
-		_cells.put(place, cell);
-
-		int index = this.getFragmentIndex(place);
-
-		_cellsFragments.get(index).put(place, cell);
-	}
-
-	public void removeCell(Point place) {
-		_cells.remove(place);
-
-		int index = this.getFragmentIndex(place);
-
-//		_cellsFragments.get(index).remove(place);
-	}
-
-	public void addEmergingPlace(Point place, int neighborhood) {
-		_emergingPlaces.put(place, neighborhood);
-
-		int index = this.getFragmentIndex(place);
-
-		_emergingPlacesFragments.get(index).put(place, neighborhood);
-	}
-
-	public int getFragmentIndex(Point place) {
-		return place.y / Field.NB_FRAGMENT * (int) Math.ceil(_size.x / (double) Field.NB_FRAGMENT)
-			   + place.x / Field.NB_FRAGMENT;
-	}*/
-
+	/**
+	 * Récupère les cellules vivantes sur le terrain.
+	 * @return Un objet HashMap contenant toute les cellules vivantes.
+	 */
 	public HashMap<Point, Cell> getCells() {
 		return _cells;
 	}
 
+	/**
+	 * Définit les cellules vivantes sur le terrain.
+	 * @param cells Un objet HashMap contenant toute les cellules vivantes.
+	 */
 	public void setCells(HashMap<Point, Cell> cells) {
 		this._cells = cells;
 	}
 
+	/**
+	 * Récupère les positions où les cellules peuvent potentiellement naitres.
+	 * @return Un objet hashmap contenant les positions.
+	 */
 	public HashMap<Point, Integer> getEmergingPlaces() {
 		return _emergingPlaces;
 	}
 
+	/**
+	 * Définit les positions où les cellules peuvent potentiellement naitres.
+	 * @param emergingPlaces Un objet hashmap contenant les positions.
+	 */
 	public void setEmergingPlaces(HashMap<Point, Integer> emergingPlaces) {
 		this._emergingPlaces = emergingPlaces;
 
 	}
 
+	/**
+	 * Récupère la taille du terrain.
+	 * @return 
+	 */
 	public Point getSize() {
 		return _size;
 	}
 
+	/**
+	 * Définit la taille du terrain. C'est une operation potentiellement longue car il faut probablement supprimer beaucoup de cellules.
+	 * @param size La nouvelle taille du terrain.
+	 */
 	public synchronized void setSize(Point size) {
 		_size = size;
 
@@ -124,75 +118,12 @@ public class Field extends Observable{
 		}
 	}
 
-	/*public String toString() {
-	
-	String str = new String();
-	
-	String[][] cells = new String[this._size.y][this._size.x];
-	String[][] emergingPlaces = new String[this._size.y][this._size.x];
-	
-	for (int y = 0; y < this._size.y; ++y) {
-	for (int x = 0; x < this._size.x; ++x) {
-	
-	cells[y][x] = ".";
-	emergingPlaces[y][x] = ".";
-	}
-	}
-	
-	
-	for (Map.Entry<Point, Cell> entry : this._cells.entrySet()) {
-	
-	Point c = entry.getKey();
-	
-	cells[c.y][c.x] = "O";
-	}
-	
-	for (Map.Entry<Point, Integer> entry : this._emergingPlaces.entrySet()) {
-	
-	Point ep = entry.getKey();
-	
-	emergingPlaces[ep.y][ep.x] = Integer.toString(entry.getValue());
-	}
-	
-	/*for(String[] row : cells) {
-	str += "[ ";
-	for(String place : row) {
-	
-	str += place + " ";
-	}
-	str += "]\n";
-	}
-	
-	str += "\n";
-	
-	for(String[] row : emergingPlaces) {
-	str += "[ ";
-	for(String place : row) {
-	
-	str += place + " ";
-	}
-	str += "]\n";
-	}*/
-
-	/*for (int y = 0; y < this._size.y; ++y) {
-	str += "[ ";
-	for (int x = 0; x < this._size.x; ++x) {
-	
-	str += cells[y][x] + " ";
-	}
-	str += "]\t [";
-	
-	for (int x = 0; x < this._size.x; ++x) {
-	
-	str += emergingPlaces[y][x] + " ";
-	}
-	str += "]\n";
-	}
-	
-	return str;
-	}*/
-	public void save(String name) {
-		File f = new java.io.File(name);
+	/**
+	 * Enregistre la position des cellules vivantes sous l'un forme d'un fichier XML.
+	 * @param filepath Le chemin vers le fichier.
+	 */
+	public void save(String filepath) {
+		File f = new java.io.File(filepath);
 		try {
 			f.createNewFile();
 		}
@@ -246,7 +177,11 @@ public class Field extends Observable{
 		}
 	}
 
-	public void load(String name) {
+	/**
+	 * Charge un fichier XML contenant la position de cellules vivantes.
+	 * @param filepath Le chemin vers le fichier.
+	 */
+	public void load(String filepath) {
 		try {
 			// création d'une fabrique de documents
 			DocumentBuilderFactory DBF = DocumentBuilderFactory.newInstance();
@@ -255,7 +190,7 @@ public class Field extends Observable{
 			DocumentBuilder DB = DBF.newDocumentBuilder();
 
 			// lecture du contenu d'un fichier XML avec DOM
-			File xml = new File(name);
+			File xml = new File(filepath);
 			Document document = DB.parse(xml);
 
 			//traitement du document
