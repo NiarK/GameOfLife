@@ -146,11 +146,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
 		
-		_cellIcon = new ImageIcon(manager.get("src/resources/treeIcon.png"));
+		_cellIcon = new ImageIcon(manager.get("resources/Icons/treeIcon.png"));
 		//imgOpen = new ImageIcon(manager.get("src/resources/treeIconOpen.png"));
 		//imgClose = new ImageIcon(manager.get("src/resources/treeIconClose.png"));
 		
-		this.setIconImage(new ImageIcon(manager.get("src/resources/random.png")).getImage());
+		this.setIconImage(new ImageIcon(manager.get("resources/Icons/random.png")).getImage());
 		
 		_field = new Field(8);
 		_field.setBackground(Color.black);
@@ -285,31 +285,31 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_Pause = new JButton();
 		_btn_Pause.addActionListener(this);
 		_btn_Pause.addKeyListener(this);
-		_btn_Pause.setIcon(new ImageIcon(manager.get("src/resources/pause.png")));
+		_btn_Pause.setIcon(new ImageIcon(manager.get("resources/Icons/pause.png")));
 		_btn_Pause.setFocusable(false);
 
 		_btn_Play = new JButton();
 		_btn_Play.addActionListener(this);
 		_btn_Play.addKeyListener(this);
-		_btn_Play.setIcon(new ImageIcon(manager.get("src/resources/play.png")));
+		_btn_Play.setIcon(new ImageIcon(manager.get("resources/Icons/play.png")));
 		_btn_Play.setFocusable(false);
 
 		_btn_Next = new JButton();
 		_btn_Next.addActionListener(this);
 		_btn_Next.addKeyListener(this);
-		_btn_Next.setIcon(new ImageIcon(manager.get("src/resources/next.png")));
+		_btn_Next.setIcon(new ImageIcon(manager.get("resources/Icons/next.png")));
 		_btn_Next.setFocusable(false);
 
 		_btn_RandomlyFill = new JButton();
 		_btn_RandomlyFill.addActionListener(this);
 		_btn_RandomlyFill.addKeyListener(this);
-		_btn_RandomlyFill.setIcon(new ImageIcon(manager.get("src/resources/random.png")));
+		_btn_RandomlyFill.setIcon(new ImageIcon(manager.get("resources/Icons/random.png")));
 		_btn_RandomlyFill.setFocusable(false);
 
 		_btn_Empty = new JButton();
 		_btn_Empty.addActionListener(this);
 		_btn_Empty.addKeyListener(this);
-		_btn_Empty.setIcon(new ImageIcon(manager.get("src/resources/empty.png")));
+		_btn_Empty.setIcon(new ImageIcon(manager.get("resources/Icons/empty.png")));
 		_btn_Empty.setFocusable(false);
 
 		/*_btn_Save = new JButton();
@@ -326,7 +326,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_RuleParameter = new JButton();
 		_btn_RuleParameter.addActionListener(this);
 		_btn_RuleParameter.addKeyListener(this);
-		_btn_RuleParameter.setIcon(new ImageIcon(manager.get("src/resources/param.png")));
+		_btn_RuleParameter.setIcon(new ImageIcon(manager.get("resources/Icons/param.png")));
 		_btn_RuleParameter.setFocusable(false);
 
 		_lbl_Rule = new JLabel();
@@ -369,7 +369,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_pnl_BtnPatternsSymetric = new JPanel();
 		_pnl_BtnPatternsSymetric.setLayout(new BoxLayout(_pnl_BtnPatternsSymetric, BoxLayout.LINE_AXIS));
 		_btn_RotateLeftPatterns = new JButton();
-		_btn_RotateLeftPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateLeft.png")));
+		_btn_RotateLeftPatterns.setIcon(new ImageIcon(manager.get("resources/Icons/rotateLeft.png")));
 		_btn_RotateLeftPatterns.addActionListener(this);
 		_btn_RotateLeftPatterns.setFocusable(false);
 		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());
@@ -377,20 +377,20 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());		
 		_pnl_BtnPatternsRotate.add(Box.createVerticalGlue());
 		_btn_RotateRightPatterns = new JButton();
-		_btn_RotateRightPatterns.setIcon(new ImageIcon(manager.get("src/resources/rotateRight.png")));
+		_btn_RotateRightPatterns.setIcon(new ImageIcon(manager.get("resources/Icons/rotateRight.png")));
 		_btn_RotateRightPatterns.addActionListener(this);
 		_btn_RotateRightPatterns.setFocusable(false);
 		_pnl_BtnPatternsRotate.add(_btn_RotateRightPatterns);
 		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());
 		_btn_ChangeXAxisPatterns = new JButton();
-		_btn_ChangeXAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryY.png")));
+		_btn_ChangeXAxisPatterns.setIcon(new ImageIcon(manager.get("resources/Icons/symmetryY.png")));
 		_btn_ChangeXAxisPatterns.addActionListener(this);
 		_btn_ChangeXAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(Box.createHorizontalGlue());
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeXAxisPatterns);
 		_pnl_BtnPatternsSymetric.add(Box.createHorizontalGlue());
 		_btn_ChangeYAxisPatterns = new JButton();
-		_btn_ChangeYAxisPatterns.setIcon(new ImageIcon(manager.get("src/resources/symmetryX.png")));
+		_btn_ChangeYAxisPatterns.setIcon(new ImageIcon(manager.get("resources/Icons/symmetryX.png")));
 		_btn_ChangeYAxisPatterns.addActionListener(this);
 		_btn_ChangeYAxisPatterns.setFocusable(false);
 		_pnl_BtnPatternsSymetric.add(_btn_ChangeYAxisPatterns);
@@ -551,7 +551,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		repertories = _controller.patternRepertoryList();
 		_patterns = new ArrayList[repertories.size()];
 		DefaultMutableTreeNode[] repertory = new DefaultMutableTreeNode[repertories.size()];
-		DefaultMutableTreeNode base = new DefaultMutableTreeNode("None");
+		DefaultMutableTreeNode base = new DefaultMutableTreeNode("One cell");
 		root.add(base);
 		for(int i = 0; i < repertories.size(); i++){
 			repertory[i] = new DefaultMutableTreeNode(repertories.get(i));
@@ -567,7 +567,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_tree_Pattern.setFocusable(false);
 		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		_tree_Pattern.addMouseListener(this);
-		DefaultTreeCellRenderer rend = new DefaultTreeCellRenderer();
 		DefaultTreeCellRenderer renderer =  (DefaultTreeCellRenderer) _tree_Pattern.getCellRenderer();
 		
 		renderer.setLeafIcon(_cellIcon);
@@ -587,10 +586,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	
 	public void updateBtnPlay() {
 		if (_controller.isPlayed()) {
-			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/pause.png")));
+			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("resources/Icons/pause.png")));
 		}
 		else {
-			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/play.png")));
+			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("resources/Icons/play.png")));
 		}
 	}
 
@@ -618,7 +617,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	public void save(){
 		boolean test = false;
 		JFileChooser fc = new JFileChooser();
-		fc.setSelectedFile(new File("Cellule.cells"));
+		fc.setSelectedFile(new File("Untitled.cells"));
 		do {
 			if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 				String path = fc.getSelectedFile().getPath();
@@ -727,7 +726,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					);
 			
 			if(name != null) {
-				String path = "src/resources/User/" + name + ".cells";
+				String path = "resources/Patterns/User/" + name + ".cells";
 				File f = new File(path);
 
 				if (!f.exists()) {
@@ -884,7 +883,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			if (tp != null){
 				boolean test = true;
 				int j = 0;
-				if(tp.getLastPathComponent().toString().equals("None")){
+				if(tp.getLastPathComponent().toString().equals("One cell")){
 					test = false;
 				}
 				for(int i = 0; i < this.repertories.size() && test;i++){
