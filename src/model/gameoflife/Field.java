@@ -229,13 +229,13 @@ public class Field extends Observable{
 				FOS.write(bend);
 			}
 			FOS.write(titleend.getBytes());
+			this.setChanged();
+			this.notifyObservers(1);
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("Can not find the file");
 			e.printStackTrace();
 			ErrorIO err = new ErrorIO("Can not find the file");
-			this.setChanged();
-			this.notifyObservers(err);
 		}
 		catch (IOException ex) {
 			System.err.println("INPUT/OUTPUT exception");

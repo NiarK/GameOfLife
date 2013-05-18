@@ -139,6 +139,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private Icon imgClose;
 	private JPanel _pnl_BtnPattern;
 	private DefaultMutableTreeNode root;
+	private DefaultTreeModel treeModel;
 
 	public Window() {
 		
@@ -401,18 +402,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_pnl_BtnPattern.add(Box.createVerticalGlue());
 		_pnl_BtnPattern.add(_pnl_BtnPatternsSymetric);
 		_pnl_BtnPattern.add(Box.createVerticalGlue());
-		_pnl_patterns.add(_pnl_BtnPattern);
-		root = new DefaultMutableTreeNode("Patterns");
-		DefaultTreeModel treeModel = new DefaultTreeModel(root);
-		_tree_Pattern = new JTree(treeModel);
-		_tree_Pattern.setFocusable(false);
-		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		_tree_Pattern.addMouseListener(this);
 		
 		this.createPatternsList();
-		_pnl_patterns.add(Box.createVerticalGlue());
-		_pnl_patterns.add(Box.createVerticalGlue());
-		_pnl_patterns.add(new JScrollPane(_tree_Pattern));
 
 
 		this.setTitle("Conway's game of life");
@@ -551,10 +542,12 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	public void createPatternsList() {
+		treeModel = null;
+		_tree_Pattern = null;
+		root = new DefaultMutableTreeNode("Patterns");
 		repertories = _controller.patternRepertoryList();
 		_patterns = new ArrayList[repertories.size()];
 		DefaultMutableTreeNode[] repertory = new DefaultMutableTreeNode[repertories.size()];
-		_tree_Pattern.removeAll();
 		DefaultMutableTreeNode base = new DefaultMutableTreeNode("None");
 		root.add(base);
 		for(int i = 0; i < repertories.size(); i++){
@@ -566,6 +559,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			root.add(repertory[i]);
 		}
 		
+		treeModel = new DefaultTreeModel(root);
+		_tree_Pattern = new JTree(treeModel);
+		_tree_Pattern.setFocusable(false);
+		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		_tree_Pattern.addMouseListener(this);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		renderer.setLeafIcon(img);
 		renderer.setOpenIcon(imgOpen);
@@ -574,10 +572,17 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
 		}
+		
+		_pnl_patterns.removeAll();
+		_pnl_patterns.add(_pnl_BtnPattern);
+		_pnl_patterns.add(Box.createVerticalGlue());
+		_pnl_patterns.add(Box.createVerticalGlue());
+		_pnl_patterns.add(new JScrollPane(_tree_Pattern));
+		
 		this.revalidate();
 		this.repaint();
 	}
-
+	
 	public void updateBtnPlay() {
 		if (_controller.isPlayed()) {
 			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("src/resources/pause.png")));
@@ -729,8 +734,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
 					_controller.save(path);
 				}
-
-				this.createPatternsList();
 			}
 		}
 		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Open) {
@@ -1082,6 +1085,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		if(arg instanceof ErrorIO){
 			ErrorIO err = (ErrorIO) arg;
 			JOptionPane.showMessageDialog(this, err.getErrorText());
+		}
+		else if(arg == 1){
+			this.createPatternsList();
 		}
 	}
 	

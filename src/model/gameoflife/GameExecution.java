@@ -212,7 +212,6 @@ public class GameExecution extends Observable implements Runnable, Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("game");
 		this.setChanged();
 		this.notifyObservers(arg);
 	}
