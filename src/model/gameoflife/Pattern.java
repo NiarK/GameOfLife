@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Observable;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,6 +55,10 @@ public class Pattern extends Observable{
 	public Pattern() {
 	}
 
+	/**
+	 * Charge le pattern qui est demandé en paramètre
+	 * @param name Nom du fichier à charger à partir du fichier resources sans l'extension
+	 */
 	public void loadPattern(String name) {
 		try {
 			// création d'une fabrique de documents
@@ -107,7 +110,9 @@ public class Pattern extends Observable{
 			this.notifyObservers(err);
 		}
 	}
-
+	/**
+	 * Calcule le milieu du pattern
+	 */
 	public void findMiddle() {
 		int xmin = Integer.MAX_VALUE;
 		int xmax = 0;
@@ -132,6 +137,9 @@ public class Pattern extends Observable{
 		this.setMiddle(new Point((xmin + xmax) / 2, (ymin + ymax) / 2));
 	}
 	
+	/**
+	 * Calcule le pattern en fonction du milieu pour permettre l'inclusion dans le field
+	 */
 	public void makeCellsByMiddle(){
 		HashSet<Point> hs = new HashSet();
 		Iterator<Point> it = Cells.iterator();
@@ -142,6 +150,9 @@ public class Pattern extends Observable{
 		this.setCellsByMiddle(hs);
 	}
 	
+	/**
+	 * Calcule la symétrie horizontale du pattern
+	 */
 	public void horizontalSymmetry(){
 		HashSet<Point> hs = new HashSet();
 		Iterator<Point> it = this.getCellsByMiddle().iterator();
@@ -152,6 +163,9 @@ public class Pattern extends Observable{
 		this.setCellsByMiddle(hs);
 	}
 	
+	/**
+	 * Calcule la symétrie verticale du pattern
+	 */
 	public void verticalSymmetry(){
 		HashSet<Point> hs = new HashSet();
 		Iterator<Point> it = this.getCellsByMiddle().iterator();
@@ -161,7 +175,9 @@ public class Pattern extends Observable{
 		}
 		this.setCellsByMiddle(hs);
 	}
-	
+	/**
+	 * Effectue une rotation du pattern dans le sens inverse des aiguilles d'une montre
+	 */
 	public void rotateLeft(){
 		HashSet<Point> hs = new HashSet();
 		Iterator<Point> it = this.getCellsByMiddle().iterator();
@@ -172,6 +188,9 @@ public class Pattern extends Observable{
 		this.setCellsByMiddle(hs);
 	}
 	
+	/**
+	 * Effectue une rotation du pattern dans le sens des aiguilles d'une montre
+	 */
 	public void rotateRight(){
 		HashSet<Point> hs = new HashSet();
 		Iterator<Point> it = this.getCellsByMiddle().iterator();

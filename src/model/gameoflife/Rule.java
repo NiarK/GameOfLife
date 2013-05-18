@@ -21,8 +21,17 @@ public interface Rule {
 	 */
 	public abstract void updateEmergingPlaces(HashMap<Point, Cell> clusterCells, Field field);
 	
+	/**
+	 * Mets à jour la case si elle doit naitre
+	 * @param clusterPlaces
+	 * @param field 
+	 */
 	public abstract void calculEmergingCells(HashMap<Point, Integer> clusterPlaces, Field field);
-	
+	/**
+	 * Calcule si la cellule doit survivre
+	 * @param clusterCells
+	 * @param field 
+	 */
 	public abstract void calculNextCellsGeneration(HashMap<Point, Cell> clusterCells, Field field);
 	
 	/**
@@ -37,5 +46,9 @@ public interface Rule {
 	 */
 	public void empty(Field field);
 	
+	/**
+	 * Récupère la recherche
+	 * @return search la recherche utilisée
+	 */
 	public Search getSearch();
 }

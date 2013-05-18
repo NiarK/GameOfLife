@@ -14,8 +14,8 @@ import javax.imageio.ImageIO;
 import view.FieldDrawManager;
 
 /**
- *
- * @author pierre
+ * Permet la gestion des images dans tout le programme
+ * 
  */
 public class ImageManager {
 	

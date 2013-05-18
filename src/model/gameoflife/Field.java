@@ -191,6 +191,11 @@ public class Field extends Observable{
 	
 	return str;
 	}*/
+	
+	/**
+	 * Fonction de sauvegarde du field
+	 * @param name path du fichier pour la sauvegarde
+	 */
 	public void save(String name) {
 		File f = new java.io.File(name);
 		try {
@@ -246,6 +251,10 @@ public class Field extends Observable{
 		}
 	}
 
+	/**
+	 * Fonction de chargement du field
+	 * @param name path du fichier à charger
+	 */
 	public void load(String name) {
 		try {
 			// création d'une fabrique de documents
@@ -299,6 +308,11 @@ public class Field extends Observable{
 		}
 	}
 
+	/**
+	 * Crée une liste des patterns existants dans le dossier
+	 * @param repertory dossier où l'on veut lire
+	 * @return ArrayList qui contient les différents nom de fichier .cells sans l'extension
+	 */
 	public ArrayList patternList(String repertory) {
 		String[] list;
 		ArrayList result = new ArrayList();
@@ -314,6 +328,10 @@ public class Field extends Observable{
 		return result;
 	}
 
+	/**
+	 * Fonction qui cherche les dossiers présents dans les ressources
+	 * @return ArrayList qui contient les noms des dossiers
+	 */
 	public ArrayList patternRepertoryList() {
 		String[] list;
 		ArrayList result = new ArrayList();
@@ -384,6 +402,10 @@ public class Field extends Observable{
 
 	}
 	
+	/**
+	 * Renvoi le fragment suivant
+	 * @return  numéro du fragment
+	 */
 	private synchronized int getNextFragmentNumber() {
 		
 		_currentFragmentNumber++;
@@ -394,7 +416,10 @@ public class Field extends Observable{
 		return _currentFragmentNumber;
 	}
 	
-	
+	/**
+	 * Permet d'ajouter une cellule au field
+	 * @param coord coordonnées de la cellule
+	 */
 	public synchronized void addCell(Point coord){
 		
 		coord = new Point(coord);
@@ -406,6 +431,10 @@ public class Field extends Observable{
 		this.add(c);
 	}
 	
+	/**
+	 * Permet d'ajouter une cellule émergeante
+	 * @param coord coordonnées de la cellule
+	 */
 	public synchronized void addEmergingCell(Point coord){
 		coord = new Point(coord);
 		
@@ -416,6 +445,10 @@ public class Field extends Observable{
 		this.add(c);
 	}
 	
+	/**
+	 * Fonction d'ajout de la cellule dans le field
+	 * @param c Cellule à ajouter
+	 */
 	private void add(Cell c) {
 		
 		if( _cells.containsKey(c.getCoordinate())) {
@@ -426,6 +459,10 @@ public class Field extends Observable{
 		_cellsFragments.get(c.getFragmentNumber()).put(c.getCoordinate(), c);
 	}
 	
+	/**
+	 * Fonction de suppression de la cellule dans le field
+	 * @param c Cellule à supprimer
+	 */
 	public synchronized void removeCell(Cell c) {
 		
 		if(_cellsFragments.get(c.getFragmentNumber()).get(c.getCoordinate()) != null) {
@@ -437,6 +474,9 @@ public class Field extends Observable{
 		}
 	}
 	
+	/**
+	 * Fonction pour vider les cellules
+	 */
 	public synchronized void clearCells() {
 		_cells.clear();
 		int fragmentNumber = _cellsFragments.size();
@@ -445,6 +485,9 @@ public class Field extends Observable{
 		}
 	}
 	
+	/**
+	 * Fonction pour vider les cellules emergeantes
+	 */
 	public synchronized void clearEmergingPlaces() {
 		_emergingPlaces.clear();
 		int fragmentNumber = _emergingPlacesFragments.size();
@@ -453,6 +496,11 @@ public class Field extends Observable{
 		}
 	}
 	
+	/**
+	 * Fonction d'ajout d'une emergeante
+	 * @param coord Coordonnées de la cellule
+	 * @param neighborNumber Nombre de voisins vivants de cette cellule
+	 */
 	public synchronized void addEmergingPlace(Point coord, Integer neighborNumber){
 		coord = new Point(coord);
 		
@@ -462,19 +510,36 @@ public class Field extends Observable{
 		
 		_emergingPlacesFragments.get(thread).put(coord, neighborNumber);
 	}
-
+	
+	/**
+	 * Récupère les cellules du fragment
+	 * @param threadNumber fragment à récupérer
+	 * @return HashMap avec les cellules
+	 */
 	public HashMap<Point, Cell> getCellsFragments(int threadNumber) {
 		return _cellsFragments.get(threadNumber);
 	}
 
+	/**
+	 * Récupère les cellules émergeantes du fragment
+	 * @param threadNumber numéro de fragment
+	 * @return Hashmap avec les cellules
+	 */
 	public HashMap<Point, Integer> getEmergingPlacesFragments(int threadNumber) {
 		return _emergingPlacesFragments.get(threadNumber);
 	}
 
+	/**
+	 * Récupère le numéro de fragment
+	 * @return numéro du fragment
+	 */
 	public int getFragmentNumber() {
 		return _fragmentNumber;
 	}
 
+	/**
+	 * Vide tout le field
+	 */
 	public synchronized void empty() {
 		
 		this._cells = new HashMap<>();
