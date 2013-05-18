@@ -134,9 +134,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_ChangeXAxisPatterns;
 	private JButton _btn_ChangeYAxisPatterns;
 	private JTree _tree_Pattern;
-	private Icon img;
-	private Icon imgOpen;
-	private Icon imgClose;
+	private Icon _cellIcon;
+	//private Icon imgOpen;
+	//private Icon imgClose;
 	private JPanel _pnl_BtnPattern;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
@@ -145,9 +145,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
-		img = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIcon.png"));
-		imgOpen = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconOpen.png"));
-		imgClose = new ImageIcon(ImageManager.getInstance().get("src/resources/treeIconClose.png"));
+		
+		_cellIcon = new ImageIcon(manager.get("src/resources/treeIcon.png"));
+		//imgOpen = new ImageIcon(manager.get("src/resources/treeIconOpen.png"));
+		//imgClose = new ImageIcon(manager.get("src/resources/treeIconClose.png"));
+		
 		this.setIconImage(new ImageIcon(manager.get("src/resources/random.png")).getImage());
 		
 		_field = new Field(8);
@@ -565,9 +567,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		_tree_Pattern.addMouseListener(this);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-		renderer.setLeafIcon(img);
-		renderer.setOpenIcon(imgOpen);
-		renderer.setClosedIcon(imgClose);
+		renderer.setLeafIcon(_cellIcon);
+		//renderer.setOpenIcon(imgOpen);
+		//renderer.setClosedIcon(imgClose);
 		_tree_Pattern.setCellRenderer(renderer);
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
