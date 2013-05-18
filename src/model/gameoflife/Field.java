@@ -303,7 +303,7 @@ public class Field extends Observable{
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("src/resources/"+repertory+"/");
+		File f = new File("resources/"+repertory+"/");
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
@@ -318,7 +318,7 @@ public class Field extends Observable{
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("src/resources/");
+		File f = new File("resources/");
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
