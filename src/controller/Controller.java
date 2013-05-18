@@ -6,7 +6,6 @@ package controller;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;

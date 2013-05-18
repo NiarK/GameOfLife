@@ -159,6 +159,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_field.addMouseWheelListener(this);
 		_field.addComponentListener(this);
 
+		//Gestion menu
 		_mnu_Bar = new JMenuBar();
 		_mnu_File = new JMenu("File");
 		_mnu_File.setMnemonic(KeyEvent.VK_F);
@@ -238,6 +239,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_itm_OptionsVisible.setAccelerator(KeyStroke.getKeyStroke("P"));
 		_itm_OptionsVisible.addActionListener(this);
 
+		//Ajout des items aux menus
 		_mnu_Bar.add(_mnu_File);
 		_mnu_Bar.add(_mnu_Edit);
 		_mnu_Bar.add(_mnu_Simulators);
@@ -282,6 +284,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		_mousePosition = new Point();
 
+		//Gestion des boutons du panel
 		_btn_Pause = new JButton();
 		_btn_Pause.addActionListener(this);
 		_btn_Pause.addKeyListener(this);
@@ -362,6 +365,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_cbb_Rule.setSelectedIndex(0);
 		_cbb_Rule.addActionListener(this);*/
 
+		//Gestion de l'onglet patterns
 		_pnl_patterns = new JPanel();
 		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.PAGE_AXIS));
 		_pnl_BtnPatternsRotate = new JPanel();
@@ -533,6 +537,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 	}
 
+	/**
+	 * Récupère les différentes vitesses possibles
+	 * @return Tableau de string
+	 */
 	public String[] getSpeeds() {
 		Integer[] int_Speeds = Controller.getSpeeds();
 		String[] str_Speeds = new String[int_Speeds.length];
@@ -544,6 +552,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		return str_Speeds;
 	}
 
+	/**
+	 * Crée et affiche le jtabbed patterns
+	 */
 	public void createPatternsList() {
 		treeModel = null;
 		_tree_Pattern = null;
@@ -584,6 +595,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		this.repaint();
 	}
 	
+	/**
+	 * Gère l'affichage du bouton play ou pause
+	 */
 	public void updateBtnPlay() {
 		if (_controller.isPlayed()) {
 			_btn_Play.setIcon(new ImageIcon(ImageManager.getInstance().get("resources/Icons/pause.png")));
@@ -593,6 +607,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 	}
 
+	/**
+	 * Gère l'affichage des règles dans le label
+	 */
 	public void updateRuleLabel() {
 
 		String textRule = "Rule : ";
@@ -614,6 +631,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_lbl_Search.setText(textSearch);
 	}
 	
+	/*
+	 * Effectue la sauvegarde du plateau courant
+	 */
 	public void save(){
 		boolean test = false;
 		JFileChooser fc = new JFileChooser();
@@ -637,10 +657,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 		}
 		while (test);
-	}
-	
-	public void load(){
-		
 	}
 
 	@Override
@@ -711,7 +727,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			}
 			
 		}
-		else if (/*e.getSource() == _btn_Save || */e.getSource() == _itm_Save) {
+		else if (e.getSource() == _itm_Save) {
 			this.save();
 		}
 		else if (e.getSource() == _itm_SavePattern) {
@@ -737,7 +753,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				}
 			}
 		}
-		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Open) {
+		else if (e.getSource() == _itm_Open) {
 			JFileChooser fc = new JFileChooser();
 			boolean test;
 			do {
