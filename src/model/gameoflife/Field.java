@@ -317,7 +317,7 @@ public class Field extends Observable{
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("resources/"+repertory+"/");
+		File f = new File("resources/Patterns/"+repertory+"/");
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
@@ -336,13 +336,11 @@ public class Field extends Observable{
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("resources/");
+		File f = new File("resources/Patterns/");
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
-			if (!list[i].endsWith(".png")) {
-				result.add(list[i]);
-			}
+			result.add(list[i]);
 		}
 		return result;
 	}

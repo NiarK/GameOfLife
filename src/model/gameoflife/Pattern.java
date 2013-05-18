@@ -68,7 +68,7 @@ public class Pattern extends Observable{
 			DocumentBuilder DB = DBF.newDocumentBuilder();
 
 			// lecture du contenu d'un fichier XML avec DOM
-			File xml = new File("src/resources/" + name + ".cells");
+			File xml = new File("resources/Patterns/" + name + ".cells");
 			Document document = DB.parse(xml);
 
 			//traitement du document

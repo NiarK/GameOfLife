@@ -890,6 +890,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					while(test && j < _patterns[i].size()){
 						if(tp.getLastPathComponent().toString().equals(_patterns[i].get(j).toString())){
 							test = false;
+							System.out.println(this.repertories.get(i) +"/"+_patterns[i].get(j).toString());
 							p = _controller.loadPattern(this.repertories.get(i) +"/"+_patterns[i].get(j).toString(), this);
 						}
 						j++;
