@@ -512,6 +512,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_panel = new JTabbedPane();
 		_panel.addTab("Option", option);
 		_panel.addTab("Patterns", _pnl_patterns);
+		_panel.addChangeListener(this);
 
 
 		main = new JPanel();
@@ -564,11 +565,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_tree_Pattern.setFocusable(false);
 		_tree_Pattern.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		_tree_Pattern.addMouseListener(this);
-		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		DefaultTreeCellRenderer rend = new DefaultTreeCellRenderer();
+		DefaultTreeCellRenderer renderer =  (DefaultTreeCellRenderer) _tree_Pattern.getCellRenderer();
+		
 		renderer.setLeafIcon(img);
-		renderer.setOpenIcon(imgOpen);
-		renderer.setClosedIcon(imgClose);
-		_tree_Pattern.setCellRenderer(renderer);
 		for (int i = 0; i < _tree_Pattern.getRowCount(); i++) {
 			 _tree_Pattern.expandRow(i);
 		}
@@ -1035,6 +1035,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 					new Point(
 					_sli_Column.getValue(),
 					_sli_Row.getValue()));
+		}
+		else if (ce.getSource() == _panel) {
+			this.createPatternsList();
 		}
 	}
 
