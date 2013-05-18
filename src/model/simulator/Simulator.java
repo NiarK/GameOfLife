@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * permet la simulation du jeu de la vie
  * @author pierre
  */
 public class Simulator extends Thread {
