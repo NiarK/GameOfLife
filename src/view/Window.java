@@ -716,17 +716,19 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 											"Custom"
 					);
 			
-			String path = "src/resources/Normal/" + name + ".cells";
-			File f = new File(path);
-			
-			if (!f.exists()) {
-				_controller.save(path);
+			if(name != null) {
+				String path = "src/resources/User/" + name + ".cells";
+				File f = new File(path);
+
+				if (!f.exists()) {
+					_controller.save(path);
+				}
+				else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
+					_controller.save(path);
+				}
+
+				this.createPatternsList();
 			}
-			else if (JOptionPane.showConfirmDialog(this, "This file already exists, overwrite it?", "Confirm overwriting", JOptionPane.OK_CANCEL_OPTION) == 0) {
-				_controller.save(path);
-			}
-			
-			this.createPatternsList();
 		}
 		else if (/*e.getSource() == _btn_Load || */e.getSource() == _itm_Open) {
 			JFileChooser fc = new JFileChooser();
