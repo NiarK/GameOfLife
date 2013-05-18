@@ -7,10 +7,9 @@ package model.gameoflife.search;
 import model.gameoflife.Search;
 import java.awt.Point;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
- *
+ * Recherche issue d'un bug qui a été conservée
  * @author Quentin
  */
 public class RainSearch implements Search {

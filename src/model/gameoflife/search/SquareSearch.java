@@ -10,6 +10,11 @@ import java.util.HashSet;
 
 /**
  * Takes the cells directly adjacent and diagonally
+ * | | | | | |
+ * | |X|X|X| |
+ * | |X|O|X| |
+ * | |X|X|X| |
+ * | | | | | |
  * @author Quentin
  */
 public class SquareSearch implements Search {

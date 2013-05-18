@@ -9,7 +9,14 @@ import java.awt.Point;
 import java.util.HashSet;
 
 /**
- *
+ * Effectue la recherche sur une map hexagonale.
+ * Elle prend toutes les cellules directement adjacentes
+ * 
+ * | | | | | |
+ *  | |X|X| |
+ * | |X|O|X| |
+ *  | |X|X| | 
+ * | | | | | |
  * @author Quentin
  */
 public class HexagoneSearch implements Search {

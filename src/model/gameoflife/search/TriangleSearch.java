@@ -9,7 +9,12 @@ import java.awt.Point;
 import java.util.HashSet;
 
 /**
- *
+ * Recherche sur les cases qui partage un coté avec la case
+ * \ / \ / \ /
+ * / \ /X\ / \
+ * \ /X\O/X\ /
+ * / \ / \ / \
+ * \ / \ / \ /
  * @author Quentin
  */
 public class TriangleSearch implements Search {

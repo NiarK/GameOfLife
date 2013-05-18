@@ -10,6 +10,11 @@ import java.util.HashSet;
 
 /**
  * Fais une recherche standart en ajoutant les cases à une distance de 2 alignés
+ * | | |X| | |
+ * | |X|X|X| |
+ * |X|X|O|X|X|
+ * | |X|X|X| |
+ * | | |X| | |
  * @author Quentin
  */
 public class LargeSearch implements Search {

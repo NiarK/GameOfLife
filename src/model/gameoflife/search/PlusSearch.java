@@ -10,6 +10,11 @@ import java.util.HashSet;
 
 /**
  * Prend les cellules adjacentes (sous forme de +)
+ * | | | | | |
+ * | | |X| | |
+ * | |X|O|X| |
+ * | | |X| | |
+ * | | | | | |
  * @author Quentin
  */
 public class PlusSearch implements Search {

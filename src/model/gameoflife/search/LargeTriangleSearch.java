@@ -9,7 +9,12 @@ import java.awt.Point;
 import java.util.HashSet;
 
 /**
- *
+ * Recherche sur les cases qui partage un sommet avec la case
+ * \ / \ / \ /
+ * /X\X/X\X/X\
+ * \X/X\O/X\X/
+ * / \X/X\X/ \
+ * \ / \ / \ /
  * @author Quentin
  */
 public class LargeTriangleSearch implements Search {

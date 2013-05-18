@@ -10,6 +10,12 @@ import java.util.HashSet;
 
 /**
  * Prend les cellules en diagonale directe (sous forme de X)
+ * 
+ * | | | | | |
+ * | |X| |X| |
+ * | | |O| | |
+ * | |X| |X| |
+ * | | | | | |
  * @author Quentin
  */
 public class CrossSearch implements Search {
