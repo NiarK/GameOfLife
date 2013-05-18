@@ -1,7 +1,7 @@
 package model.gameoflife;
 
 /**
- * Etat d'une cellule.
+ * Gère l'état d'une cellule.
  * @author pierre
  */
 public class CellState {
