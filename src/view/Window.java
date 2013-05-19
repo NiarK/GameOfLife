@@ -135,7 +135,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
 	private DefaultMutableTreeNode[] repertory;
-	private ArrayList<String> _patternsRep;
 	private ArrayList<String>[] _patternsPath;
 
 	public Window() {
@@ -553,28 +552,35 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	 * Fonction qui permet de créer l'arborescence en profondeur
 	 * @param parent Chemin du parent en chaine de caractère
 	 * @param parentNode Noeud du parent auquel rattacher les éléments
+	 * @return renvoi true si le dossier parent contient au moins un fichier
 	 */
-	public void createTree(String parent, DefaultMutableTreeNode parentNode){
+	public boolean createTree(String parent, DefaultMutableTreeNode parentNode){
+		int i,j;
+		boolean ret = false;
 		_patterns = _controller.patternList(parent);
-		for (int j = 0 ; j < _patterns.size() ; j++) {
-			_patternsPath[0].add(_patterns.get(j).toString());
-			_patternsPath[1].add(parent + "/" + _patterns.get(j).toString());
-			DefaultMutableTreeNode pat = new DefaultMutableTreeNode(_patterns.get(j).toString());
+		for (i = 0 ; i < _patterns.size() ; i++) {
+			_patternsPath[0].add(_patterns.get(i).toString());
+			_patternsPath[1].add(parent + "/" + _patterns.get(i).toString());
+			DefaultMutableTreeNode pat = new DefaultMutableTreeNode(_patterns.get(i).toString());
 			parentNode.add(pat);
+			ret = true;
 		}
-		_patternsRep = _controller.patternRepertoryList(parent+"/");
-		for (int j = 0 ; j < _patternsRep.size() ; j++) {
+		ArrayList<String> _patternsRep = _controller.patternRepertoryList(parent+"/");
+		for (j = 0 ; j < _patternsRep.size() ; j++) {
 			DefaultMutableTreeNode doc = new DefaultMutableTreeNode(_patternsRep.get(j).toString());
-			parentNode.add(doc);
-			createTree(parent+"/"+_patternsRep.get(j).toString(),doc);
+			boolean test = createTree(parent+"/"+_patternsRep.get(j).toString(),doc);
+			if(test){
+				parentNode.add(doc);
+				ret = true;
+			}
 		}
+		return ret;
 	}
 
 	/**
 	 * Crée et affiche le jtabbed patterns
 	 */
 	public void createPatternsList() {
-		_patternsRep = new ArrayList();
 		_patternsPath = new ArrayList[2];
 		_patternsPath[0] = new ArrayList();
 		_patternsPath[1] = new ArrayList();
@@ -588,8 +594,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		root.add(base);
 		for(int i = 0; i < repertories.size(); i++){
 			repertory[i] = new DefaultMutableTreeNode(repertories.get(i));
-			createTree(repertories.get(i), repertory[i]);
-			root.add(repertory[i]);
+			boolean test = createTree(repertories.get(i), repertory[i]);
+			if(test)
+				root.add(repertory[i]);
 		}
 		
 		treeModel = new DefaultTreeModel(root);
