@@ -453,7 +453,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		JPanel sizeRow = new JPanel();
 		sizeRow.setLayout(new FlowLayout());
-		sizeRow.add(new JLabel("Row : "));
+		sizeRow.add(new JLabel("     Row : "));
 		sizeRow.add(_sli_Row);
 
 		JPanel speed = new JPanel();
