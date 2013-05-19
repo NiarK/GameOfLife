@@ -235,9 +235,9 @@ public class Field extends Observable{
 	}
 
 	/**
-	 * Crée une liste des patterns existants dans le dossier
-	 * @param repertory dossier où l'on veut lire
-	 * @return ArrayList qui contient les différents nom de fichier .cells sans l'extension
+	 * Crée une liste contenant le nom des modèles présent dans un dossier.
+	 * @param repertory Dossier à scanner.
+	 * @return ArrayList Liste contenant le nom des modèles trouvés.
 	 */
 	public ArrayList patternList(String repertory) {
 		String[] list;
@@ -255,8 +255,8 @@ public class Field extends Observable{
 	}
 
 	/**
-	 * Fonction qui cherche les dossiers présents dans les ressources
-	 * @return ArrayList qui contient les noms des dossiers
+	 * Crée une liste contenant les noms des dossiers du dossier Patterns
+	 * @return ArrayList Liste contenant les noms des dossiers.
 	 */
 	public ArrayList patternRepertoryList() {
 		String[] list;
@@ -341,8 +341,8 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Permet d'ajouter une cellule au field
-	 * @param coord coordonnées de la cellule
+	 * Permet d'ajouter une cellule vivante dans le terrain à une certaine position.
+	 * @param coord Coordonnées de la cellule.
 	 */
 	public synchronized void addCell(Point coord){
 		
@@ -356,8 +356,8 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Permet d'ajouter une cellule émergeante
-	 * @param coord coordonnées de la cellule
+	 * Permet d'ajouter une cellule sur le point de naitre (état actuel : morte, état suivant : vivante).
+	 * @param coord coordonnées de la cellule.
 	 */
 	public synchronized void addEmergingCell(Point coord){
 		coord = new Point(coord);
@@ -370,7 +370,7 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Fonction d'ajout de la cellule dans le field
+	 * Permet d'ajouter une cellule dans le terrain.
 	 * @param c Cellule à ajouter
 	 */
 	private void add(Cell c) {
@@ -384,8 +384,8 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Fonction de suppression de la cellule dans le field
-	 * @param c Cellule à supprimer
+	 * Permet de supprimer une cellule du terrain.
+	 * @param c Cellule à supprimer.
 	 */
 	public synchronized void removeCell(Cell c) {
 		
@@ -399,7 +399,7 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Fonction pour vider les cellules
+	 * Supprime toute les cellules du terrain.
 	 */
 	public synchronized void clearCells() {
 		_cells.clear();
@@ -410,7 +410,7 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Fonction pour vider les cellules emergeantes
+	 * Supprime toutes les positions où les cellules peuvent potentiellement naitres.
 	 */
 	public synchronized void clearEmergingPlaces() {
 		_emergingPlaces.clear();
@@ -421,9 +421,9 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Fonction d'ajout d'une emergeante
-	 * @param coord Coordonnées de la cellule
-	 * @param neighborNumber Nombre de voisins vivants de cette cellule
+	 * Ajoute une position où une cellule peut potentiellement naitre.
+	 * @param coord Coordonnées de la position.
+	 * @param neighborNumber Nombre de voisins vivants de cette position.
 	 */
 	public synchronized void addEmergingPlace(Point coord, Integer neighborNumber){
 		coord = new Point(coord);
@@ -436,33 +436,33 @@ public class Field extends Observable{
 	}
 	
 	/**
-	 * Récupère les cellules du fragment
-	 * @param threadNumber fragment à récupérer
-	 * @return HashMap avec les cellules
+	 * Récupère les cellules lier à un certains thread.
+	 * @param threadNumber Le numéro du thread.
+	 * @return HashMap Liste des cellules.
 	 */
 	public HashMap<Point, Cell> getCellsFragments(int threadNumber) {
 		return _cellsFragments.get(threadNumber);
 	}
 
 	/**
-	 * Récupère les cellules émergeantes du fragment
-	 * @param threadNumber numéro de fragment
-	 * @return Hashmap avec les cellules
+	 * Récupère les positions où cellules peuvent naitres lier à un certains thread.
+	 * @param threadNumber Numéro du thread.
+	 * @return Hashmap Liste des positions.
 	 */
 	public HashMap<Point, Integer> getEmergingPlacesFragments(int threadNumber) {
 		return _emergingPlacesFragments.get(threadNumber);
 	}
 
 	/**
-	 * Récupère le numéro de fragment
-	 * @return numéro du fragment
+	 * Récupère le nombre de fragment (C'est à dire le nombre de thread).
+	 * @return Nombre de fragment.
 	 */
 	public int getFragmentNumber() {
 		return _fragmentNumber;
 	}
 
 	/**
-	 * Vide tout le field
+	 * Vide tout le terrain.
 	 */
 	public synchronized void empty() {
 		
@@ -478,6 +478,11 @@ public class Field extends Observable{
 		}
 	}
 
+	/**
+	 * Définit le nombre de fragment (donc de thread) que le terrain doit gérer.
+	 * C'est une opération potentiellement lourde car elle parcours un certains nombre de cellules pour mettre à jour leur numéro de fragment.
+	 * @param n Noueau numéro de fragment.
+	 */
 	public synchronized void setFragmentNumber(int n) {
 		if(n > 0) {
 			
