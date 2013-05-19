@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Classe gérant un modèle de cellule.
  * @author Quentin
  */
 public class Pattern extends Observable{
@@ -28,36 +28,64 @@ public class Pattern extends Observable{
 	private Point Middle;
 	private HashSet<Point> CellsByMiddle;
 
+	/**
+	 * Constructeur par défaut.
+	 */
+	public Pattern() {
+	}
+	
+	/**
+	 * Récupère le modèle dont la cellule centrale se trouve en (0, 0).
+	 * @return Le modèle.
+	 */
 	public HashSet<Point> getCellsByMiddle() {
 		return CellsByMiddle;
 	}
 
+	/**
+	 * Récupère le modèle dont la cellule centrale se trouve en (0, 0).
+	 * @param CellsByMiddle Le modèle.
+	 */
 	private void setCellsByMiddle(HashSet<Point> CellsByMiddle) {
 		this.CellsByMiddle = CellsByMiddle;
 	}
 
+	/**
+	 * Récupère la position centrale du modèle.
+	 * @return La position centrale.
+	 */
 	public Point getMiddle() {
 		return Middle;
 	}
 
+	/**
+	 * définit le centre du modèle.
+	 * @param Middle 
+	 */
 	private void setMiddle(Point Middle) {
 		this.Middle = Middle;
 	}
 
+	/**
+	 * Récupère la liste des positions des cellules du modèle.
+	 * @return Un objet HashSet contenant la liste des positions.
+	 */
 	public HashSet<Point> getCells() {
 		return Cells;
 	}
 
+	/**
+	 * Définit les positions des cellules du modèle.
+	 * @param hs Un objet HashSet contenant les positions.
+	 */
 	private void setCells(HashSet<Point> hs) {
 		this.Cells = hs;
 	}
 
-	public Pattern() {
-	}
 
 	/**
-	 * Charge le pattern qui est demandé en paramètre
-	 * @param name Nom du fichier à charger à partir du fichier resources sans l'extension
+	 * Charge le modèle depuis un fichier XML.
+	 * @param name Nom du fichier XML à charger (sans extension).
 	 */
 	public void loadPattern(String name) {
 		try {
@@ -110,8 +138,9 @@ public class Pattern extends Observable{
 			this.notifyObservers(err);
 		}
 	}
+	
 	/**
-	 * Calcule le milieu du pattern
+	 * Calcule le milieu du modèle.
 	 */
 	public void findMiddle() {
 		int xmin = Integer.MAX_VALUE;
@@ -138,7 +167,7 @@ public class Pattern extends Observable{
 	}
 	
 	/**
-	 * Calcule le pattern en fonction du milieu pour permettre l'inclusion dans le field
+	 * Calcule le modèle en fonction du milieu pour permettre l'inclusion dans le terrain.
 	 */
 	public void makeCellsByMiddle(){
 		HashSet<Point> hs = new HashSet();
@@ -151,7 +180,7 @@ public class Pattern extends Observable{
 	}
 	
 	/**
-	 * Calcule la symétrie horizontale du pattern
+	 * Calcule la symétrie horizontale du modèle.
 	 */
 	public void horizontalSymmetry(){
 		HashSet<Point> hs = new HashSet();
@@ -164,7 +193,7 @@ public class Pattern extends Observable{
 	}
 	
 	/**
-	 * Calcule la symétrie verticale du pattern
+	 * Calcule la symétrie verticale du modèle.
 	 */
 	public void verticalSymmetry(){
 		HashSet<Point> hs = new HashSet();
@@ -176,7 +205,7 @@ public class Pattern extends Observable{
 		this.setCellsByMiddle(hs);
 	}
 	/**
-	 * Effectue une rotation du pattern dans le sens inverse des aiguilles d'une montre
+	 * Effectue une rotation du modèle dans le sens inverse des aiguilles d'une montre.
 	 */
 	public void rotateLeft(){
 		HashSet<Point> hs = new HashSet();
@@ -189,7 +218,7 @@ public class Pattern extends Observable{
 	}
 	
 	/**
-	 * Effectue une rotation du pattern dans le sens des aiguilles d'une montre
+	 * Effectue une rotation du modèle dans le sens des aiguilles d'une montre.
 	 */
 	public void rotateRight(){
 		HashSet<Point> hs = new HashSet();

@@ -25,6 +25,7 @@ public class StandardRule implements Rule {
 	
 	/**
 	 * Constructeur par défaut
+	 * @param search L'objet en charge de la recherche des voisins.
 	 */
 	public StandardRule(Search search){
 		this._born = new HashSet<>();
@@ -34,7 +35,7 @@ public class StandardRule implements Rule {
 	}
 
 	/**
-	 * Initialise les règles pour le jeu de la vie standard
+	 * Initialise les règles pour le jeu de la vie de Conway.
 	 * Born : 3
 	 * Survive : 2 et 3
 	 */
@@ -55,7 +56,7 @@ public class StandardRule implements Rule {
 	}
 	
 	/**
-	 * Initialise les règles pour le jeu de la vie standard
+	 * Initialise les règles pour le jeu de la vie standard d'un terrain hexagonal.
 	 * Born : 2
 	 * Survive : 3 et 4
 	 */
@@ -76,7 +77,7 @@ public class StandardRule implements Rule {
 	}
 	
 	/**
-	 * Initialise les règles pour le jeu de la vie : HighLife
+	 * Initialise les règles pour le jeu de la vie : HighLife.
 	 * Born : 3 et 6
 	 * Survive : 2 et 3
 	 */
@@ -99,7 +100,7 @@ public class StandardRule implements Rule {
 	}
 	
 	/**
-	 * Initialise les règles pour le jeu de la vie
+	 * Initialise les règles pour le jeu de la vie.
 	 * Born : 1
 	 * Survive : 1 et 2
 	 */
@@ -121,7 +122,7 @@ public class StandardRule implements Rule {
 	}
 	
 	/**
-	 * Initialise les règles pour le jeu de la vie
+	 * Initialise les règles pour le jeu de la vie : Seeds
 	 * Born : 2
 	 * Survive : non
 	 */
@@ -283,15 +284,12 @@ public class StandardRule implements Rule {
 	}
 
 	/**
-	 * Met à jour les voisins émergeants d'un endroit.
-	 * @param neighbor L'endroit en question.
+	 * Met à jour les voisins d'un endroit .
+	 * @param place L'endroit en question.
 	 * @param field Le terrain dans lequel évolue les cellules.
 	 */
 	public void updateEmergingPlace(Point place, Field field) {
 		
-		//Point size = field.getSize();
-		//place = (Point)place.clone();
-
 		HashSet<Point> neighbors = _search.getNeighbor(field.getSize().x, field.getSize().y, place);
 		
 		for(Point n : neighbors) {
@@ -300,13 +298,18 @@ public class StandardRule implements Rule {
 		
 	}
 
-	private synchronized void incrementEmergingNeighbor(Point neighbor, Field field) {
+	/**
+	 * Incrémente le nombre de voisin d'une case.
+	 * @param placea case à incrementer.
+	 * @param field Le terrain dans lequel évolue les cellules.
+	 */
+	private synchronized void incrementEmergingNeighbor(Point place, Field field) {
 
-		if( ! field.getCells().containsKey(neighbor) || ! field.getCells().get(neighbor).getState().isAlive() ){
+		if( ! field.getCells().containsKey(place) || ! field.getCells().get(place).getState().isAlive() ){
 
 			HashMap<Point, Integer> emergingPlaces = field.getEmergingPlaces();
 
-			Integer n = emergingPlaces.get(neighbor);
+			Integer n = emergingPlaces.get(place);
 
 			if(n == null) {
 				n = new Integer(0);
@@ -314,34 +317,54 @@ public class StandardRule implements Rule {
 
 			n += 1;
 			
-			//synchronized(emergingPlaces){
-			//emergingPlaces.put((Point)neighbor.clone(), n);
-			field.addEmergingPlace(neighbor, n);
-			//}
+			field.addEmergingPlace(place, n);
 		}
-		//System.out.println(field);
 	}
 
+	/**
+	 * Récupère la liste des nombres de voisins dont une cellule à besoin pour naitre.
+	 * @return Un objet HashSet contenant la liste.
+	 */
 	public HashSet<Integer> getBorn() {
 		return _born;
 	}
 
+	/**
+	 * Définit la liste des nombres de voisins dont une cellule à besoin pour naitre.
+	 * @param born Un objet HashSet contenant la liste.
+	 */
 	public void setBorn(HashSet<Integer> born) {
 		this._born = born;
 	}
 
+	/**
+	 * Récupère la liste des nombres de voisins dont une cellule à besoin pour survivre.
+	 * @return Un objet HashSet contenant la liste.
+	 */
 	public HashSet<Integer> getSurvive() {
 		return _survive;
 	}
 
+	/**
+	 * Définit la liste des nombres de voisins dont une cellule à besoin pour survivre.
+	 * @param survive Un objet HashSet contenant la liste.
+	 */
 	public void setSurvive(HashSet<Integer> survive) {
 		this._survive = survive;
 	}
 
+	/**
+	 * Récupère l'objet permettant de récupérer les voisins d'une cellule.
+	 * @return Un objet Search.
+	 */
 	public Search getSearch() {
 		return _search;
 	}
 
+	/**
+	 * Définit l'objet permettant de récupérer les voisins d'une cellule.
+	 * @param _search Un objet Search.
+	 */
 	public void setSearch(Search _search) {
 		this._search = _search;
 	}

@@ -19,14 +19,16 @@ public interface Search {
 	 * @return hashset de point qui contient les voisins
      */
     public HashSet<Point> getNeighbor(int width, int height, Point place);
+	
 	/**
-	 * Récupère le nombre maximum de voisin par la recherche
-	 * @return nombre de voisins maximum
+	 * Récupère le nombre maximum de voisin fournit par la recherche.
+	 * @return Nombre de voisins maximum.
 	 */
 	public int getNeighborMaximumNumber();
-    /**
-	 * Test si la recherche est en torus ou non
-	 * @return boolean qui précise le torus
+    
+	/**
+	 * Test si le terrain est un torus ou non
+	 * @return boolean True si le terrain est un torus, false sinon.
 	 */
 	public boolean isTorus();
 }
