@@ -16,7 +16,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -28,7 +27,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -36,7 +34,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -50,7 +47,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -58,8 +54,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -124,7 +118,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JTabbedPane _panel;
 	private JPanel main;
 	private ArrayList<String> repertories;
-	private ArrayList<String>[] _patterns;
+	private ArrayList<String> _patterns;
 	//private ButtonGroup _bg_Patterns;
 	private JPanel _pnl_patterns;
 	private JPanel _pnl_BtnPatternsRotate;
@@ -140,6 +134,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JPanel _pnl_BtnPattern;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
+	private DefaultMutableTreeNode[] repertory;
+	private ArrayList<String> _patternsRep;
+	private ArrayList<String>[] _patternsPath;
 
 	public Window() {
 		
@@ -367,7 +364,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		//Gestion de l'onglet patterns
 		_pnl_patterns = new JPanel();
-		_pnl_patterns.setLayout(new BoxLayout(_pnl_patterns, BoxLayout.PAGE_AXIS));
+		_pnl_patterns.setLayout(new BorderLayout());
 		_pnl_BtnPatternsRotate = new JPanel();
 		_pnl_BtnPatternsRotate.setLayout(new BoxLayout(_pnl_BtnPatternsRotate, BoxLayout.LINE_AXIS));
 		_pnl_BtnPatternsSymetric = new JPanel();
@@ -551,25 +548,47 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		return str_Speeds;
 	}
+	
+	/**
+	 * Fonction qui permet de créer l'arborescence en profondeur
+	 * @param parent Chemin du parent en chaine de caractère
+	 * @param parentNode Noeud du parent auquel rattacher les éléments
+	 */
+	public void createTree(String parent, DefaultMutableTreeNode parentNode){
+		_patterns = _controller.patternList(parent);
+		for (int j = 0 ; j < _patterns.size() ; j++) {
+			_patternsPath[0].add(_patterns.get(j).toString());
+			_patternsPath[1].add(parent + "/" + _patterns.get(j).toString());
+			DefaultMutableTreeNode pat = new DefaultMutableTreeNode(_patterns.get(j).toString());
+			parentNode.add(pat);
+		}
+		_patternsRep = _controller.patternRepertoryList(parent+"/");
+		for (int j = 0 ; j < _patternsRep.size() ; j++) {
+			DefaultMutableTreeNode doc = new DefaultMutableTreeNode(_patternsRep.get(j).toString());
+			parentNode.add(doc);
+			createTree(parent+"/"+_patternsRep.get(j).toString(),doc);
+		}
+	}
 
 	/**
 	 * Crée et affiche le jtabbed patterns
 	 */
 	public void createPatternsList() {
+		_patternsRep = new ArrayList();
+		_patternsPath = new ArrayList[2];
+		_patternsPath[0] = new ArrayList();
+		_patternsPath[1] = new ArrayList();
 		treeModel = null;
 		_tree_Pattern = null;
 		root = new DefaultMutableTreeNode("Patterns");
-		repertories = _controller.patternRepertoryList();
-		_patterns = new ArrayList[repertories.size()];
-		DefaultMutableTreeNode[] repertory = new DefaultMutableTreeNode[repertories.size()];
+		repertories = _controller.patternRepertoryList("");
+		_patterns = new ArrayList();
+		repertory = new DefaultMutableTreeNode[repertories.size()];
 		DefaultMutableTreeNode base = new DefaultMutableTreeNode("One cell");
 		root.add(base);
 		for(int i = 0; i < repertories.size(); i++){
 			repertory[i] = new DefaultMutableTreeNode(repertories.get(i));
-			_patterns[i] = _controller.patternList(repertories.get(i));
-			for (int j = 0 ; j < _patterns[i].size() ; j++) {
-				repertory[i].add(new DefaultMutableTreeNode(_patterns[i].get(j).toString()));
-			}
+			createTree(repertories.get(i), repertory[i]);
 			root.add(repertory[i]);
 		}
 		
@@ -586,10 +605,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		}
 		
 		_pnl_patterns.removeAll();
-		_pnl_patterns.add(_pnl_BtnPattern);
-		_pnl_patterns.add(Box.createVerticalGlue());
-		_pnl_patterns.add(Box.createVerticalGlue());
-		_pnl_patterns.add(new JScrollPane(_tree_Pattern));
+		_pnl_patterns.add(_pnl_BtnPattern, BorderLayout.NORTH);
+		_pnl_patterns.add(new JScrollPane(_tree_Pattern), BorderLayout.CENTER);
 		
 		this.revalidate();
 		this.repaint();
@@ -902,16 +919,13 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				if(tp.getLastPathComponent().toString().equals("One cell")){
 					test = false;
 				}
-				for(int i = 0; i < this.repertories.size() && test;i++){
-					while(test && j < _patterns[i].size()){
-						if(tp.getLastPathComponent().toString().equals(_patterns[i].get(j).toString())){
-							test = false;
-							System.out.println(this.repertories.get(i) +"/"+_patterns[i].get(j).toString());
-							p = _controller.loadPattern(this.repertories.get(i) +"/"+_patterns[i].get(j).toString(), this);
-						}
-						j++;
+				j = 0;
+				while(test && j < _patternsPath[0].size()){
+					if(tp.getLastPathComponent().toString().equals(_patternsPath[0].get(j).toString())){
+						test = false;
+						p = _controller.loadPattern(_patternsPath[1].get(j).toString(), this);
 					}
-					j = 0;
+					j++;
 				}
 				if(!test){
 					_field.setPattern(p);

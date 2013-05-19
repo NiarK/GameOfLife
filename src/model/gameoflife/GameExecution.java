@@ -191,8 +191,8 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		return _field.patternList(repertory);
 	}
 
-	public ArrayList patternRepertoryList() {
-		return _field.patternRepertoryList();
+	public ArrayList patternRepertoryList(String s) {
+		return _field.patternRepertoryList(s);
 	}
 
 	public Pattern getPattern() {

@@ -414,8 +414,8 @@ public final class Controller{
 	 * @param repertory Le répertoire a lister.
 	 * @return Un ArrayList contenant les différents dossiers.
 	 */
-	public ArrayList patternRepertoryList() {
-		return _game.patternRepertoryList();
+	public ArrayList patternRepertoryList(String s) {
+		return _game.patternRepertoryList(s);
 	}
 	
 	/**
