@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Classe centrale du model du jeu de la vie.
+ * Cette classe, implémentant Runnable, permet de gérer l'éxecution du jeu.
+ * Elle gère aussi quasiment toutes les interactions entre le controller et le model.
  * @author pierre
  */
 public class GameExecution extends Observable implements Runnable, Observer {
@@ -23,6 +25,11 @@ public class GameExecution extends Observable implements Runnable, Observer {
 	private Rule _rule;
 	private Pattern _pattern;
 
+	/**
+	 * Construit tout le model.
+	 * @param size La taille du terrain.
+	 * @param rule Les règles à appliquer au terrain.
+	 */
 	public GameExecution(Point size, Rule rule) {
 		this._field = new Field(size);
 		this._field.addObserver(this);
@@ -74,10 +81,17 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		}
 	}
 
+	/**
+	 * Récupère le terrain.
+	 * @return Le terrain.
+	 */
 	public Field getField() {
 		return _field;
 	}
 	
+	/**
+	 * Vide le terrain.
+	 */
 	public synchronized void empty() {
 
 		_rule.empty(_field);
@@ -86,6 +100,9 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers();
 	}
 
+	/**
+	 * Remplie aléatoirement le terrain.
+	 */
 	public synchronized void randomlyFill() {
 
 		_rule.randomlyFill(_field);
@@ -94,14 +111,26 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers();
 	}
 
+	/**
+	 * Récupère la liste de toutes les cellules en vie.
+	 * @return Un objet HashMap contenant les cellules.
+	 */
 	public synchronized HashMap<Point, Cell> getCells() {
 		return (HashMap<Point, Cell>) this._field.getCells().clone();
 	}
 
+	/**
+	 * Récupère la taille du terrain.
+	 * @return Un objet Point contenant la taille du terrain.
+	 */
 	public Point getFieldSize() {
 		return this._field.getSize();
 	}
 
+	/**
+	 * Change l'état d'un cellule à une certaines position : une cellule vivante meurt et une cellule morte nait.
+	 * @param position La position de la cellule.
+	 */
 	public synchronized void toggleCell(Point position) {
 
 		if (position.x >= 0
@@ -131,6 +160,10 @@ public class GameExecution extends Observable implements Runnable, Observer {
 
 	}
 	
+	/**
+	 * Fait naitre toutes les cellules si situant dans le modèle à une certaines position.
+	 * @param position La position du modèle.
+	 */
 	public synchronized void putPattern(Point position){
 
 		Iterator<Point> it = _pattern.getCellsByMiddle().iterator();
@@ -166,6 +199,10 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers();
 	}
 	
+	/**
+	 * définit la taille du terrain.
+	 * @param size La nouvelle taille du terrain.
+	 */
 	public synchronized void setFieldSize(Point size) {
 		_field.setSize(size);
 
@@ -173,37 +210,71 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers();
 	}
 
+	/**
+	 * Définit la règle à appliquer au terrain.
+	 * @param rule L'objet Rule à appliquer au terrain.
+	 */
 	public synchronized void setRule(Rule rule) {
 		_rule = rule;
 	}
 
-	public void save(String name) {
-		_field.save(name);
+	/***
+	 * Sauvegarde toutes les cellules vivante du terrain dans un fichier XML.
+	 * @param filepath Chemin du fichier à sauvegarder.
+	 */
+	public void save(String filepath) {
+		_field.save(filepath);
 	}
 
-	public void load(String name) {
-		_field.load(name);
+	/**
+	 * charge un terrain depuis un fichier XML.
+	 * @param filepath Chemin du fichier à charger.
+	 */
+	public void load(String filepath) {
+		_field.load(filepath);
 		this.setChanged();
 		this.notifyObservers();
 	}
 
+	/**
+	 * Crée une liste contenant le nom des modèles présent dans un dossier.
+	 * @param repertory Dossier à scanner.
+	 * @return ArrayList Liste contenant le nom des modèles trouvés.
+	 */
 	public ArrayList patternList(String repertory) {
 		return _field.patternList(repertory);
 	}
 
-	public ArrayList patternRepertoryList(String s) {
-		return _field.patternRepertoryList(s);
+	/**
+	 * Crée une liste contenant les noms des dossiers du dossier repertory
+	 * @param repertory Dossier à scanner.
+	 * @return ArrayList Liste contenant les noms des dossiers.
+	 */
+	public ArrayList patternRepertoryList(String repertory) {
+		return _field.patternRepertoryList(repertory);
 	}
 
+	/**
+	 * récupère le modèle en cours.
+	 * @return Un objet Pattern représentant le modèle.
+	 */
 	public Pattern getPattern() {
 		return _pattern;
 	}
 
+	/**
+	 * Définit le modèle en cours.
+	 * @param _pattern Un objet Pattern représentant le modèle.
+	 */
 	public void setPattern(Pattern _pattern) {
 		this._pattern = _pattern;
 		
 	}
 	
+	/**
+	 * définit le nombre de thread que l'application doit utiiser pour calculer les prochaines générations.
+	 * @param n Le nouveau nombre de thread.
+	 */
 	public synchronized void setThreadNumber(int n) {
 		
 		_field.setFragmentNumber(n);
@@ -216,10 +287,17 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		this.notifyObservers(arg);
 	}
 
+	/**
+	 * récupère le nombre de thread que l'application utiise pour calculer les prochaines générations.
+	 * @return Le nombre de thread.
+	 */
 	public int getThreadNumber() {
 		return _field.getFragmentNumber();
 	}
 	
+	/**
+	 * Classe interne gérant la création des différents thread de calcule.
+	 */
 	private abstract class Process implements Runnable {
 
 		@Override
@@ -254,12 +332,22 @@ public class GameExecution extends Observable implements Runnable, Observer {
 			}
 		}
 		
+		/**
+		 * Permet d'initialiser certaines choses avant le début du calcul.
+		 */
 		protected void init(){}
 		
+		/**
+		 * Lance le calcule.
+		 * @param fragmentIndex Le numéro du fragment associé au thread.
+		 */
 		protected abstract void exec(int fragmentIndex);
 		
 	}
 	
+	/**
+	 * Classe interne gérant la mise à jour des positions où les cellules peuvent potentiellement naitres.
+	 */
 	private class UpdatePlaceProcess extends Process {
 
 		@Override
@@ -276,6 +364,9 @@ public class GameExecution extends Observable implements Runnable, Observer {
 		}
 	}
 	
+	/**
+	 * Classe interne gérant la naissance des cellules.
+	 */
 	private class EmergingProcess extends Process  {
 
 
@@ -287,6 +378,9 @@ public class GameExecution extends Observable implements Runnable, Observer {
 
 	}
 
+	/**
+	 * Classe interne gérant la mort ou la survie des cellules.
+	 */
 	private class EvolutionProcess extends Process  {
 
 		@Override
@@ -297,6 +391,9 @@ public class GameExecution extends Observable implements Runnable, Observer {
 
 	}
 
+	/**
+	 * Classe interne gérant la mise à jour de l'état des cellules.
+	 */
 	private class UpdateProcess extends Process  {
 
 		@Override

@@ -5,7 +5,7 @@
 package model.gameoflife;
 
 /**
- * Classe d'erreur qui permet de remonter les erreurs vers l'utilisateur
+ * Exxeption qui permettant de remonté à l'utilisateur les erreurs lié aux fichiers.
  * @author Quentin
  */
 public class ErrorIO {

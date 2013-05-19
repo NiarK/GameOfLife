@@ -255,14 +255,15 @@ public class Field extends Observable{
 	}
 
 	/**
-	 * Crée une liste contenant les noms des dossiers du dossier Patterns
+	 * Crée une liste contenant les noms des dossiers du dossier repertory
+	 * @param repertory Dossier à scanner.
 	 * @return ArrayList Liste contenant les noms des dossiers.
 	 */
-	public ArrayList patternRepertoryList(String path) {
+	public ArrayList patternRepertoryList(String repertory) {
 		String[] list;
 		ArrayList result = new ArrayList();
 		int i;
-		File f = new File("resources/Patterns/"+path);
+		File f = new File("resources/Patterns/"+repertory);
 
 		list = f.list();
 		for (i = 0 ; i < list.length ; i++) {
