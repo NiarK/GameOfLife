@@ -376,7 +376,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());
 		_pnl_BtnPatternsRotate.add(_btn_RotateLeftPatterns);
 		_pnl_BtnPatternsRotate.add(Box.createHorizontalGlue());		
-		_pnl_BtnPatternsRotate.add(Box.createVerticalGlue());
+		//_pnl_BtnPatternsRotate.add(Box.createVerticalGlue());
 		_btn_RotateRightPatterns = new JButton();
 		_btn_RotateRightPatterns.setIcon(new ImageIcon(manager.get("resources/Icons/rotateRight.png")));
 		_btn_RotateRightPatterns.addActionListener(this);
@@ -400,11 +400,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		_pnl_BtnPattern = new JPanel();
 		_pnl_BtnPattern.setLayout(new BoxLayout(_pnl_BtnPattern, BoxLayout.PAGE_AXIS));
-		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_BtnPattern.add(Box.createVerticalStrut(15));
 		_pnl_BtnPattern.add(_pnl_BtnPatternsRotate);
-		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_BtnPattern.add(Box.createVerticalStrut(10));
 		_pnl_BtnPattern.add(_pnl_BtnPatternsSymetric);
-		_pnl_BtnPattern.add(Box.createVerticalGlue());
+		_pnl_BtnPattern.add(Box.createVerticalStrut(15));
 		
 		this.createPatternsList();
 
