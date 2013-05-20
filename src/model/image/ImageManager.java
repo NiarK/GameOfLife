@@ -14,8 +14,9 @@ import javax.imageio.ImageIO;
 import view.FieldDrawManager;
 
 /**
- * Permet la gestion des images dans tout le programme
- * 
+ * Ce singleton fournit un gestionnaire d'image.
+ * Il suffit de lui fournir le chemin d'une image et il l'a chargera qu'une seul fois.
+ * Si l'image à déjà été chargée, il ne refera pas un accès fichier pour la recharger, il retournera directement l'instance de l'image demandé.
  */
 public class ImageManager {
 	
@@ -23,10 +24,18 @@ public class ImageManager {
 	
 	private HashMap<String, BufferedImage> _images;
 
-	public ImageManager() {
+	/**
+	 * Construit le gestionnaire.
+	 */
+	private ImageManager() {
 		_images = new HashMap<>();
 	}
 	
+	/**
+	 * Retourne l'instance du gestionnaire.
+	 * Si l'instance n'existe pas, il l'a créé.
+	 * @return L'instance du gestionnaire.
+	 */
 	public static ImageManager getInstance() {
 		
 		if(_instance == null) {
@@ -36,6 +45,12 @@ public class ImageManager {
 		return _instance;
 	}
 	
+	/**
+	 * Charge l'image à partir d'un chemin.
+	 * Si l'image existe dèjà, aucun accès fichier n'est réalisé.
+	 * @param filename Le chemin vers l'image.
+	 * @return Un objet BufferedImage représentant l'image demandé.
+	 */
 	public BufferedImage get(String filename) {
 		
 		BufferedImage img = null;
