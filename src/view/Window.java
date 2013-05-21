@@ -54,6 +54,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -144,11 +145,11 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		_cellIcon = new ImageIcon(manager.get("resources/Icons/treeIcon.png"));
 		//imgOpen = new ImageIcon(manager.get("src/resources/treeIconOpen.png"));
-		//imgClose = new ImageIcon(manager.get("src/resources/treeIconClose.png"));
+		//imgClose = new ImageIcon(manager.get("src/resources/treezIconClose.png"));
 		
 		this.setIconImage(new ImageIcon(manager.get("resources/Icons/random.png")).getImage());
 		
-		_field = new Field(8);
+		_field = new Field(8, this.getBackground());
 		_field.setBackground(Color.black);
 		_field.addMouseListener(this);
 		_field.addMouseMotionListener(this);
@@ -1039,7 +1040,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 
 		if (ce.getSource() == _field) {
 			_field.resize();
-			_field.repaint();
+			
 		}
 
 	}
