@@ -4,7 +4,6 @@
  */
 package view;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -17,8 +16,8 @@ import model.gameoflife.Cell;
  * @author Pierre
  */
 public class TriangularDrawManager extends FieldDrawManager {
-	public TriangularDrawManager(Point fieldSize, Color background) {
-		super(fieldSize, background);
+	public TriangularDrawManager(Point fieldSize) {
+		super(fieldSize);
 	}
 
 	TriangularDrawManager(FieldDrawManager fdm) {

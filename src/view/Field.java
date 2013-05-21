@@ -26,17 +26,17 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	
 
 	//private view.Cell c;
-	public Field(int neighbors, Color background) {
+	public Field(int neighbors) {
 		super();
 
-		_drawer = new FieldDrawManager(new Point(this.getWidth(), this.getHeight()), background);
+		_drawer = new FieldDrawManager(new Point(this.getWidth(), this.getHeight()));
 		_drawer.setCellSize(10);
 
 	}
 
 	@Override
 	public synchronized void paintComponent(Graphics g) {
-		
+
 		_drawer.draw(g);
 		
 	}
@@ -94,7 +94,6 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	}
 
 	public void resize() {
-		
 		
 		_drawer.setComponentSize(new Point(this.getWidth(),this.getHeight()));
 		_drawer.resize();

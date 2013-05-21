@@ -4,7 +4,6 @@
  */
 package view;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Iterator;
@@ -17,8 +16,8 @@ import model.gameoflife.Cell;
  */
 public class HexagonalDrawManager extends FieldDrawManager {
 
-	public HexagonalDrawManager(Point fieldSize, Color background) {
-		super(fieldSize, background);
+	public HexagonalDrawManager(Point fieldSize) {
+		super(fieldSize);
 	}
 
 	HexagonalDrawManager(FieldDrawManager fdm) {

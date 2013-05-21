@@ -27,13 +27,12 @@ public class FieldDrawManager {
 	protected Point _componentSize;
 	protected Pattern _pattern;
 	protected boolean _torus;
-	protected Color _background;
 	
 	public static double ZOOM_UNIT = 0.9;
 	
 
 	//private view.Cell c;
-	public FieldDrawManager(Point fieldSize, Color background) {
+	public FieldDrawManager(Point fieldSize) {
 
 		/*CellImageParameter p = new CellImageParameter("cell.png", new Point(10,10), 5,5,5);
 		 c = new view.Cell(new CellState(), p);
@@ -60,8 +59,6 @@ public class FieldDrawManager {
 		
 		_torus = false;
 		
-		_background = background;
-		
 		//_exec = true;
 
 	}
@@ -78,16 +75,9 @@ public class FieldDrawManager {
 		_componentSize = fdm._componentSize;
 		_pattern = fdm._pattern;
 		_torus = fdm._torus;
-		_background = fdm._background;
 	}
 
 	protected synchronized void drawBorder(Graphics g) {
-		g.fillRect(
-			_offset.x,
-			_offset.y,
-			_fieldSize.x * (int) (_cellSize * _zoom),
-			_fieldSize.y * (int) (_cellSize * _zoom));
-		g.setColor(Color.DARK_GRAY);
 		g.drawRect(
 			_offset.x,
 			_offset.y,
@@ -176,18 +166,17 @@ public class FieldDrawManager {
 	
 	public synchronized void draw(Graphics g) {
 
-		g.setColor(_background);
-		
+		g.setColor(Color.BLACK);
 		//g.setColor(new Color(0, 0, 0, 1));
 		g.fillRect(0, 0, _componentSize.x, _componentSize.y);
-		
-		g.setColor(Color.BLACK);
-		this.drawBorder(g);
 
 		//TODO: Mettre ce calcul autre part
 		_offset.x = _position.x - (int) (_fieldSize.x * _cellSize * _zoom) / 2;
 		_offset.y = _position.y - (int) (_fieldSize.y * _cellSize * _zoom) / 2;
 
+
+		g.setColor(Color.DARK_GRAY);
+		this.drawBorder(g);
 
 		Point p1 = new Point();
 		Point p2 = new Point();
@@ -322,13 +311,11 @@ public class FieldDrawManager {
 		size.x = _componentSize.x - _oldComponentSize.x;
 		size.y = _componentSize.y - _oldComponentSize.y;
 
-		System.out.println(_componentSize);
-		System.out.println(_oldComponentSize);
 		_position.x += size.x / 2;
 		_position.y += size.y / 2;
 
-		/*_oldComponentSize.x = _componentSize.x;
-		_oldComponentSize.y = _componentSize.y;*/
+		_oldComponentSize.x = _componentSize.x;
+		_oldComponentSize.y = _componentSize.y;
 	}
 
 	/*public HashMap<Point, Cell> getCells() {
@@ -392,10 +379,7 @@ public class FieldDrawManager {
 		* }*/
 
 	public void setComponentSize(Point componentSize) {
-		
-		_oldComponentSize = _componentSize;
-		
-		_componentSize = componentSize;
+		this._componentSize = componentSize;
 	}
 
 	public Pattern getPattern() {
