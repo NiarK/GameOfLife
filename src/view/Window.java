@@ -148,7 +148,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		
 		this.setIconImage(new ImageIcon(manager.get("resources/Icons/random.png")).getImage());
 		
-		_field = new Field(8);
+		_field = new Field();
 		_field.setBackground(Color.black);
 		_field.addMouseListener(this);
 		_field.addMouseMotionListener(this);
@@ -844,7 +844,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 				_currentRuleParameter = rp;
 				_controller.setRule(_currentRuleParameter);
 				this.updateRuleLabel();
-				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()),_currentRuleParameter.isTorus());
+				_field.setNeighbors(_controller.getNeighborMaximumNumber(rp.getSearch()));
+				_field.setTorus(_currentRuleParameter.isTorus());
 			}
 		}
 		else if (e.getSource() == _itm_Plus) {
