@@ -24,7 +24,7 @@ import model.simulator.Simulator;
 import view.Window;
 
 /**
- *
+ * Controller de l'application.
  * @author pierre
  */
 public final class Controller{
@@ -332,13 +332,6 @@ public final class Controller{
 		t.start();
 	}
 
-	/**
-	 * Récupère les différents type de terrain possible ("Square", "Hexagone"...).
-	 * @return Un tableau de String contenant le nom des type de terrain possible.
-	 */
-	/*public String[] getFieldTypes() {
-		return _typeName;
-	}*/
 
 	/**
 	 * Récupère les types de recherche ("Hexagonal", "square"...).
@@ -350,8 +343,8 @@ public final class Controller{
 	}
 
 	/**
-	 * 
-	 * @param rp Récupère un objet Search en fonction de paramètres.
+	 * Récupère un objet Search en fonction de paramètres.
+	 * @param rp Les paramètres de la règles.
 	 * @return Les paramètres qui définisse la recherche.
 	 */
 	private Search getSearch(RuleParameter rp) {

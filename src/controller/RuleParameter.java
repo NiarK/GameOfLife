@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.TreeSet;
 
 /**
- *
+ * Classe permettant de gérer les paramètres pour une règle de jeu.
+ * Elle permet de centraliser Les entrées fournit par l'utilisateur pour le paramétrage des règles.
+ * Le controller sera ensuite capable de construire une règle en fonction de ses paramètres.
  * @author pierre
  */
 public class RuleParameter {
@@ -20,13 +22,17 @@ public class RuleParameter {
 	private String _name;
 	private int _neighbor;
 
+	/**
+	 * Constructeur par défaut.
+	 */
 	public RuleParameter() {
 		this("");
-		/*_born = new TreeSet<>();
-		_survive = new TreeSet<>();
-		_name = null;*/
 	}
 	
+	/**
+	 * construit des paramètres de règle avec un certains nom.
+	 * @param name Le nom de la règle.
+	 */
 	public RuleParameter(String name) {
 		_born = new TreeSet<>();
 		_survive = new TreeSet<>();
@@ -40,37 +46,57 @@ public class RuleParameter {
 		_neighbor = 0;
 	}
 	
-	/*public RuleParameter(RuleParameter rule) {
-		this._born = new TreeSet<>(rule._born);
-		this._survive = new TreeSet<>(rule._survive);
-		this._name = new String(rule._name);
-	}*/
-	
+	/**
+	 * Constructeur par copie.
+	 * @param rule Les paramètres à copier.
+	 */
 	public void copy(RuleParameter rule) {
 		this._born = new TreeSet<>(rule._born);
 		this._survive = new TreeSet<>(rule._survive);
 	}
 	
+	/**
+	 * Ajoute un nombre de voisin pour lequel une cellule nait.
+	 * @param b Le nombre de voisin.
+	 */
 	public void addBorn(Integer b) {
 		_born.add(b);
 	}
 	
+	/**
+	 * Supprime un nombre de voisin pour lequel une cellule nait.
+	 * @param b Le nombre de voisin.
+	 */
 	public void removeBorn(Integer b) {
 		_born.remove(b);
 	}
 	
+	/**
+	 * Vide la liste des voisins pour lesquels une cellule nait.
+	 */
 	public void emptyBorn() {
 		_born.clear();
 	}
 	
+	/**
+	 * Ajoute un nombre de voisin pour lequel une cellule survie.
+	 * @param s Le nombre de voisin.
+	 */
 	public void addSurvive(Integer s) {
 		_survive.add(s);
 	}
 	
+	/**
+	 * Supprime un nombre de voisin pour lequel une cellule survie.
+	 * @param s Le nombre de voisin.
+	 */
 	public void removeSurvive(Integer s) {
 		_survive.remove(s);
 	}
 
+	/**
+	 * Vide la liste des voisins pour lesquels une cellule survie.
+	 */
 	public void emptySurvive() {
 		_survive.clear();
 	}

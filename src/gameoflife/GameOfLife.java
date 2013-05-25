@@ -10,13 +10,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
+ * Classe principale qui lancele programme.
  * @author pierre
  */
 public class GameOfLife {
 
 	/**
-	 * @param args the command line arguments
+	 * @param args Les arguments passés en ligne de commande.
 	 */
 	
 	public static void main(String[] args) throws InterruptedException {
