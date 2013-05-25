@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- *
+ * Fenêtre êrùettantde choisir les règles du jeu.
  * @author pierre
  */
 public final class RuleParameterDialog extends JDialog implements ActionListener {
@@ -32,7 +32,6 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	
 	private RuleParameter _customRule;
 	private RuleParameter _rule;
-	//private String _search;
 	
 	private JCheckBox _chb_Torus;
 	private JComboBox _cbb_Search;
@@ -49,7 +48,12 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 	
 	private Controller _controller;
 
-	
+	/**
+	 * Construit la fenètre.
+	 * @param parent L'objet parent.
+	 * @param controller Le controleur de l'application.
+	 * @param rp Les paramètres de la fenêtre.
+	 */
 	public RuleParameterDialog(JFrame parent, Controller controller, RuleParameter rp) {
 		super(parent, "Rule parameters", true);
 		
@@ -163,6 +167,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		_rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 	}
 	
+	/**
+	 * Initialise le nombre checkbox "born" et "survive" que la règle en cours doit disposer.
+	 */
 	public void initBSCheckBox() {
 		int nbBorn = _controller.getNeighborMaximumNumber((String)_cbb_Search.getSelectedItem());
 		int nbSurvive = _controller.getNeighborMaximumNumber((String)_cbb_Search.getSelectedItem());
@@ -189,6 +196,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		this.repaint();
 	}
 	
+	/**
+	 * Mets à jour les checkboxs "born" et "survive" avec la règle séléctionnée.
+	 */
 	public void updateBSCheckBox() {
 		RuleParameter rule = (RuleParameter)_cbb_Rule.getSelectedItem();
 		
@@ -215,6 +225,9 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		}
 	}
 
+	/**
+	 * Mets à jour la règle avec les checkboxs.
+	 */
 	public void updateRuleWithBSCheckBox() {
 		
 		if(_rule != null) {
@@ -298,6 +311,10 @@ public final class RuleParameterDialog extends JDialog implements ActionListener
 		}
 	}
 	
+	/**
+	 * Affiche la fenêtre.
+	 * @return Un booléen permettant de savoir si l'utilisateur à cliqué sur "Ok".
+	 */
 	public RuleParameter showDialog() {
 		
 		this.setVisible(true);

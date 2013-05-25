@@ -435,38 +435,62 @@ public class FieldDrawManager {
 		
 	}
 	
+	/**
+	 * Fait une symetrie verticale de la previsualisation du modèle.
+	 */
 	public void verticalSymmetry(){
 		if(_pattern != null){
 			_pattern.verticalSymmetry();
 		}
 	}
 	
+	/**
+	 * Fait une symetrie horizontale de la previsualisation du modèle.
+	 */
 	public void horizontalSymmetry(){
 		if(_pattern != null){
 			_pattern.horizontalSymmetry();
 		}
 	}
 	
+	/**
+	 * Fait une rotation vers la droite de la previsualisation du modèle.
+	 */
 	public void rotateRight(){
 		if(_pattern != null){
 			_pattern.rotateRight();
 		}
 	}
 	
+	/**
+	 * Fait une rotation vers la gauche de la previsualisation du modèle.
+	 */
 	public void rotateLeft(){
 		if(_pattern != null){
 			_pattern.rotateLeft();
 		}
 	}
 
+	/**
+	 * Vérifie si l'affichage représente un terrain en forme de tore.
+	 * @return True ou false.
+	 */
 	public boolean isTorus() {
 		return _torus;
 	}
 
+	/**
+	 * Définie si l'affichage représente un terrain en forme de tore.
+	 * @param _torus Un booléen.
+	 */
 	public void setTorus(boolean _torus) {
 		this._torus = _torus;
 	}
 
+	/**
+	 * Vérifie si un modèle est définie pour la prévisualisation.
+	 * @return True ou false.
+	 */
 	boolean isPatternDefine() {
 		return (_pattern != null)?true:false;
 	}

@@ -15,10 +15,18 @@ import model.gameoflife.Cell;
  * @author Pierre
  */
 public class TriangularDrawManager extends FieldDrawManager {
-	public TriangularDrawManager(/*Point fieldSize*/) {
-		super(/*fieldSize*/);
+	
+	/**
+	 * Construit un manageur pour un terrain triangulaire.
+	 */
+	public TriangularDrawManager() {
+		super();
 	}
 
+	/**
+	 * Constructeur par copie.
+	 * @param fdm L'objet à copier.
+	 */
 	TriangularDrawManager(FieldDrawManager fdm) {
 		super(fdm);
 	}
@@ -42,6 +50,7 @@ public class TriangularDrawManager extends FieldDrawManager {
 		g.drawPolygon(this.getTriangle(position, ((_indicator.x + _indicator.y) % 2) == 0 ));
 	}
 	
+	@Override
 	protected synchronized void drawPoint(Graphics g, Point p){
 		Point position = new Point(
 			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x,
@@ -72,6 +81,12 @@ public class TriangularDrawManager extends FieldDrawManager {
 		}
 	}
 	
+	/**
+	 * Récupère un triangle en fonction de sa position.
+	 * @param position La position en pixel.
+	 * @param pair Permet de savoir si le triangle doit pointer vers le haut ou le bas (true -> triangle vers le bas).
+	 * @return Un objet Polygon représentant le triangle.
+	 */
 	private Polygon getTriangle(Point position, boolean pair) {
 		
 			int[] xPoints = new int[3];

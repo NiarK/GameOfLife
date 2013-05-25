@@ -65,6 +65,11 @@ import model.gameoflife.ErrorIO;
 import model.gameoflife.Pattern;
 import model.image.ImageManager;
 
+
+/**
+ * Fenêtre principale du jeu de la vie.
+ * @author Pierre
+ */
 public final class Window extends JFrame implements ActionListener, ChangeListener, WindowListener, MouseListener, MouseMotionListener, MouseWheelListener, ComponentListener, KeyListener, FocusListener, Observer {
 
 	private RuleParameter _currentRuleParameter;
@@ -73,11 +78,8 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_Next;
 	private JButton _btn_RandomlyFill;
 	private JButton _btn_Empty;
-	/*private JButton _btn_Save;
-	private JButton _btn_Load;*/
 	private JButton _btn_RuleParameter;
 	private JComboBox _cbb_Speed;
-	//private JComboBox	_cbb_Rule;
 	private JTextField _txt_Column;
 	private JTextField _txt_Row;
 	private JSlider _sli_Column;
@@ -119,7 +121,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JPanel main;
 	private ArrayList<String> repertories;
 	private ArrayList<String> _patterns;
-	//private ButtonGroup _bg_Patterns;
 	private JPanel _pnl_patterns;
 	private JPanel _pnl_BtnPatternsRotate;
 	private JPanel _pnl_BtnPatternsSymetric;
@@ -129,22 +130,21 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	private JButton _btn_ChangeYAxisPatterns;
 	private JTree _tree_Pattern;
 	private Icon _cellIcon;
-	//private Icon imgOpen;
-	//private Icon imgClose;
 	private JPanel _pnl_BtnPattern;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel treeModel;
 	private DefaultMutableTreeNode[] repertory;
 	private ArrayList<String>[] _patternsPath;
 
+	/**
+	 * Construit la fenêtre principale du programme.
+	 */
 	public Window() {
 		
 		ImageManager manager = ImageManager.getInstance();
 		_controller = new Controller();
 		
 		_cellIcon = new ImageIcon(manager.get("resources/Icons/treeIcon.png"));
-		//imgOpen = new ImageIcon(manager.get("src/resources/treeIconOpen.png"));
-		//imgClose = new ImageIcon(manager.get("src/resources/treeIconClose.png"));
 		
 		this.setIconImage(new ImageIcon(manager.get("resources/Icons/random.png")).getImage());
 		
@@ -534,7 +534,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	/**
-	 * Récupère les différentes vitesses possibles
+	 * Récupère les différentes vitesses de jeu possibles.
 	 * @return Tableau de string
 	 */
 	public String[] getSpeeds() {
@@ -549,10 +549,10 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 	
 	/**
-	 * Fonction qui permet de créer l'arborescence en profondeur
-	 * @param parent Chemin du parent en chaine de caractère
-	 * @param parentNode Noeud du parent auquel rattacher les éléments
-	 * @return renvoi true si le dossier parent contient au moins un fichier
+	 * Créer l'arborescence des modèles en profondeur.
+	 * @param parent Chemin du parent en chaine de caractère.
+	 * @param parentNode Noeud du parent auquel rattacher les éléments.
+	 * @return Renvoi true si le dossier parent contient au moins un fichier.
 	 */
 	public boolean createTree(String parent, DefaultMutableTreeNode parentNode){
 		int i,j;
@@ -578,7 +578,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	/**
-	 * Crée et affiche le jtabbed patterns
+	 * Crée et affiche l'arborescence des modèles.
 	 */
 	public void createPatternsList() {
 		_patternsPath = new ArrayList[2];
@@ -620,7 +620,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 	
 	/**
-	 * Gère l'affichage du bouton play ou pause
+	 * Gère l'affichage du bouton play ou pause.
 	 */
 	public void updateBtnPlay() {
 		if (_controller.isPlayed()) {
@@ -632,7 +632,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 
 	/**
-	 * Gère l'affichage des règles dans le label
+	 * Gère l'affichage du règles dans l'onglet option.
 	 */
 	public void updateRuleLabel() {
 
@@ -656,7 +656,7 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	}
 	
 	/*
-	 * Effectue la sauvegarde du plateau courant
+	 * Effectue la sauvegarde du terrain.
 	 */
 	public void save(){
 		boolean test = false;
@@ -882,7 +882,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 	public void windowClosing(WindowEvent we) {
 		if (we.getSource() == this) {
 			_controller.stop();
-//			_field.terminate();
 		}
 	}
 

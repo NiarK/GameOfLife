@@ -16,10 +16,17 @@ import model.gameoflife.Cell;
  */
 public class HexagonalDrawManager extends FieldDrawManager {
 
-	public HexagonalDrawManager(/*Point fieldSize*/) {
-		super(/*fieldSize*/);
+	/**
+	 * Construit un manageur pour un terrain hexagonal.
+	 */
+	public HexagonalDrawManager() {
+		super();
 	}
 
+	/**
+	 * Constructeur par copie.
+	 * @param fdm L'objet à copier.
+	 */
 	HexagonalDrawManager(FieldDrawManager fdm) {
 		super(fdm);
 	}
@@ -48,6 +55,8 @@ public class HexagonalDrawManager extends FieldDrawManager {
 			(int) (_cellSize * _zoom));
 	}
 	
+	
+	@Override
 	protected synchronized void drawPoint(Graphics g, Point p){
 		int space = 0;
 		if((_indicator.y + p.y) % 2 == 1) {
@@ -56,8 +65,6 @@ public class HexagonalDrawManager extends FieldDrawManager {
 		g.fillOval(
 			(int) (_cellSize * _zoom) * (_indicator.x + p.x) + _offset.x + space,
 			(int) (_cellSize * _zoom) * (_indicator.y + p.y) + _offset.y,
-			/*(int) ((_cellSize * _indicator.x + _offset.x) * _zoom),
-			 (int) ((_cellSize * _indicator.y + _offset.y) * _zoom),*/
 			(int) (_cellSize * _zoom),
 			(int) (_cellSize * _zoom));
 	}
@@ -83,13 +90,6 @@ public class HexagonalDrawManager extends FieldDrawManager {
 
 	@Override
 	protected synchronized void drawCells(Graphics g, Point p1, Point p2) {
-		/*point p1 = new Point();
-		Point p2 = new Point();
-
-		p1.x = (int) (-_offset.x / _zoom) / _cellSize;
-		p1.y = (int) (-_offset.y / _zoom) / _cellSize;
-		p2.x = (int) ((_componentSize.x - _offset.x) / (int)(_cellSize * _zoom));
-		p2.y = (int) ((_componentSize.y - _offset.y) / (int)(_cellSize * _zoom));*/
 		
 		for (Map.Entry<Point, Cell> entry : _cells.entrySet()) {
 			Point coord = entry.getKey();
@@ -101,12 +101,11 @@ public class HexagonalDrawManager extends FieldDrawManager {
 				int space = 0;
 				if(coord.y % 2 == 1) {
 					space = (int) (_cellSize * _zoom)/2;
-					//System.out.println(space);
 				}
 				
 				Point position = new Point(_position);
 				position.x = (int) (_cellSize * _zoom) * coord.x + _offset.x + space;
-				position.y = (int) (_cellSize * _zoom) * coord.y + _offset.y ;//- (int)(coord.y * _zoom);
+				position.y = (int) (_cellSize * _zoom) * coord.y + _offset.y ;
 				
 				g.fillOval(
 						position.x,
@@ -117,9 +116,4 @@ public class HexagonalDrawManager extends FieldDrawManager {
 			}
 		}
 	}
-
-	
-	
-	
-	
 }
