@@ -30,7 +30,7 @@ public class RuleParameter {
 	}
 	
 	/**
-	 * construit des paramètres de règle avec un certains nom.
+	 * Construit des paramètres de règle avec un certains nom.
 	 * @param name Le nom de la règle.
 	 */
 	public RuleParameter(String name) {
@@ -173,11 +173,6 @@ public class RuleParameter {
 	public String toString() {
 		return this.getName();
 	}
-
-	/*@Override
-	protected Object clone() throws CloneNotSupportedException {
-	return super.clone(); //To change body of generated methods, choose Tools | Templates.
-	}*/
 	
 	public int getNeighbor() {
 		return _neighbor;

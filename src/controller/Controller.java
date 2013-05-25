@@ -46,17 +46,9 @@ public final class Controller{
 	 */
 	public Controller() {
 
-		/*_typeName = new String[3];
-		_typeName[0] = "Square";
-		_typeName[1] = "Hexagone";
-		_typeName[2] = "Triangle";*/
-
 		this.initRuleParameter();
 
 		StandardRule rule = StandardRule.gameOfLifeRule();
-		//StandardRule rule = StandardRule.highLifeRule();
-		//StandardRule rule = StandardRule.seedsRule();
-		//StandardRule rule = StandardRule.B1S12Rule();
 
 		_game = new GameExecution(new Point(50, 50), rule);
 
@@ -339,7 +331,6 @@ public final class Controller{
 	 */
 	public String[] getSearchType() {
 		return _searchName;
-		//return _search.keySet().toArray(new String[_search.keySet().size()]);
 	}
 
 	/**
