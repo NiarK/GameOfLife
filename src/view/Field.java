@@ -31,7 +31,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	public Field() {
 		super();
 
-		_drawer = new FieldDrawManager(new Point(this.getWidth(), this.getHeight()));
+		_drawer = new FieldDrawManager(/*new Point(this.getWidth(), this.getHeight())*/);
 		_drawer.setCellSize(10);
 
 	}
@@ -123,7 +123,7 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 	}
 
 	/**
-	 * 
+	 * Centre l'affichage (à appeler après un changement de taille).
 	 */
 	public void resize() {
 		
@@ -131,30 +131,55 @@ public final class Field extends JPanel implements Observer/*, Runnable */ {
 		_drawer.resize();
 	}
 	
+	/**
+	 * Définit le modèle à prévisualiser.
+	 * @param _pattern Le modèle en question.
+	 */
 	public void setPattern(Pattern _pattern) {
 		_drawer.setPattern(_pattern);
 	}
 	
+	/**
+	 * Permet de savoir si un modèle doit etre prévisualiser.
+	 * @return True ou false.
+	 */
 	public boolean isPatternDefine() {
 		return _drawer.isPatternDefine();
 	}
 	
+	/**
+	 * Permet de savoir si les coordonnées sont dans le terrain.
+	 * @param coord Les coordonnées à tester.
+	 * @return True ou false.
+	 */
 	public boolean isInsideTheField(Point coord) {
 		return _drawer.isInsideTheField(coord);
 	}
 	
+	/**
+	 * Fait une symetrie verticale de la previsualisation du modèle.
+	 */
 	public void verticalSymmetry(){
 		_drawer.verticalSymmetry();
 	}
 	
+	/**
+	 * Fait une symetrie horizontale de la previsualisation du modèle.
+	 */
 	public void horizontalSymmetry(){
 		_drawer.horizontalSymmetry();
 	}
 	
+	/**
+	 * Fait une rotation vers la droite de la previsualisation du modèle.
+	 */
 	public void rotateRight(){
 		_drawer.rotateRight();
 	}
 	
+	/**
+	 *  Fait une rotation vers la gauche de la previsualisation du modèle.
+	 */
 	public void rotateLeft(){
 		_drawer.rotateLeft();
 	}

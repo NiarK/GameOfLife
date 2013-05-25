@@ -16,8 +16,8 @@ import model.gameoflife.Cell;
  */
 public class HexagonalDrawManager extends FieldDrawManager {
 
-	public HexagonalDrawManager(Point fieldSize) {
-		super(fieldSize);
+	public HexagonalDrawManager(/*Point fieldSize*/) {
+		super(/*fieldSize*/);
 	}
 
 	HexagonalDrawManager(FieldDrawManager fdm) {
