@@ -6,6 +6,5 @@
 *.war
 *.ear
 build/*
-dist/*
 nbproject/*
 

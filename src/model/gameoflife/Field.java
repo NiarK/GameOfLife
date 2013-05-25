@@ -519,6 +519,4 @@ public class Field extends Observable{
 			}
 		}
 	}
-	
-	
 }

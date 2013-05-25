@@ -311,15 +311,6 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 		_btn_Empty.setIcon(new ImageIcon(manager.get("resources/Icons/empty.png")));
 		_btn_Empty.setFocusable(false);
 
-		/*_btn_Save = new JButton();
-		_btn_Save.addActionListener(this);
-		_btn_Save.addKeyListener(this);
-		_btn_Save.setIcon(new ImageIcon(manager.get("src/resources/save.png")));
-		
-		_btn_Load = new JButton();
-		_btn_Load.addActionListener(this);
-		_btn_Load.addKeyListener(this);
-		_btn_Load.setIcon(new ImageIcon(manager.get("src/resources/open.png")));*/
 
 
 		_btn_RuleParameter = new JButton();

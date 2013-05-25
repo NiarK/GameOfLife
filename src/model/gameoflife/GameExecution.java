@@ -39,10 +39,6 @@ public class GameExecution extends Observable implements Runnable, Observer {
 	@Override
 	public synchronized void run() {
 		try {
-			/*this._rule.updateEmergingPlaces(this._field);
-			this._rule.calculNextCellsGeneration(this._field);
-			this._rule.calculEmergingCells(this._field);
-			this._rule.updateCellsState(this._field.getCells());*/
 
 			
 			UpdatePlaceProcess upp = new UpdatePlaceProcess();
@@ -56,22 +52,17 @@ public class GameExecution extends Observable implements Runnable, Observer {
 
 			Thread updateProcess = new Thread(new UpdateProcess());
 
-			//System.out.println(_field);
 			updatePlaceProcess.start();
 			evolutionProcess.start();
 			
 			evolutionProcess.join(0);
 			updatePlaceProcess.join(0);
 			
-			//System.out.println(_field);
 			emergingProcess.start();
 			emergingProcess.join(0);
 
-			//System.out.println(_field);
 			updateProcess.start();
 			updateProcess.join(0);
-			//System.out.println(_field);
-			//System.out.println("---------------------------------------------");
 
 			this.setChanged();
 			this.notifyObservers();
@@ -137,22 +128,12 @@ public class GameExecution extends Observable implements Runnable, Observer {
 			&& position.x < _field.getSize().x
 			&& position.y >= 0
 			&& position.y < _field.getSize().y) {
-			//if(_pattern == null){
-				if (_field.getCells().containsKey(position)) {
-					//_field.getCells().remove(position);
-					_field.removeCell(_field.getCells().get(position));
-				}
-				else {
-					//_field.getCells().put(position, new Cell(position));
-					_field.addCell(position);
-				}
-			//}
-			//else{
-			//	displayPattern(position);
-
-			//}
-
-			//_rule.updateEmergingPlace(position, _field);
+			if (_field.getCells().containsKey(position)) {
+				_field.removeCell(_field.getCells().get(position));
+			}
+			else {
+				_field.addCell(position);
+			}
 
 			this.setChanged();
 			this.notifyObservers();
