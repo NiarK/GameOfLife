@@ -1119,9 +1119,9 @@ public final class Window extends JFrame implements ActionListener, ChangeListen
 			ErrorIO err = (ErrorIO) arg;
 			JOptionPane.showMessageDialog(this, err.getErrorText());
 		}
-		else if(arg == 1){
+		/*else if((int)arg == 1){
 			this.createPatternsList();
-		}
+		}*/
 	}
 	
 	
